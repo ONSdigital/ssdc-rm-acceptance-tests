@@ -1,9 +1,9 @@
 import functools
 import json
 
+from acceptance_tests.utilities.database_helper import add_survey_and_collex_to_db
 from acceptance_tests.utilities.rabbit_context import RabbitContext
 from acceptance_tests.utilities.rabbit_helper import start_listening_to_rabbit_queue
-from acceptance_tests.utilities.survey_and_collex_helper import add_new_survey_and_collection_exercise
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -12,7 +12,7 @@ from behave import step
 
 @step('a message is put on the inbound queue')
 def send_message_to_rabbit(context):
-    add_new_survey_and_collection_exercise(context)
+    add_survey_and_collex_to_db(context)
 
     message = {
         'addressLine1': '666 Long Lane',

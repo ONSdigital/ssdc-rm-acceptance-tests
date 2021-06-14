@@ -4,10 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+toolbox = {editable = true,git = "https://github.com/ONSdigital/ssdc-rm-toolbox", ref="388481ed0fe6179390a4a710b407f20cb4705555"}
+#census-rm-sample-loader = {editable = true,git = "https://github.com/ONSdigital/census-rm-sample-loader",ref = "b4701466838cdc740a12dacbbcf3f45decac9273"}
 behave = "*"
 pika = "*"
 structlog = "*"
 requests = "*"
+psycopg2-binary = "*"
+
 
 [dev-packages]
 "flake8" = "*"
