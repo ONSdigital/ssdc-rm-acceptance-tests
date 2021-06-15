@@ -1,8 +1,7 @@
 import functools
 import json
-from datetime import datetime
 
-from behave import *
+from behave import step, when
 
 from acceptance_tests.utilities.rabbit_context import RabbitContext
 from acceptance_tests.utilities.rabbit_helper import start_listening_to_rabbit_queue, store_all_msgs_in_context
@@ -27,10 +26,9 @@ def _get_emitted_uac(context):
 def check_uac_updated_msg_sets_receipted_qid_to_active(context):
     uac = _get_emitted_uac(context)
 
-    # test_helper.assertEqual(uac['caseId'], context.receipting_case['id'])
-    # test_helper.assertEquals(uac['questionnaireId'], context.qid_to_receipt)
     test_helper.assertTrue(uac['active'])
     context.questionnaire_id = uac['questionnaireId']
+    context.receipting_case_id = uac['caseId']
 
 
 @when("the case has been receipted")
@@ -58,27 +56,20 @@ def receipting_case(context):
             content_type='application/json',
             routing_key=Config.RABBITMQ_RESPONSE_QUEUE)
 
-    print(context.questionnaire_id)
-
 
 @step("a uac_updated msg is emitted with active set to false")
 def uac_updated_msg_emitted(context):
     emitted_uac = _get_emitted_uac(context)
-    # test_helper.assertEqual(emitted_uac['caseId'], context.first_case['id'])
+    test_helper.assertEqual(emitted_uac['caseId'], context.receipting_case_id)
     test_helper.assertFalse(emitted_uac['active'], 'The UAC_UPDATED message should active flag "false"')
 
 
-
 @step('a case_updated msg is emitted where "{case_field}" is "{expected_field_value}"')
-@step(
-    'a case_updated msg of type "{case_type}" and address level "{address_level}" is emitted where "{case_field}" is '
-    '"{expected_field_value}" and qid is "{another_qid_needed}"')
 def case_updated_msg_sent_with_values(context, case_field, expected_field_value, address_level=None, case_type=None,
                                       another_qid_needed=None):
-
     emitted_case = _get_emitted_case(context)
 
-    # test_helper.assertEqual(emitted_case['id'], context.first_case['id'])
+    test_helper.assertEqual(emitted_case['caseId'], context.receipting_case_id)
     test_helper.assertEqual(str(emitted_case[case_field]), expected_field_value)
 
 

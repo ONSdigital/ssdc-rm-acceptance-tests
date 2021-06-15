@@ -10,6 +10,7 @@ pika = "*"
 structlog = "*"
 requests = "*"
 psycopg2-binary = "*"
+retrying = "*"
 
 [dev-packages]
 "flake8" = "*"

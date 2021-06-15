@@ -1,9 +1,8 @@
 
-Feature: test receipting
-
+Feature: receipting a case
 
   Scenario: A case is loaded and can be receipted
-    Given sample file is loaded successfully
+    Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And a wave of contact has been created
     And a uac_updated msg is emitted with active set to true for the receipted qid
     When the case has been receipted

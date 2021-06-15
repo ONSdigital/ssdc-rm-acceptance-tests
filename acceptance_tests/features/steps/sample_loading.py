@@ -1,8 +1,8 @@
 import json
-from pathlib import Path
 import time
+from pathlib import Path
 
-from behave import *
+from behave import given
 from sample_loader.load_sample import load_sample_file
 
 from acceptance_tests.utilities.database_helper import add_survey_and_collex_to_db, poll_database_with_timeout
@@ -11,19 +11,12 @@ from config import Config
 
 RESOURCE_FILE_PATH = Path(__file__).parents[3].joinpath('resources')
 
-use_step_matcher("re")
 
-
-@given("sample file is loaded successfully")
-# @step('sample file "sample_file_name" is loaded successfully')
-def load_sample_file_successfully_step(context):
-    load_sample_file_helper(context, "sample_1_english_HH_unit.csv")
-
-    # get_and_check_sample_load_case_created_messages(context)
-    # get_and_check_uac_updated_messages(context)
+@given('sample file "{sample_file}" is loaded successfully')
+def step_impl(context, sample_file):
+    load_sample_file_helper(context, sample_file)
 
     poll_until_sample_is_ingested(context)
-
 
 
 def load_sample_file_helper(context, sample_file_name):
