@@ -35,3 +35,12 @@ class Config:
     EXCEPTIONMANAGER_CONNECTION_HOST = os.getenv('EXCEPTIONMANAGER_CONNECTION_HOST', 'localhost')
     EXCEPTIONMANAGER_CONNECTION_PORT = os.getenv('EXCEPTIONMANAGER_CONNECTION_PORT', '8666')
     EXCEPTION_MANAGER_URL = f'http://{EXCEPTIONMANAGER_CONNECTION_HOST}:{EXCEPTIONMANAGER_CONNECTION_PORT}'
+
+    SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
+    SFTP_PORT = os.getenv('SFTP_PORT', '122')
+    SFTP_USERNAME = os.getenv('SFTP_USERNAME', 'centos')
+    SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_sftp_private_key')
+    SFTP_KEY = os.getenv('SFTP_KEY', None)
+    SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'secret')
+    SUPPLIER_B_DIRECTORY = os.getenv('SUPPLIER_B_DIRECTORY', 'supplier_A/print_services/')
+    SUPPLIER_A_DIRECTORY = os.getenv('SUPPLIER_A_DIRECTORY', 'supplier_B/print_services/')
