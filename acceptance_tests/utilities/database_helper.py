@@ -1,3 +1,4 @@
+import contextlib
 import time
 import psycopg2
 
@@ -36,3 +37,20 @@ def poll_database_with_timeout(query, query_vars: tuple, result_success_callback
     """
     pg_connection = connect_to_db()
     _poll_database_with_timeout(query, query_vars, result_success_callback, pg_connection, timeout)
+
+
+@contextlib.contextmanager
+def open_write_cursor(db_host=Config.DB_HOST_CASE, extra_options=""):
+    conn = psycopg2.connect(f"dbname='{Config.DB_NAME}' user='{Config.DB_USERNAME}' host='{db_host}' "
+                            f"password='{Config.DB_PASSWORD}' port='{Config.DB_PORT}'"
+                            f"{Config.DB_CASE_CERTIFICATES}{extra_options}")
+    cursor = conn.cursor()
+    try:
+        yield cursor
+        conn.commit()
+
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
