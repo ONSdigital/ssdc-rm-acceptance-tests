@@ -29,6 +29,7 @@ def check_uac_updated_msg_emitted_with_qid_active(context):
     test_helper.assertTrue(uac['active'])
     context.questionnaire_id = uac['questionnaireId']
     context.case_id = uac['caseId']
+    context.uac = uac['uac']
 
 
 def _get_emitted_case(context, type_filter='CASE_UPDATED'):

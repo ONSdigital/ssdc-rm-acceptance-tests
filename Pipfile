@@ -11,6 +11,8 @@ structlog = "*"
 requests = "*"
 psycopg2-binary = "*"
 retrying = "*"
+paramiko = "*"
+pgpy = "*"
 
 [dev-packages]
 "flake8" = "*"

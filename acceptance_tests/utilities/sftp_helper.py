@@ -3,7 +3,6 @@ from datetime import datetime
 import paramiko
 import pgpy
 
-from acceptance_tests.utilities.mappings import PACK_CODE_TO_SFTP_DIRECTORY
 from config import Config
 
 
@@ -27,8 +26,8 @@ class SftpUtility:
     def __exit__(self, *_):
         self.ssh_client.close()
 
-    def get_all_files_after_time(self, period_start_time, prefix, suffix=""):
-        files = self._sftp_client.listdir_attr(PACK_CODE_TO_SFTP_DIRECTORY[prefix])
+    def get_all_files_after_time(self, period_start_time, prefix, supplier, suffix=""):
+        files = self._sftp_client.listdir_attr(supplier)
         period = period_start_time.strftime('%Y-%m-%d')
 
         return [
@@ -39,12 +38,11 @@ class SftpUtility:
         ]
 
 # TODO Create a supplier mapping to use for getting the files in sftp directory
-# TODO Install requited dependencies
-    def get_files_content_as_list(self, files, prefix):
+    def get_files_content_as_list(self, files, prefix, supplier):
         actual_content = []
 
         for _file in files:
-            file_path = f'{PACK_CODE_TO_SFTP_DIRECTORY[prefix]}/{_file.filename}'
+            file_path = f'{supplier}{_file.filename}'
             content_list = self._get_file_lines_as_list(file_path)
             actual_content.extend(content_list)
 
@@ -65,7 +63,7 @@ class SftpUtility:
 
 # TODO Get new sftp dummy keys from docker dev to use for decrypting print files
     def decrypt_message(self, message):
-        our_key, _ = pgpy.PGPKey.from_file('our_dummy_private.asc')
+        our_key, _ = pgpy.PGPKey.from_file('dummy-key-ssdc-rm-private.asc')
         with our_key.unlock('test'):
             encrypted_text_message = pgpy.PGPMessage.from_blob(message)
             message_text = our_key.decrypt(encrypted_text_message)

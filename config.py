@@ -1,4 +1,6 @@
+import json
 import os
+from pathlib import Path
 
 
 class Config:
@@ -39,8 +41,16 @@ class Config:
     SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
     SFTP_PORT = os.getenv('SFTP_PORT', '122')
     SFTP_USERNAME = os.getenv('SFTP_USERNAME', 'centos')
-    SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_sftp_private_key')
+    SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_rsa')
     SFTP_KEY = os.getenv('SFTP_KEY', None)
-    SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'secret')
+    SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'dummy_secret')
     SUPPLIER_B_DIRECTORY = os.getenv('SUPPLIER_B_DIRECTORY', 'supplier_A/print_services/')
     SUPPLIER_A_DIRECTORY = os.getenv('SUPPLIER_A_DIRECTORY', 'supplier_B/print_services/')
+
+    SUPPLIER_KEY_DIRECTORY = Path(os.getenv('SUPPLIER_KEY_DIRECTORY') or Path(__file__).parent.joinpath('dummy_keys'))
+    SUPPLIER_CONFIG_JSON_PATH = Path(
+        os.getenv('SUPPLIER_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath('dummy_supplier_config.json'))
+    SUPPLIERS_CONFIG = json.loads(
+        SUPPLIER_CONFIG_JSON_PATH.read_text())\
+        if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
+
