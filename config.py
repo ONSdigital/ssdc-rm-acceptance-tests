@@ -32,14 +32,14 @@ class Config:
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
     RABBITMQ_INBOUND_QUEUE = os.getenv('RABBITMQ_INBOUND_QUEUE', 'case.sample.inbound')
     RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
-    # RABBITMQ_OUTBOUND_QUEUE = os.getenv('RABBITMQ_OUTBOUND_QUEUE', 'case.sample.outbound')
+
     RABBITMQ_INBOUND_EXCHANGE = os.getenv('RABBITMQ_INBOUND_EXCHANGE', 'inbound-exchange')
     RABBITMQ_INBOUND_ROUTING_KEY = os.getenv('RABBITMQ_INBOUND_ROUTING_KEY',
                                              'case.sample.inbound')
-    # RABBITMQ_OUTBOUND_ROUTING_KEY = os.getenv('RABBITMQ_OUTBOUND_ROUTING_KEY',
-    #                                           'case.sample.outbound')
 
     RABBITMQ_RESPONSE_QUEUE = os.getenv('RABBITMQ_RESPONSE_QUEUE', 'Case.Responses')
+    RABBITMQ_REFUSAL_QUEUE = os.getenv('RABBITMQ_REFUSAL_QUEUE', 'case.refusals')
+    RABBITMQ_INVALID_ADDRESS_QUEUE = os.getenv('RABBITMQ_INVALID_ADDRESS_QUEUE', 'case.invalidaddress')
 
     RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'case.rh.uac')
     RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'case.rh.case')

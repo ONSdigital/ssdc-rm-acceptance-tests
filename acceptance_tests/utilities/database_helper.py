@@ -5,15 +5,8 @@ import psycopg2
 from config import Config
 
 
-def connect_to_db():
-    return psycopg2.connect(
-        f"dbname='{Config.DB_NAME}' user={Config.DB_USERNAME} host='{Config.DB_HOST_CASE}' "
-        f"password={Config.DB_PASSWORD} port='{Config.DB_PORT}'{Config.DB_CASE_CERTIFICATES}")
-
-
-def _poll_database_with_timeout(query, query_vars: tuple, result_success_callback, pg_connection, timeout):
+def _poll_database_with_timeout(query, query_vars: tuple, result_success_callback, cur, timeout):
     timeout_deadline = time.time() + timeout
-    cur = pg_connection.cursor()
     while True:
         cur.execute(query, vars=query_vars)
         db_result = cur.fetchall()
@@ -35,8 +28,8 @@ def poll_database_with_timeout(query, query_vars: tuple, result_success_callback
         :param timeout: Timeout period in seconds (default 60s)
         :return: None
     """
-    pg_connection = connect_to_db()
-    _poll_database_with_timeout(query, query_vars, result_success_callback, pg_connection, timeout)
+    with open_write_cursor() as cur:
+        _poll_database_with_timeout(query, query_vars, result_success_callback, cur, timeout)
 
 
 @contextlib.contextmanager
