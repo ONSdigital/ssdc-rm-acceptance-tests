@@ -2,44 +2,20 @@ import os
 
 
 class Config:
-    PROTOCOL = os.getenv('PROTOCOL', 'http')
-
-    CASE_PROCESSOR_HOST = os.getenv('CASE_PROCESSOR_HOST', 'localhost')
-    CASE_PROCESSOR_PORT = os.getenv('CASE_PROCESSOR_PORT', '8080')
-    CASE_PROCESSOR = f'{PROTOCOL}://{CASE_PROCESSOR_HOST}:{CASE_PROCESSOR_PORT}'
-
-    SECURITY_USER_NAME = os.getenv('SECURITY_USER_NAME', 'admin')
-    SECURITY_USER_PASSWORD = os.getenv('SECURITY_USER_PASSWORD', 'secret')
-    BASIC_AUTH = (SECURITY_USER_NAME, SECURITY_USER_PASSWORD)
-
-    PROTOCOL = os.getenv('PROTOCOL', 'http')
-
-    # # Postgres
-    # POSTGRES_PASSWORD = postgres
-    # POSTGRES_USERNAME = postgres
-    # POSTGRES_HOST = postgres
-    # POSTGRES_PORT = 5432
-    # EX_POSTGRES_PORT = 6432
-
-    # # Rabbit
-    # RABBIT_HOST = rabbitmq
-    # RABBIT_PORT = 5672
-    # EX_RABBIT_PORT = 6671 - 6672
-
     RABBITMQ_HOST = os.getenv('RABBITMQ_SERVICE_HOST', 'localhost')
     RABBITMQ_PORT = os.getenv('RABBITMQ_SERVICE_PORT', '6672')
     RABBITMQ_HTTP_PORT = os.getenv('RABBITMQ_HTTP_PORT', '16672')
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
-    RABBITMQ_INBOUND_QUEUE = os.getenv('RABBITMQ_INBOUND_QUEUE', 'case.sample.inbound')
+
     RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
 
-    RABBITMQ_INBOUND_EXCHANGE = os.getenv('RABBITMQ_INBOUND_EXCHANGE', 'inbound-exchange')
-    RABBITMQ_INBOUND_ROUTING_KEY = os.getenv('RABBITMQ_INBOUND_ROUTING_KEY',
-                                             'case.sample.inbound')
+    RABBITMQ_EVENT_EXCHANGE = os.getenv('RABBITMQ_EVENT_EXCHANGE', 'events')
 
     RABBITMQ_RESPONSE_QUEUE = os.getenv('RABBITMQ_RESPONSE_QUEUE', 'Case.Responses')
     RABBITMQ_REFUSAL_QUEUE = os.getenv('RABBITMQ_REFUSAL_QUEUE', 'case.refusals')
     RABBITMQ_INVALID_ADDRESS_QUEUE = os.getenv('RABBITMQ_INVALID_ADDRESS_QUEUE', 'case.invalidaddress')
+    RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY = os.getenv('RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY',
+                                                     'event.response.authentication')
 
     RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'case.rh.uac')
     RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'case.rh.case')

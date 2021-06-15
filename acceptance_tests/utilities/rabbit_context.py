@@ -14,7 +14,7 @@ class RabbitContext:
         self._exchange = kwargs.get('exchange') or Config.RABBITMQ_EXCHANGE
         self._user = kwargs.get('user') or Config.RABBITMQ_USER
         self._password = kwargs.get('password') or Config.RABBITMQ_PASSWORD
-        self.queue_name = kwargs.get('queue_name') or Config.RABBITMQ_INBOUND_QUEUE
+        self.queue_name = kwargs.get('queue_name')
 
     def __enter__(self):
         self.open_connection()
