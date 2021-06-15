@@ -31,7 +31,7 @@ def check_uac_updated_msg_sets_receipted_qid_to_active(context):
     context.receipting_case_id = uac['caseId']
 
 
-@when("the case has been receipted")
+@when("a case receipt msg is put on the queue")
 def receipting_case(context):
     message = json.dumps(
         {

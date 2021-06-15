@@ -5,7 +5,8 @@ from pathlib import Path
 from behave import given
 from sample_loader.load_sample import load_sample_file
 
-from acceptance_tests.utilities.database_helper import add_survey_and_collex_to_db, poll_database_with_timeout
+from acceptance_tests.utilities.collex_and_survey_helper import add_survey_and_collex_to_db
+from acceptance_tests.utilities.database_helper import poll_database_with_timeout
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -13,7 +14,7 @@ RESOURCE_FILE_PATH = Path(__file__).parents[3].joinpath('resources')
 
 
 @given('sample file "{sample_file}" is loaded successfully')
-def step_impl(context, sample_file):
+def load_sample_file_step(context, sample_file):
     load_sample_file_helper(context, sample_file)
 
     poll_until_sample_is_ingested(context)

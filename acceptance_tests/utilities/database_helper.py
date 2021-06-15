@@ -1,37 +1,13 @@
 import time
-import uuid
-
 import psycopg2
-from datetime import datetime
 
 from config import Config
 
 
-def _connect_to_db():
+def connect_to_db():
     return psycopg2.connect(
         f"dbname='{Config.DB_NAME}' user={Config.DB_USERNAME} host='{Config.DB_HOST_CASE}' "
         f"password={Config.DB_PASSWORD} port='{Config.DB_PORT}'{Config.DB_CASE_CERTIFICATES}")
-
-
-def add_survey_and_collex_to_db(context):
-    pg_connection = _connect_to_db()
-    cur = pg_connection.cursor()
-
-    context.survey_id = str(uuid.uuid4())
-    context.survey_name = 'test survey ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    add_survey_query = """INSERT INTO casev3.survey(id, name) VALUES(%s,%s)"""
-    survey_vars = (context.survey_id, context.survey_name)
-    cur.execute(add_survey_query, vars=survey_vars)
-
-    context.collex_id = str(uuid.uuid4())
-    context.collex_name = 'test collex ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    add_collex_query = """INSERT INTO casev3.collection_exercise(id, name, survey_id) VALUES(%s, %s, %s)"""
-    collex_vars = (context.collex_id, context.collex_name, context.survey_id)
-    cur.execute(add_collex_query, collex_vars)
-
-    pg_connection.commit()
-    cur.close()
-    pg_connection.close()
 
 
 def _poll_database_with_timeout(query, query_vars: tuple, result_success_callback, pg_connection, timeout):
@@ -58,5 +34,5 @@ def poll_database_with_timeout(query, query_vars: tuple, result_success_callback
         :param timeout: Timeout period in seconds (default 60s)
         :return: None
     """
-    pg_connection = _connect_to_db()
+    pg_connection = connect_to_db()
     _poll_database_with_timeout(query, query_vars, result_success_callback, pg_connection, timeout)
