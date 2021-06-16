@@ -6,13 +6,19 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("a print file is created")
+@step("a print file is created with correct rows")
 def creating_print_file(context):
-    pack_code = 'pack_code'
-    print_file_row = f'"{context.sample_units[0]["attributes"]["ADDRESS_LINE1"]}"|' \
-                     f'"{context.sample_units[0]["attributes"]["POSTCODE"]}"|' \
-                     f'"{context.uac}"'
-    test_printfile(context, pack_code, print_file_row)
+
+    print_file_row = ''
+    template = context.template.replace('[', '').replace(']', '').replace('"','').split(',')
+
+    for key in template:
+        if key == '__uac__':
+            print_file_row += f'"{context.uac}"'
+        else:
+            print_file_row += f'"{context.sample_units[0]["attributes"][key]}"|'
+
+    test_printfile(context, context.pack_code, print_file_row)
 
 
 @retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)

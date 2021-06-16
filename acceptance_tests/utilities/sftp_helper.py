@@ -33,11 +33,11 @@ class SftpUtility:
         return [
             _file for _file in files
             if f'{prefix}_{period}' in _file.filename
+               and _file.filename.startswith(prefix)
                and _file.filename.endswith(suffix)
                and period_start_time <= datetime.fromtimestamp(_file.st_mtime)
         ]
 
-# TODO Create a supplier mapping to use for getting the files in sftp directory
     def get_files_content_as_list(self, files, prefix, supplier):
         actual_content = []
 

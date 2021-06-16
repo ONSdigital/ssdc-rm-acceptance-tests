@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "599b2159b3119ff2d5ae52f66d155feb3f119783a793ecf109fab8c3055fab56"
+            "sha256": "65cad63ab196327d136449d2ebe814a9a4f9914c77463a94abcc903b76d6e871"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -287,7 +287,7 @@
         "ssdc-rm-toolbox": {
             "editable": true,
             "git": "https://github.com/ONSdigital/ssdc-rm-toolbox",
-            "ref": "d11c0331f7b53b571e6296703be5ca67201f7a41"
+            "ref": "7c99b6bf4bf3aca71bdeb2f5e05a6aa3040741d9"
         },
         "structlog": {
             "hashes": [

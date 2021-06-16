@@ -26,7 +26,7 @@ def load_sample_file_helper(context, sample_file_name):
 
     context.sample_units = [
         json.loads(sample_unit)
-        for sample_unit in sample_units_raw.values()
+        for sample_unit in sample_units_raw
     ]
 
 
