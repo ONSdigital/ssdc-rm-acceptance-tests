@@ -6,19 +6,35 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
+def get_uac_from_case_id(context, caseId):
+    for uac_dto in context.uac_created_events:
+        if uac_dto["payload"]["uac"]['caseId'] == caseId:
+            return uac_dto["payload"]["uac"]['uac']
+
+    test_helper.fail(f"didn't match caseId: {caseId} in context.uac_created_events")
+
+
 @step("a print file is created with correct rows")
 def creating_print_file(context):
+    print_file_rows = []
+    template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
 
-    print_file_row = ''
-    template = context.template.replace('[', '').replace(']', '').replace('"','').split(',')
+    for sample_unit in context.sample_units:
+        print_file_row = ''
 
-    for key in template:
-        if key == '__uac__':
-            print_file_row += f'"{context.uac}"'
-        else:
-            print_file_row += f'"{context.sample_units[0]["attributes"][key]}"|'
+        for key in template:
+            if key == '__uac__':
+                uac = get_uac_from_case_id(context, sample_unit['caseId'])
+                print_file_row += f'"{uac}"'
+            else:
+                print_file_row += f'"{sample_unit["sample"][key]}"|'
 
-    test_printfile(context, context.pack_code, print_file_row)
+        print_file_rows.append(print_file_row)
+        # print_file_row += '\n'
+    #         removing trailing |
+
+    test_printfile(context, context.pack_code, print_file_rows)
+
 
 
 @retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)
@@ -28,7 +44,10 @@ def test_printfile(context, pack_code, print_file_row):
     if not actual_file_rows:
         raise FileNotFoundError
 
-    test_helper.assertEquals(actual_file_rows, [print_file_row], 'Print file contents did not match expected')
+    actual_file_rows.sort()
+    print_file_row.sort()
+
+    test_helper.assertEquals(actual_file_rows, print_file_row, 'Print file contents did not match expected')
 
 
 @retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)

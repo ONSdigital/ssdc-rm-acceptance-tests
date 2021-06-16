@@ -21,7 +21,7 @@ def send_invalid_address_msg(context):
                 "invalidAddress": {
                     "reason": "Not found",
                     "notes": "Looked hard",
-                    "caseId": context.case_id
+                    "caseId": context.uac_created_events['caseId']
                 }
             }
         })

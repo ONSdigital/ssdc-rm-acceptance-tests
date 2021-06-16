@@ -19,7 +19,7 @@ def send_survey_launched_msg(context):
             },
             "payload": {
                 "response": {
-                    "questionnaireId": context.questionnaire_id,
+                    "questionnaireId": context.uac_created_events['questionnaireId'],
                     "agentId": "cc_000351"
                 }
             }

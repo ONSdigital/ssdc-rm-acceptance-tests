@@ -1,4 +1,3 @@
-
 import json
 
 from behave import step
@@ -20,7 +19,7 @@ def receipting_case(context):
             },
             "payload": {
                 "response": {
-                    "questionnaireId": context.questionnaire_id,
+                    "questionnaireId": context.uac_created_events['questionnaireId'],
                     "dateTime": "2019-07-07T22:37:11.988+0000"
                 }
             }
@@ -31,3 +30,5 @@ def receipting_case(context):
             message=message,
             content_type='application/json',
             routing_key=Config.RABBITMQ_RESPONSE_QUEUE)
+
+

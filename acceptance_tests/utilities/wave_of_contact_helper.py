@@ -23,5 +23,6 @@ def create_wave_of_contact_in_db(context):
         wave_of_contact_query = """insert into casev3.wave_of_contact(id, classifiers,has_triggered, pack_code,
         print_supplier,template,trigger_date_time
         ,type,collection_exercise_id) values (%s,'1=1', 'f', %s, 'SUPPLIER_A',%s,%s,'PRINT',%s)"""
-        wave_of_contact_vars = (context.woc_uuid, context.pack_code, context.template, trigger_date_time, context.collex_id)
+        wave_of_contact_vars = (context.woc_uuid, context.pack_code, context.template,
+                                trigger_date_time, context.collex_id)
         cur.execute(wave_of_contact_query, vars=wave_of_contact_vars)

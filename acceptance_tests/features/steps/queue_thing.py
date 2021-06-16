@@ -15,11 +15,10 @@ def uac_updated_msg_emitted(context):
 
 
 @step('a case_updated msg is emitted where "{case_field}" is "{expected_field_value}"')
-def case_updated_msg_sent_with_values(context, case_field, expected_field_value, address_level=None, case_type=None,
-                                      another_qid_needed=None):
+def case_updated_msg_sent_with_values(context, case_field, expected_field_value):
     emitted_case = _get_emitted_case(context)
 
-    test_helper.assertEqual(emitted_case['caseId'], context.case_id)
+    test_helper.assertEqual(emitted_case['caseId'], context.uac_created_events['caseId'])
     test_helper.assertEqual(str(emitted_case[case_field]), expected_field_value)
 
 
@@ -27,16 +26,13 @@ def case_updated_msg_sent_with_values(context, case_field, expected_field_value,
 def check_uac_updated_msg_emitted_with_qid_active(context):
     context.uac_created_events = get_uac_updated_events(context, len(context.sample_units))
     _test_uacs_updated_correct(context)
-    uac = context.uac_created[0]
 
-    test_helper.assertTrue(uac['active'])
-    context.questionnaire_id = uac['questionnaireId']
-    context.case_id = uac['caseId']
-    context.uac = uac['uac']
+    for uac in context.uac_created_events:
+        test_helper.assertTrue(uac['payload']['uac']['active'])
 
 
 def _test_uacs_updated_correct(context):
-    case_ids = set(sample_unit['id'] for sample_unit in context.sample_units)
+    case_ids = set(sample_unit['caseId'] for sample_unit in context.sample_units)
     test_helper.assertSetEqual(set(uac['payload']['uac']['caseId'] for uac in context.uac_created_events), case_ids)
 
     test_helper.assertEqual(len(context.uac_created_events), len(context.sample_units))
