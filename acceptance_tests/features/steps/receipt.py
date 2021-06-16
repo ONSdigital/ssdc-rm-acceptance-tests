@@ -30,5 +30,3 @@ def receipting_case(context):
             message=message,
             content_type='application/json',
             routing_key=Config.RABBITMQ_RESPONSE_QUEUE)
-
-

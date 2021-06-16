@@ -30,11 +30,8 @@ def creating_print_file(context):
                 print_file_row += f'"{sample_unit["sample"][key]}"|'
 
         print_file_rows.append(print_file_row)
-        # print_file_row += '\n'
-    #         removing trailing |
 
     test_printfile(context, context.pack_code, print_file_rows)
-
 
 
 @retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)
