@@ -32,4 +32,3 @@ def testing_sftp_stuff(context, pack_code):
         files = sftp_utility.get_all_files_after_time(context.test_start_local_datetime, pack_code, supplier, 'csv.gpg')
         file_rows = sftp_utility.get_files_content_as_list(files, pack_code, supplier)
         return file_rows
-

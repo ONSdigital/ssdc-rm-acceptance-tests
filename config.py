@@ -53,4 +53,3 @@ class Config:
     SUPPLIERS_CONFIG = json.loads(
         SUPPLIER_CONFIG_JSON_PATH.read_text())\
         if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
-
