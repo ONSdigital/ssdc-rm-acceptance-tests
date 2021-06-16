@@ -18,6 +18,7 @@ def load_sample_file_step(context, sample_file):
     load_sample_file_helper(context, sample_file)
 
     poll_until_sample_is_ingested(context)
+    context.first_case_id = context.sample_units[0]['caseId']
 
 
 def load_sample_file_helper(context, sample_file_name):

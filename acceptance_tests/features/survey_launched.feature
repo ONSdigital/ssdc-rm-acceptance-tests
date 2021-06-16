@@ -6,4 +6,4 @@ Feature: launch a survey
     And a wave of contact has been created
     And a uac_updated msg is emitted with active set to true
     When a survey launched msg is put on the queue
-    And a case_updated msg is emitted where "surveyLaunched" is "True"
+    Then a case_updated msg is emitted where "surveyLaunched" is "True"

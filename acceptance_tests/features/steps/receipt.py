@@ -19,7 +19,7 @@ def receipting_case(context):
             },
             "payload": {
                 "response": {
-                    "questionnaireId": context.uac_created_events['questionnaireId'],
+                    "questionnaireId": context.uac_created_events[0]['payload']['uac']['questionnaireId'],
                     "dateTime": "2019-07-07T22:37:11.988+0000"
                 }
             }
