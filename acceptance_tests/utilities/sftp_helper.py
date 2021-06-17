@@ -54,14 +54,6 @@ class SftpUtility:
             decrypted_content = self.decrypt_message(content)
             return decrypted_content.rstrip().split('\n')
 
-    def get_file_contents_as_string(self, file_path):
-        with self._sftp_client.open(file_path) as sftp_file:
-            return sftp_file.read().decode('utf-8')
-
-    def get_file_size(self, file_path):
-        return self._sftp_client.lstat(file_path).st_size
-
-# TODO Get new sftp dummy keys from docker dev to use for decrypting print files
     def decrypt_message(self, message):
         our_key, _ = pgpy.PGPKey.from_file('dummy-key-ssdc-rm-private.asc')
         with our_key.unlock('test'):

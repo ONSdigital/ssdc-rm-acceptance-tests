@@ -2,7 +2,7 @@ import json
 import time
 from pathlib import Path
 
-from behave import given
+from behave import step
 from sample_loader.load_sample import load_sample_file
 
 from acceptance_tests.utilities.collex_and_survey_helper import add_survey_and_collex_to_db
@@ -13,12 +13,12 @@ from config import Config
 RESOURCE_FILE_PATH = Path(__file__).parents[3].joinpath('resources')
 
 
-@given('sample file "{sample_file}" is loaded successfully')
+@step('sample file "{sample_file}" is loaded successfully')
 def load_sample_file_step(context, sample_file):
     load_sample_file_helper(context, sample_file)
 
     poll_until_sample_is_ingested(context)
-    context.first_case_id = context.sample_units[0]['caseId']
+    context.loaded_case_ids = [sample_unit['caseId'] for sample_unit in context.sample_units]
 
 
 def load_sample_file_helper(context, sample_file_name):

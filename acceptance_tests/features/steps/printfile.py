@@ -16,16 +16,17 @@ def get_uac_from_case_id(context, caseId):
 
 @step("a print file is created with correct rows")
 def checking_files_in_sftp(context):
-    print_file_rows = []
-    template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
 
-    getting_expected_print_files(context, print_file_rows, template)
+    template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
+    print_file_rows = getting_expected_print_files(context, template)
 
     check_print_files_are_as_expected(context, context.pack_code, print_file_rows)
 
 
-def getting_expected_print_files(context, print_file_rows, template):
+def getting_expected_print_files(context, template):
     template_len = len(template) - 1
+    print_file_rows = []
+
     for sample_unit in context.sample_units:
         print_file_row = ''
 
@@ -39,6 +40,8 @@ def getting_expected_print_files(context, print_file_rows, template):
                 altered_print_file_row = print_file_row.rstrip(print_file_row[-1])
 
         print_file_rows.append(altered_print_file_row)
+
+    return print_file_rows
 
 
 @retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)

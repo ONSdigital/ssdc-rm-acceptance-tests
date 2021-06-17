@@ -1,7 +1,6 @@
 import json
 
 from behave import step
-
 from acceptance_tests.utilities.rabbit_context import RabbitContext
 from config import Config
 
@@ -21,7 +20,7 @@ def send_invalid_address_msg(context):
                 "invalidAddress": {
                     "reason": "Not found",
                     "notes": "Looked hard",
-                    "caseId": context.first_case_id
+                    "caseId": context.loaded_case_ids[0]
                 }
             }
         })

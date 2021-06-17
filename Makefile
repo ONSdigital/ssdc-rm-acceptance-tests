@@ -7,11 +7,14 @@ package_vulnerability:
 flake:
 	pipenv run flake8 .
 
-lint: flake
+vulture:
+	pipenv run vulture
 
-check: package_vulnerability flake
+lint: flake vulture
 
-test: package_vulnerability flake at_tests
+check: package_vulnerability lint
+
+test: package_vulnerability lint at_tests
 
 at_tests:
 	pipenv run python run.py --log_level WARN

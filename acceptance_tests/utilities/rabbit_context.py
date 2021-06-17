@@ -20,7 +20,7 @@ class RabbitContext:
         self.open_connection()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, *_):
         self.close_connection()
 
     @property

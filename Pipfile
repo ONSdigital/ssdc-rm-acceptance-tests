@@ -16,6 +16,7 @@ pgpy = "*"
 
 [dev-packages]
 "flake8" = "*"
+"vulture" = "*"
 
 [requires]
 python_version = "3.9"
