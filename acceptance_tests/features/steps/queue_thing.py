@@ -22,8 +22,8 @@ def case_updated_msg_sent_with_values(context, case_field, expected_field_value)
     test_helper.assertEqual(str(emitted_case[case_field]), expected_field_value)
 
 
-@step("a uac_updated msg is emitted with active set to true")
-def check_uac_updated_msg_emitted_with_qid_active(context):
+@step("uac_updated msgs are emitted with active set to true")
+def check_uac_updated_msgs_emitted_with_qid_active(context):
     context.uac_created_events = get_uac_updated_events(context, len(context.sample_units))
     _test_uacs_updated_correct(context)
 
@@ -85,8 +85,7 @@ def store_all_uac_updated_msgs_by_collex_id(ch, method, _properties, body, conte
         context.messages_received.append(parsed_body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
     else:
-        # take it, ignore it?
-
+        # take it, ignore it
         ch.basic_nack(delivery_tag=method.delivery_tag)
 
     if len(context.messages_received) == expected_msg_count:
