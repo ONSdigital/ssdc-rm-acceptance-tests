@@ -14,7 +14,7 @@ def create_wave_of_contact_in_db(context):
     context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
     if not hasattr(context, 'template'):
-        context.template = '["ADDRESS_LINE1", "POSTCODE", "__uac__"]'
+        context.template = '["__uac__"]'
 
     if not hasattr(context, 'classifiers'):
         context.classifiers = '1=1'

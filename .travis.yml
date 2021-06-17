@@ -1,0 +1,26 @@
+sudo: required
+
+services:
+  - docker
+
+language: python
+
+python:
+  - "3.9"
+
+install:
+  - pip install pipenv
+  - pipenv install --dev --deploy
+
+script:
+  - make package_vulnerability
+  - make flake
+  - make build
+
+env:
+  global:
+    - PIPENV_IGNORE_VIRTUALENVS=1
+
+branches:
+  only:
+    - main

@@ -13,7 +13,6 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def before_all(_):
-    # reduce log level
     logging.getLogger("pika").setLevel(logging.WARNING)
 
 

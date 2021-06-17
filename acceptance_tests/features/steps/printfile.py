@@ -54,8 +54,6 @@ def check_print_files_are_as_expected(context, pack_code, print_file_row):
     test_helper.assertEquals(actual_file_rows, print_file_row, 'Print file contents did not match expected')
 
 
-# TODO do we need this retry here?
-@retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)
 def get_sftp_files_rows(context, pack_code):
     with SftpUtility() as sftp_utility:
         supplier = Config.SUPPLIERS_CONFIG['SUPPLIER_A'].get('sftpDirectory')
