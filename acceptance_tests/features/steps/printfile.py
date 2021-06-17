@@ -16,7 +16,6 @@ def get_uac_from_case_id(context, caseId):
 
 @step("a print file is created with correct rows")
 def checking_files_in_sftp(context):
-
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
     print_file_rows = getting_expected_print_files(context, template)
 
@@ -62,6 +61,7 @@ def get_sftp_files_rows(context, pack_code):
         supplier = Config.SUPPLIERS_CONFIG['SUPPLIER_A'].get('sftpDirectory')
         files = sftp_utility.get_all_files_after_time(context.test_start_local_datetime, pack_code, supplier, 'csv.gpg')
         file_rows = sftp_utility.get_files_content_as_list(files, pack_code, supplier)
+
         return file_rows
 
 

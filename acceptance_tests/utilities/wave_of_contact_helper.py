@@ -13,12 +13,6 @@ def create_wave_of_contact_in_db(context):
     # We can change/remove this if we get UACS differently or a better solution is found
     context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
-    if not hasattr(context, 'template'):
-        context.template = '["__uac__"]'
-
-    if not hasattr(context, 'classifiers'):
-        context.classifiers = '1=1'
-
     with open_write_cursor() as cur:
         context.woc_uuid = str(uuid.uuid4())
         trigger_date_time = datetime.utcnow()
