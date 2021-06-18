@@ -31,7 +31,6 @@ class Config:
     DB_HOST_CASE = os.getenv('DB_HOST', 'localhost')
     DB_PORT = os.getenv('DB_PORT', '6432')
     DB_NAME = os.getenv('DB_NAME', 'postgres')
-    DB_ACTION_CERTIFICATES = os.getenv('DB_ACTION_CERTIFICATES', '')
     DB_CASE_CERTIFICATES = os.getenv('DB_CASE_CERTIFICATES', '')
 
     EXCEPTIONMANAGER_CONNECTION_HOST = os.getenv('EXCEPTIONMANAGER_CONNECTION_HOST', 'localhost')
@@ -42,12 +41,8 @@ class Config:
     SFTP_PORT = os.getenv('SFTP_PORT', '122')
     SFTP_USERNAME = os.getenv('SFTP_USERNAME', 'centos')
     SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_rsa')
-    SFTP_KEY = os.getenv('SFTP_KEY', None)
     SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'dummy_secret')
-    SUPPLIER_B_DIRECTORY = os.getenv('SUPPLIER_B_DIRECTORY', 'supplier_A/print_services/')
-    SUPPLIER_A_DIRECTORY = os.getenv('SUPPLIER_A_DIRECTORY', 'supplier_B/print_services/')
 
-    SUPPLIER_KEY_DIRECTORY = Path(os.getenv('SUPPLIER_KEY_DIRECTORY') or Path(__file__).parent.joinpath('dummy_keys'))
     SUPPLIER_CONFIG_JSON_PATH = Path(
         os.getenv('SUPPLIER_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath('dummy_supplier_config.json'))
     SUPPLIERS_CONFIG = json.loads(
