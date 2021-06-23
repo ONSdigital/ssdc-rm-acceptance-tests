@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+ssdc-rm-toolbox = {editable = true,git = "https://github.com/ONSdigital/ssdc-rm-toolbox", ref="7c99b6bf4bf3aca71bdeb2f5e05a6aa3040741d9"}
+behave = "*"
+pika = "*"
+structlog = "*"
+requests = "*"
+psycopg2-binary = "*"
+retrying = "*"
+paramiko = "*"
+pgpy = "*"
+
+[dev-packages]
+"flake8" = "*"
+"vulture" = "*"
+
+[requires]
+python_version = "3.9"
