@@ -30,3 +30,9 @@ def receipting_case(context):
             message=message,
             content_type='application/json',
             routing_key=Config.RABBITMQ_RESPONSE_QUEUE)
+
+
+@step("the receipt msg is put on the GCP pubsub")
+def send_receipt(context):
+    _publish_object_finalize(context, questionnaire_id=context.qid_to_receipt)
+    test_helper.assertTrue(context.sent_to_gcp)
