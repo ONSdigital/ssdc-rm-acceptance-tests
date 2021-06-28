@@ -16,6 +16,7 @@ class Config:
     RABBITMQ_RESPONSE_QUEUE = os.getenv('RABBITMQ_RESPONSE_QUEUE', 'events.caseProcessor.response')
     RABBITMQ_REFUSAL_QUEUE = os.getenv('RABBITMQ_REFUSAL_QUEUE', 'events.caseProcessor.refusal')
     RABBITMQ_INVALID_ADDRESS_QUEUE = os.getenv('RABBITMQ_INVALID_ADDRESS_QUEUE', 'events.caseProcessor.invalidAddress')
+    RABBITMQ_FULFILMENT_QUEUE = os.getenv('RABBITMQ_FULFILMENT_QUEUE', 'events.caseProcessor.fulfilment')
     RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY = os.getenv('RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY',
                                                      'events.caseProcessor.surveyLaunched')
 
