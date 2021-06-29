@@ -17,24 +17,23 @@ from config import Config
 RESOURCE_FILE_PATH = Path(__file__).parents[3].joinpath('resources')
 
 
-@step('sample file "{sample_file}" is loaded successfully')
-def load_sample_file_step(context, sample_file):
+@step('sample file "{sample_file_name}" is loaded successfully')
+def load_sample_file_step(context, sample_file_name):
     add_survey_and_collex(context)
 
-    upload_file_via_support_tool(context, sample_file)
-    # load_sample_file_helper(context, sample_file)
+    sample_file_path = RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
+    upload_file_via_support_tool(context, sample_file_path)
 
-    context.loaded_cases = get_emitted_cases(context, 'CASE_CREATED', 1)
+    raw_sample_file_row_count = sum(1 for line in open(sample_file_path))
+    expected_row_count = raw_sample_file_row_count - 1
+
+    context.loaded_cases = get_emitted_cases(context, 'CASE_CREATED', expected_row_count)
 
     # poll_until_sample_is_ingested(context)
     context.loaded_case_ids = [loaded_case['caseId'] for loaded_case in context.loaded_cases]
 
 
-def upload_file_via_support_tool(context, sample_file_name):
-    sample_file_path = RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
-
-    # ('sample_file_name', open('sample_file_name', 'rb')
-
+def upload_file_via_support_tool(context, sample_file_path):
     multipart_data = MultipartEncoder(fields={
         'collectionExerciseId': context.collex_id,
         'file': ('sample_file', open(sample_file_path, 'rb'), 'text/plain')
