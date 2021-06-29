@@ -24,7 +24,7 @@ def case_updated_msg_sent_with_values(context, case_field, expected_field_value)
 
 @step("uac_updated msgs are emitted with active set to true")
 def check_uac_updated_msgs_emitted_with_qid_active(context):
-    context.uac_created_events = get_uac_updated_events(context, len(context.sample_units))
+    context.uac_created_events = get_uac_updated_events(context, len(context.loaded_cases))
     _test_uacs_updated_correct(context)
 
     for uac in context.uac_created_events:
@@ -32,19 +32,35 @@ def check_uac_updated_msgs_emitted_with_qid_active(context):
 
 
 def _test_uacs_updated_correct(context):
-    case_ids = set(sample_unit['caseId'] for sample_unit in context.sample_units)
-    test_helper.assertSetEqual(set(uac['payload']['uac']['caseId'] for uac in context.uac_created_events), case_ids)
+    test_helper.assertSetEqual(set(uac['payload']['uac']['caseId'] for uac in context.uac_created_events),
+                               set(context.loaded_case_ids))
 
-    test_helper.assertEqual(len(context.uac_created_events), len(context.sample_units))
+    test_helper.assertEqual(len(context.uac_created_events), len(context.loaded_cases))
 
 
-def _get_emitted_case(context, type_filter='CASE_UPDATED'):
+# TODO change to get file row count dynamically
+def get_emitted_cases(context, type_filter, expected_msg_count=1):
+    context.messages_received = []
+    start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE,
+                                    functools.partial(
+                                        store_all_msgs_in_context, context=context,
+                                        expected_msg_count=expected_msg_count,
+                                        type_filter=type_filter))
+
+    test_helper.assertEqual(len(context.messages_received), expected_msg_count)
+
+    msgs_received = [message_received['payload']['collectionCase'] for message_received in context.messages_received]
+
+    return msgs_received
+
+
+def _get_emitted_case(context):
     context.messages_received = []
     start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE,
                                     functools.partial(
                                         store_all_msgs_in_context, context=context,
                                         expected_msg_count=1,
-                                        type_filter=type_filter))
+                                        type_filter='CASE_UPDATED'))
 
     test_helper.assertEqual(len(context.messages_received), 1)
 
