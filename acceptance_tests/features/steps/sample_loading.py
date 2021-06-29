@@ -5,7 +5,7 @@ from pathlib import Path
 from behave import step
 from sample_loader.load_sample import load_sample_file
 
-from acceptance_tests.utilities.collex_and_survey_helper import add_survey_and_collex_to_db
+from acceptance_tests.utilities.collex_and_survey_helper import add_survey_and_collex
 from acceptance_tests.utilities.database_helper import poll_database_with_timeout
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -15,6 +15,8 @@ RESOURCE_FILE_PATH = Path(__file__).parents[3].joinpath('resources')
 
 @step('sample file "{sample_file}" is loaded successfully')
 def load_sample_file_step(context, sample_file):
+    add_survey_and_collex(context)
+
     load_sample_file_helper(context, sample_file)
 
     poll_until_sample_is_ingested(context)
@@ -33,7 +35,6 @@ def load_sample_file_helper(context, sample_file_name):
 
 def _load_sample(context, sample_file_name):
     sample_file_path = RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
-    add_survey_and_collex_to_db(context)
     return load_sample_file(sample_file_path, context.collex_id,
                             store_loaded_sample_units=True,
                             host=Config.RABBITMQ_HOST, port=Config.RABBITMQ_PORT,
