@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 retrying = "*"
 paramiko = "*"
 pgpy = "*"
+google-cloud-pubsub = "==1.7.0"
 
 [dev-packages]
 "flake8" = "*"
