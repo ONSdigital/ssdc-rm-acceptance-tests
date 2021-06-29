@@ -9,18 +9,18 @@ class Config:
     RABBITMQ_HTTP_PORT = os.getenv('RABBITMQ_HTTP_PORT', '16672')
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
 
-    RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'case.sample.inbound')
+    RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'supportTool.caseProcessor.sample')
 
     RABBITMQ_EVENT_EXCHANGE = os.getenv('RABBITMQ_EVENT_EXCHANGE', 'events')
 
-    RABBITMQ_RESPONSE_QUEUE = os.getenv('RABBITMQ_RESPONSE_QUEUE', 'Case.Responses')
-    RABBITMQ_REFUSAL_QUEUE = os.getenv('RABBITMQ_REFUSAL_QUEUE', 'case.refusals')
-    RABBITMQ_INVALID_ADDRESS_QUEUE = os.getenv('RABBITMQ_INVALID_ADDRESS_QUEUE', 'case.invalidaddress')
+    RABBITMQ_RESPONSE_QUEUE = os.getenv('RABBITMQ_RESPONSE_QUEUE', 'events.caseProcessor.response')
+    RABBITMQ_REFUSAL_QUEUE = os.getenv('RABBITMQ_REFUSAL_QUEUE', 'events.caseProcessor.refusal')
+    RABBITMQ_INVALID_ADDRESS_QUEUE = os.getenv('RABBITMQ_INVALID_ADDRESS_QUEUE', 'events.caseProcessor.invalidAddress')
     RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY = os.getenv('RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY',
-                                                     'event.response.authentication')
+                                                     'events.caseProcessor.surveyLaunched')
 
-    RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'case.rh.uac')
-    RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'case.rh.case')
+    RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'events.rh.uacUpdate')
+    RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'events.rh.caseUpdate')
 
     RABBITMQ_EXCHANGE = os.getenv('RABBITMQ_EXCHANGE', '')
     RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'guest')
