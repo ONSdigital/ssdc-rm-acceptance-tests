@@ -22,7 +22,7 @@ def request_fulfilment_step(context):
             },
             "payload": {
                 "fulfilment": {
-                    "caseId": context.loaded_case_ids[0],
+                    "caseId": context.emitted_case_ids[0],
                     "fulfilmentCode": context.unique_template_code
                 }
             }
