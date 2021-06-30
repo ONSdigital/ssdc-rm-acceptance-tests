@@ -2,6 +2,7 @@ import json
 
 from behave import step
 
+from acceptance_tests.utilities.event_helper import check_if_event_list_is_exact_match
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -34,3 +35,8 @@ def _publish_object_finalize(context, case_id="0", tx_id="3d14675d-a25d-4672-a0f
                       objectId=tx_id)
 
     context.sent_to_gcp = True
+
+
+@step("the events logged for the receipted case are {expected_event_list}")
+def check_survey_launch_event_logging(context, expected_event_list):
+    check_if_event_list_is_exact_match(expected_event_list, context.loaded_case_ids[0])

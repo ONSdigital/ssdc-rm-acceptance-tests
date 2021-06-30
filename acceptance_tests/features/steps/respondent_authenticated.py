@@ -7,12 +7,12 @@ from acceptance_tests.utilities.rabbit_context import RabbitContext
 from config import Config
 
 
-@step("a survey launched msg is put on the queue")
-def send_survey_launched_msg(context):
+@step("a respondent authenticated msg is put on the queue")
+def send_respondent_authenticated_msg(context):
     message = json.dumps(
         {
             "event": {
-                "type": "SURVEY_LAUNCHED",
+                "type": "RESPONDENT_AUTHENTICATED",
                 "source": "RH",
                 "channel": "RH",
                 "dateTime": "2011-08-12T20:17:46.384Z",
@@ -34,6 +34,6 @@ def send_survey_launched_msg(context):
             routing_key=Config.RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY)
 
 
-@step("the events logged for the survey launched case are {expected_event_list}")
+@step("the events logged for the case the respondent has authenticated against are {expected_event_list}")
 def check_survey_launch_event_logging(context, expected_event_list):
     check_if_event_list_is_exact_match(expected_event_list, context.loaded_case_ids[0])
