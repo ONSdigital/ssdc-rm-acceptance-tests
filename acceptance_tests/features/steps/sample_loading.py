@@ -3,33 +3,50 @@ import time
 from pathlib import Path
 
 import requests
-from requests_toolbelt import MultipartEncoder
-from requests_toolbelt.utils import formdata
 from behave import step
+from requests_toolbelt import MultipartEncoder
 from sample_loader.load_sample import load_sample_file
 
 from acceptance_tests.features.steps.message_listener import get_emitted_cases
 from acceptance_tests.utilities.collex_and_survey_helper import add_survey_and_collex
 from acceptance_tests.utilities.database_helper import poll_database_with_timeout
 from acceptance_tests.utilities.test_case_helper import test_helper
+from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_and_validation_rules
 from config import Config
 
 RESOURCE_FILE_PATH = Path(__file__).parents[3].joinpath('resources')
 
 
+def get_emitted_cases_and_check_against_sample(context, type_filter, sample_rows):
+    loaded_cases = get_emitted_cases(context, type_filter, len(sample_rows))
+
+    for loaded_case in loaded_cases:
+        matched_row = None
+        for sample_row in sample_rows:
+
+            if sample_row == loaded_case['sample']:
+                matched_row = sample_row
+                break
+
+        if matched_row:
+            sample_rows.remove(matched_row)
+        else:
+            test_helper.fail(f"Could not find matching row in the sample data for case: {loaded_case}")
+
+    return loaded_cases
+
+
 @step('sample file "{sample_file_name}" is loaded successfully')
 def load_sample_file_step(context, sample_file_name):
-    add_survey_and_collex(context)
-
     sample_file_path = RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
+    sample_rows, validation_rules = get_sample_rows_and_validation_rules(sample_file_path)
+
+    add_survey_and_collex(context, validation_rules)
+
     upload_file_via_support_tool(context, sample_file_path)
 
-    raw_sample_file_row_count = sum(1 for line in open(sample_file_path))
-    expected_row_count = raw_sample_file_row_count - 1
+    context.loaded_cases = get_emitted_cases_and_check_against_sample(context, 'CASE_CREATED', sample_rows)
 
-    context.loaded_cases = get_emitted_cases(context, 'CASE_CREATED', expected_row_count)
-
-    # poll_until_sample_is_ingested(context)
     context.loaded_case_ids = [loaded_case['caseId'] for loaded_case in context.loaded_cases]
 
 

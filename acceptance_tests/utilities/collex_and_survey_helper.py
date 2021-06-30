@@ -5,7 +5,7 @@ import requests
 from config import Config
 
 
-def add_survey(context):
+def add_survey(context, sample_validation_rules):
     context.survey_id = str(uuid.uuid4())
     context.survey_name = 'test survey ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
@@ -13,49 +13,7 @@ def add_survey(context):
 
     body = {"id": context.survey_id,
             "name": context.survey_name,
-            "sampleValidationRules":
-                [
-                    {
-                        "columnName": "ADDRESS_LINE1",
-                        "rules": [
-                            {
-                                "className": "uk.gov.ons.ssdc.supporttool.validation.MandatoryRule"
-                            },
-                            {
-                                "className": "uk.gov.ons.ssdc.supporttool.validation.LengthRule",
-                                "maxLength": 60
-                            }
-                        ]
-                    },
-                    {
-                        "columnName": "ADDRESS_LINE2",
-                        "rules": [
-                            {
-                                "className": "uk.gov.ons.ssdc.supporttool.validation.LengthRule",
-                                "maxLength": 60
-                            }
-                        ]
-                    },
-                    {
-                        "columnName": "TOWN_NAME",
-                        "rules": [
-                            {
-                                "className": "uk.gov.ons.ssdc.supporttool.validation.MandatoryRule"
-                            }
-                        ]
-                    },
-                    {
-                        "columnName": "POSTCODE",
-                        "rules": [
-                            {
-                                "className": "uk.gov.ons.ssdc.supporttool.validation.MandatoryRule"
-                            },
-                            {
-                                "className": "uk.gov.ons.ssdc.supporttool.validation.AlphanumericRule"
-                            }
-                        ]
-                    }
-                ]}
+            "sampleValidationRules": sample_validation_rules}
 
     response = requests.post(url, auth=Config.BASIC_AUTH, json=body)
     response.raise_for_status()
@@ -71,6 +29,6 @@ def add_collex(context):
     response.raise_for_status()
 
 
-def add_survey_and_collex(context):
-    add_survey(context)
+def add_survey_and_collex(context, sample_validation_rules):
+    add_survey(context, sample_validation_rules)
     add_collex(context)

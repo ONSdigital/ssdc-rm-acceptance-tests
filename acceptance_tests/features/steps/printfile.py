@@ -26,15 +26,15 @@ def getting_expected_print_files(context, template):
     template_len = len(template) - 1
     print_file_rows = []
 
-    for sample_unit in context.sample_units:
+    for loaded_case in context.loaded_cases:
         print_file_row = ''
 
         for index, key in enumerate(template):
             if key == '__uac__':
-                uac = get_uac_from_case_id(context, sample_unit['caseId'])
+                uac = get_uac_from_case_id(context, loaded_case['caseId'])
                 print_file_row += f'"{uac}"|'
             else:
-                print_file_row += f'"{sample_unit["sample"][key]}"|'
+                print_file_row += f'"{loaded_case["sample"][key]}"|'
             if index == template_len:
                 altered_print_file_row = print_file_row.rstrip(print_file_row[-1])
 

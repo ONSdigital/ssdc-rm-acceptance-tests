@@ -38,7 +38,6 @@ def _test_uacs_updated_correct(context):
     test_helper.assertEqual(len(context.uac_created_events), len(context.loaded_cases))
 
 
-# TODO change to get file row count dynamically
 def get_emitted_cases(context, type_filter, expected_msg_count=1):
     context.messages_received = []
     start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE,
@@ -47,7 +46,8 @@ def get_emitted_cases(context, type_filter, expected_msg_count=1):
                                         expected_msg_count=expected_msg_count,
                                         type_filter=type_filter))
 
-    test_helper.assertEqual(len(context.messages_received), expected_msg_count)
+    test_helper.assertEqual(len(context.messages_received), expected_msg_count,
+                            f'Did not find expected number of events, type: {type_filter}')
 
     msgs_received = [message_received['payload']['collectionCase'] for message_received in context.messages_received]
 
