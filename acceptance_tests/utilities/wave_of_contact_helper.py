@@ -1,25 +1,34 @@
+import json
 import random
 import string
 import uuid
 from datetime import datetime
 
-from acceptance_tests.utilities.database_helper import open_write_cursor
+import requests
+
+from config import Config
 
 
-def create_wave_of_contact_in_db(context):
+def create_wave_of_contact(context):
     # whilst WOCs are created to get a UAC for example to receipt, a printfile will still be created after
     # that test has finished, this interferes with other tests as the printfile timestamps is often after the start
-    # of the next test.  By using a unique random pack_code we have better filter options
+    # of the next test.
+    # By using a unique random pack_code we have better filter options
     # We can change/remove this if we get UACS differently or a better solution is found
     context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
-    with open_write_cursor() as cur:
-        context.woc_uuid = str(uuid.uuid4())
-        trigger_date_time = datetime.utcnow()
+    url = f'{Config.SUPPORT_TOOL}/waveOfContacts'
+    body = {
+        'id': str(uuid.uuid4()),
+        'type': 'PRINT',
+        'packCode': context.pack_code,
+        'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
+        'hasTriggered': False,
+        'classifiers': context.classifiers,
+        'template': json.loads(context.template),
+        'printSupplier': 'SUPPLIER_A',
+        'collectionExercise':  'collectionExercises/' + context.collex_id
+    }
 
-        wave_of_contact_query = """insert into casev3.wave_of_contact(id, classifiers,has_triggered, pack_code,
-        print_supplier,template,trigger_date_time
-        ,type,collection_exercise_id) values (%s, %s, 'f', %s, 'SUPPLIER_A',%s,%s,'PRINT',%s)"""
-        wave_of_contact_vars = (context.woc_uuid, context.classifiers, context.pack_code, context.template,
-                                trigger_date_time, context.collex_id)
-        cur.execute(wave_of_contact_query, vars=wave_of_contact_vars)
+    response = requests.post(url, auth=Config.BASIC_AUTH, json=body)
+    response.raise_for_status()

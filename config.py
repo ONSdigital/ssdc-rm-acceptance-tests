@@ -24,13 +24,6 @@ class Config:
     RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'guest')
     RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD', 'guest')
 
-    DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')
-    DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
-    DB_HOST_CASE = os.getenv('DB_HOST', 'localhost')
-    DB_PORT = os.getenv('DB_PORT', '6432')
-    DB_NAME = os.getenv('DB_NAME', 'postgres')
-    DB_CASE_CERTIFICATES = os.getenv('DB_CASE_CERTIFICATES', '')
-
     EXCEPTIONMANAGER_CONNECTION_HOST = os.getenv('EXCEPTIONMANAGER_CONNECTION_HOST', 'localhost')
     EXCEPTIONMANAGER_CONNECTION_PORT = os.getenv('EXCEPTIONMANAGER_CONNECTION_PORT', '8666')
     EXCEPTION_MANAGER_URL = f'http://{EXCEPTIONMANAGER_CONNECTION_HOST}:{EXCEPTIONMANAGER_CONNECTION_PORT}'
