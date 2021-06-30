@@ -10,7 +10,7 @@ from config import Config
 @step("a uac_updated msg is emitted with active set to false")
 def uac_updated_msg_emitted(context):
     emitted_uac = _get_emitted_uac(context)
-    test_helper.assertEqual(emitted_uac['caseId'], context.emitted_case_ids[0])
+    test_helper.assertEqual(emitted_uac['caseId'], context.emitted_cases_id[0])
     test_helper.assertFalse(emitted_uac['active'], 'The UAC_UPDATED message should active flag "false"')
 
 
@@ -33,7 +33,7 @@ def check_uac_updated_msgs_emitted_with_qid_active(context):
 
 def _test_uacs_updated_correct(context):
     test_helper.assertSetEqual(set(uac['payload']['uac']['caseId'] for uac in context.uac_created_events),
-                               set(context.emitted_case_ids))
+                               set(context.emitted_cases_id))
 
     test_helper.assertEqual(len(context.uac_created_events), len(context.emitted_cases))
 

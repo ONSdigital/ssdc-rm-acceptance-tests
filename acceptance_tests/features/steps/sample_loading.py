@@ -43,7 +43,7 @@ def load_sample_file_step(context, sample_file_name):
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(context, 'CASE_CREATED', sample_rows)
 
-    context.emitted_case_ids = [emitted_case['caseId'] for emitted_case in context.emitted_cases]
+    context.emitted_cases_id = [emitted_case['caseId'] for emitted_case in context.emitted_cases]
 
 
 def upload_file_via_support_tool(context, sample_file_path):
