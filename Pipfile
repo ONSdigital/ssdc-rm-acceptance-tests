@@ -12,6 +12,7 @@ psycopg2-binary = "*"
 retrying = "*"
 paramiko = "*"
 pgpy = "*"
+google-cloud-pubsub = "==1.7.0"
 requests-toolbelt = "*"
 
 [dev-packages]
