@@ -5,11 +5,18 @@ import logging
 import requests
 from structlog import wrap_logger
 
+from acceptance_tests.utilities.database_helper import open_write_cursor
 from acceptance_tests.utilities.rabbit_helper import purge_queues
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
+
+
+def purge_fulfilment_triggers():
+    with open_write_cursor() as cur:
+        delete_trigger_query = """DELETE FROM casev3.fulfilment_next_trigger"""
+        cur.execute(delete_trigger_query)
 
 
 def before_all(_):
@@ -20,6 +27,7 @@ def before_scenario(context, _):
     context.test_start_local_datetime = datetime.now()
     context.test_start_utc = datetime.utcnow()
     purge_queues()
+    purge_fulfilment_triggers()
 
 
 def after_all(_context):
