@@ -18,7 +18,6 @@ def before_all(_):
 
 def before_scenario(context, _):
     context.test_start_local_datetime = datetime.now()
-    context.test_start_utc = datetime.utcnow()
     purge_queues()
 
 
