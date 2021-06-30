@@ -14,22 +14,22 @@ RESOURCE_FILE_PATH = Path(__file__).parents[3].joinpath('resources')
 
 
 def get_emitted_cases_and_check_against_sample(context, type_filter, sample_rows):
-    loaded_cases = get_emitted_cases(context, type_filter, len(sample_rows))
+    emitted_cases = get_emitted_cases(context, type_filter, len(sample_rows))
 
-    for loaded_case in loaded_cases:
+    for emitted_case in emitted_cases:
         matched_row = None
         for sample_row in sample_rows:
 
-            if sample_row == loaded_case['sample']:
+            if sample_row == emitted_case['sample']:
                 matched_row = sample_row
                 break
 
         if matched_row:
             sample_rows.remove(matched_row)
         else:
-            test_helper.fail(f"Could not find matching row in the sample data for case: {loaded_case}")
+            test_helper.fail(f"Could not find matching row in the sample data for case: {emitted_case}")
 
-    return loaded_cases
+    return emitted_cases
 
 
 @step('sample file "{sample_file_name}" is loaded successfully')
@@ -41,9 +41,9 @@ def load_sample_file_step(context, sample_file_name):
 
     upload_file_via_support_tool(context, sample_file_path)
 
-    context.loaded_cases = get_emitted_cases_and_check_against_sample(context, 'CASE_CREATED', sample_rows)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(context, 'CASE_CREATED', sample_rows)
 
-    context.loaded_case_ids = [loaded_case['caseId'] for loaded_case in context.loaded_cases]
+    context.emitted_case_ids = [emitted_case['caseId'] for emitted_case in context.emitted_cases]
 
 
 def upload_file_via_support_tool(context, sample_file_path):

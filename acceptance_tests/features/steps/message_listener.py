@@ -10,7 +10,7 @@ from config import Config
 @step("a uac_updated msg is emitted with active set to false")
 def uac_updated_msg_emitted(context):
     emitted_uac = _get_emitted_uac(context)
-    test_helper.assertEqual(emitted_uac['caseId'], context.loaded_case_ids[0])
+    test_helper.assertEqual(emitted_uac['caseId'], context.emitted_case_ids[0])
     test_helper.assertFalse(emitted_uac['active'], 'The UAC_UPDATED message should active flag "false"')
 
 
@@ -24,7 +24,7 @@ def case_updated_msg_sent_with_values(context, case_field, expected_field_value)
 
 @step("uac_updated msgs are emitted with active set to true")
 def check_uac_updated_msgs_emitted_with_qid_active(context):
-    context.uac_created_events = get_uac_updated_events(context, len(context.loaded_cases))
+    context.uac_created_events = get_uac_updated_events(context, len(context.emitted_cases))
     _test_uacs_updated_correct(context)
 
     for uac in context.uac_created_events:
@@ -33,9 +33,9 @@ def check_uac_updated_msgs_emitted_with_qid_active(context):
 
 def _test_uacs_updated_correct(context):
     test_helper.assertSetEqual(set(uac['payload']['uac']['caseId'] for uac in context.uac_created_events),
-                               set(context.loaded_case_ids))
+                               set(context.emitted_case_ids))
 
-    test_helper.assertEqual(len(context.uac_created_events), len(context.loaded_cases))
+    test_helper.assertEqual(len(context.uac_created_events), len(context.emitted_cases))
 
 
 def get_emitted_cases(context, type_filter, expected_msg_count=1):
