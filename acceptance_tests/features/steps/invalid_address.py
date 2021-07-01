@@ -20,7 +20,7 @@ def send_invalid_address_msg(context):
                 "invalidAddress": {
                     "reason": "Not found",
                     "notes": "Looked hard",
-                    "caseId": context.loaded_case_ids[0]
+                    "caseId": context.emitted_cases_id[0]
                 }
             }
         })
