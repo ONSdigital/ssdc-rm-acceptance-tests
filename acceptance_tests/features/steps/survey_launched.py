@@ -2,7 +2,6 @@ import json
 
 from behave import step
 
-from acceptance_tests.utilities.event_helper import check_if_event_list_is_exact_match
 from acceptance_tests.utilities.rabbit_context import RabbitContext
 from config import Config
 
@@ -32,8 +31,3 @@ def send_survey_launched_msg(context):
             message=message,
             content_type='application/json',
             routing_key=Config.RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY)
-
-
-@step("the events logged for the survey launched case are {expected_event_list}")
-def check_survey_launch_event_logging(context, expected_event_list):
-    check_if_event_list_is_exact_match(expected_event_list, context.loaded_case_ids[0])

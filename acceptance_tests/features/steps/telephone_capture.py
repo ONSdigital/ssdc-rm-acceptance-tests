@@ -2,7 +2,6 @@ import requests
 
 from behave import step
 
-from acceptance_tests.utilities.event_helper import check_if_event_list_is_exact_match
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -18,8 +17,3 @@ def request_telephone_capture(context):
 def check_telephone_capture_generated(context, qid_type):
     test_helper.assertIsNotNone(context.telephone_capture_request.get('uac'))
     test_helper.assertEqual(context.telephone_capture_request['qid'][:2], qid_type)
-
-
-@step("the events logged for the case requesting telephone capture are {expected_event_list}")
-def check_survey_launch_event_logging(context, expected_event_list):
-    check_if_event_list_is_exact_match(expected_event_list, context.loaded_case_ids[0])
