@@ -30,5 +30,5 @@ def create_wave_of_contact(context):
         'collectionExercise':  'collectionExercises/' + context.collex_id
     }
 
-    response = requests.post(url, auth=Config.BASIC_AUTH, json=body)
+    response = requests.post(url, json=body)
     response.raise_for_status()

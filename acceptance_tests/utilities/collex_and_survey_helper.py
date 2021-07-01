@@ -15,7 +15,7 @@ def add_survey(context, sample_validation_rules):
             "name": context.survey_name,
             "sampleValidationRules": sample_validation_rules}
 
-    response = requests.post(url, auth=Config.BASIC_AUTH, json=body)
+    response = requests.post(url, json=body)
     response.raise_for_status()
 
 
@@ -25,7 +25,7 @@ def add_collex(context):
 
     url = f'{Config.SUPPORT_TOOL}/collectionExercises'
     body = {'id': context.collex_id, 'name': context.collex_name, 'survey': 'surveys/' + context.survey_id}
-    response = requests.post(url, auth=Config.BASIC_AUTH, json=body)
+    response = requests.post(url, json=body)
     response.raise_for_status()
 
 
