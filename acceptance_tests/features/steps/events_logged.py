@@ -1,6 +1,6 @@
 from behave import step
 
-from acceptance_tests.utilities.event_helper import check_if_event_list_is_exact_match
+from acceptance_tests.utilities.case_api_helper import check_if_event_list_is_exact_match
 
 
 @step("the events logged for the case the respondent has authenticated against are {expected_event_list}")

@@ -1,14 +1,57 @@
-from retrying import retry
+import functools
+import json
 
-from acceptance_tests.utilities.case_api_helper import get_logged_events_for_case_by_id
+from acceptance_tests.utilities.rabbit_helper import start_listening_to_rabbit_queue, store_all_msgs_in_list
 from acceptance_tests.utilities.test_case_helper import test_helper
+from config import Config
 
 
-@retry(stop_max_attempt_number=30, wait_fixed=1000)
-def check_if_event_list_is_exact_match(event_type_list, case_id):
-    actual_logged_events = get_logged_events_for_case_by_id(case_id)
-    expected_logged_event_types = event_type_list.replace('[', '').replace(']', '').split(',')
-    actual_logged_event_types = [event['eventType'] for event in actual_logged_events]
+def get_emitted_case():
+    messages_received = []
+    start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE,
+                                    functools.partial(
+                                        store_all_msgs_in_list, messages_received=messages_received,
+                                        expected_msg_count=1,
+                                        type_filter='CASE_UPDATED'))
 
-    test_helper.assertCountEqual(expected_logged_event_types, actual_logged_event_types,
-                                 msg="Actual logged event types did not match expected")
+    test_helper.assertEqual(len(messages_received), 1)
+
+    return messages_received[0]['payload']['collectionCase']
+
+
+def get_emitted_uac():
+    messages_received = []
+    start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE,
+                                    functools.partial(
+                                        store_all_msgs_in_list, messages_received=messages_received,
+                                        expected_msg_count=1,
+                                        type_filter='UAC_UPDATED'))
+
+    test_helper.assertEqual(len(messages_received), 1, 'Only expected to receive one UAC_UPDATED message')
+
+    return messages_received[0]['payload']['uac']
+
+
+def get_uac_updated_events(context, expected_number):
+    messages_received = []
+    start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE,
+                                    functools.partial(store_all_uac_updated_msgs_by_collex_id,
+                                                      messages_received=messages_received,
+                                                      expected_msg_count=expected_number,
+                                                      collex_id=context.collex_id))
+    return messages_received
+
+
+def store_all_uac_updated_msgs_by_collex_id(ch, method, _properties, body, messages_received, expected_msg_count, collex_id):
+    parsed_body = json.loads(body)
+
+    if (parsed_body['event']['type'] == 'UAC_UPDATED' and
+            parsed_body['payload']['uac']['collectionExerciseId'] == collex_id):
+        messages_received.append(parsed_body)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+    else:
+        # ignore it
+        ch.basic_nack(delivery_tag=method.delivery_tag)
+
+    if len(messages_received) == expected_msg_count:
+        ch.stop_consuming()

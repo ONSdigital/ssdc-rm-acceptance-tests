@@ -1,14 +1,13 @@
 import functools
 import json
 import logging
+from typing import List
 
 import requests
+from structlog import wrap_logger
 
 from acceptance_tests.utilities.rabbit_context import RabbitContext
 from acceptance_tests.utilities.test_case_helper import test_helper
-
-from structlog import wrap_logger
-
 from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -50,15 +49,17 @@ def _get_all_queues():
     return [queue['name'] for queue in response_data]
 
 
-def store_all_msgs_in_context(ch, method, _properties, body, context, expected_msg_count, type_filter=None):
+def store_all_msgs_in_list(ch, method, _properties, body, received_messages: List, expected_msg_count, type_filter=None):
+    """Consumes expected_msg_count number of messages where the event type matches the type_filter
+     and appends them to the received_messages list"""
     parsed_body = json.loads(body)
 
     if type_filter is None or parsed_body['event']['type'] == type_filter:
-        context.messages_received.append(parsed_body)
+        received_messages.append(parsed_body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
     else:
         # take it, ignore it?
         ch.basic_nack(delivery_tag=method.delivery_tag)
 
-    if len(context.messages_received) == expected_msg_count:
+    if len(received_messages) == expected_msg_count:
         ch.stop_consuming()
