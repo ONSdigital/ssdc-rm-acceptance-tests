@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-ssdc-rm-toolbox = {editable = true,git = "https://github.com/ONSdigital/ssdc-rm-toolbox", ref="7c99b6bf4bf3aca71bdeb2f5e05a6aa3040741d9"}
 behave = "*"
 pika = "*"
 structlog = "*"
@@ -14,6 +13,7 @@ retrying = "*"
 paramiko = "*"
 pgpy = "*"
 google-cloud-pubsub = "==1.7.0"
+requests-toolbelt = "*"
 
 [dev-packages]
 "flake8" = "*"

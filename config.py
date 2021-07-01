@@ -9,12 +9,11 @@ class Config:
     RABBITMQ_HTTP_PORT = os.getenv('RABBITMQ_HTTP_PORT', '16672')
     RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
 
-    RABBITMQ_SAMPLE_INBOUND_QUEUE = os.getenv('RABBITMQ_QUEUE', 'supportTool.caseProcessor.sample')
-
     RABBITMQ_EVENT_EXCHANGE = os.getenv('RABBITMQ_EVENT_EXCHANGE', 'events')
 
     RABBITMQ_REFUSAL_QUEUE = os.getenv('RABBITMQ_REFUSAL_QUEUE', 'events.caseProcessor.refusal')
     RABBITMQ_INVALID_ADDRESS_QUEUE = os.getenv('RABBITMQ_INVALID_ADDRESS_QUEUE', 'events.caseProcessor.invalidAddress')
+    RABBITMQ_FULFILMENT_QUEUE = os.getenv('RABBITMQ_FULFILMENT_QUEUE', 'events.caseProcessor.fulfilment')
     RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY = os.getenv('RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY',
                                                      'events.caseProcessor.surveyLaunched')
 
@@ -35,6 +34,10 @@ class Config:
     EXCEPTIONMANAGER_CONNECTION_HOST = os.getenv('EXCEPTIONMANAGER_CONNECTION_HOST', 'localhost')
     EXCEPTIONMANAGER_CONNECTION_PORT = os.getenv('EXCEPTIONMANAGER_CONNECTION_PORT', '8666')
     EXCEPTION_MANAGER_URL = f'http://{EXCEPTIONMANAGER_CONNECTION_HOST}:{EXCEPTIONMANAGER_CONNECTION_PORT}'
+
+    SUPPORT_TOOL_HOST = os.getenv('SUPPORT_TOOL_HOST', 'localhost')
+    SUPPORT_TOOL_PORT = os.getenv('SUPPORT_TOOL_PORT', '9999')
+    SUPPORT_TOOL = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}'
 
     SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
     SFTP_PORT = os.getenv('SFTP_PORT', '122')
