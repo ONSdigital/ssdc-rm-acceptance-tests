@@ -7,4 +7,4 @@ Feature: Respondent authenticating
     And a wave of contact has been created with template "["__uac__"]" and classifiers "1=1"
     And uac_updated msgs are emitted with active set to true
     When a respondent authenticated msg is put on the queue
-    Then the events logged for the case the respondent has authenticated against are [SAMPLE_LOADED,RESPONDENT_AUTHENTICATED]
+    Then the events logged for the case the respondent has authenticated against are [SAMPLE_LOADED,PRINTED_PACK_CODE,RESPONDENT_AUTHENTICATED]

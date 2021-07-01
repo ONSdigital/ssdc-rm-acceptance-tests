@@ -8,4 +8,4 @@ Feature: receipting a case
     When the receipt msg is put on the GCP pubsub
     Then a uac_updated msg is emitted with active set to false
     And a case_updated msg is emitted where "receiptReceived" is "True"
-    And the events logged for the receipted case are [SAMPLE_LOADED,RESPONSE_RECEIVED]
+    And the events logged for the receipted case are [SAMPLE_LOADED,PRINTED_PACK_CODE,RESPONSE_RECEIVED]
