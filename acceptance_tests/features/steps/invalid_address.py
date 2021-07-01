@@ -1,6 +1,7 @@
 import json
 
 from behave import step
+
 from acceptance_tests.utilities.rabbit_context import RabbitContext
 from config import Config
 

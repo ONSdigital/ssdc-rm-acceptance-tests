@@ -7,3 +7,4 @@ Feature: launch a survey
     And uac_updated msgs are emitted with active set to true
     When a survey launched msg is put on the queue
     Then a case_updated msg is emitted where "surveyLaunched" is "True"
+    And the events logged for the survey launched case are [SAMPLE_LOADED,PRINTED_PACK_CODE,SURVEY_LAUNCHED]

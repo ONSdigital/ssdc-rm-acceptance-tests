@@ -7,3 +7,4 @@ Feature: refusing a case
     And uac_updated msgs are emitted with active set to true
     When a case refused msg is put on the queue
     Then a case_updated msg is emitted where "refusalReceived" is "EXTRAORDINARY_REFUSAL"
+    And the events logged for the refused case are [SAMPLE_LOADED,PRINTED_PACK_CODE,REFUSAL_RECEIVED]
