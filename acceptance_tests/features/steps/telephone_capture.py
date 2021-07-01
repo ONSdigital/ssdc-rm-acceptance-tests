@@ -10,6 +10,7 @@ from config import Config
 @step('there is a request for telephone capture of a case')
 def request_telephone_capture(context):
     response = requests.get(f'{Config.CASE_API_CASE_URL}{context.loaded_case_ids[0]}/telephone-capture')
+    response.raise_for_status()
     context.telephone_capture_request = response.json()
 
 
