@@ -1,8 +1,8 @@
 Feature: printfiles created with correct data
 
-  Scenario Outline: A case is loaded, wave of contact triggered and printfile created with differing templates
+  Scenario Outline: A case is loaded, action rule triggered and printfile created with differing templates
     Given sample file "<sample file>" is loaded successfully
-    When a wave of contact has been created with template "<template>" and classifiers "1=1"
+    When an action rule has been created with template "<template>" and classifiers "1=1"
     Then uac_updated msgs are emitted with active set to true
     And a print file is created with correct rows
 
@@ -12,9 +12,9 @@ Feature: printfiles created with correct data
       | business_sample_6_lines.csv      | ["BUSINESS_NAME","TOWN_NAME","__uac__","INDUSTRY"]     |
 
 
-  Scenario Outline: A case is loaded wave of contact triggered and printfile created with differing classifiers
+  Scenario Outline: A case is loaded action rule triggered and printfile created with differing classifiers
     Given sample file "<sample file>" is loaded successfully
-    When a wave of contact has been created with template "["__uac__"]" and classifiers "<classifiers>"
+    When an action rule has been created with template "["__uac__"]" and classifiers "<classifiers>"
     Then a print file is created expected row count of <expected row count>
 
     Examples:
