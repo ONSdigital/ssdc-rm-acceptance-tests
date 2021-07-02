@@ -1,6 +1,6 @@
+import logging
 import time
 from datetime import datetime
-import logging
 
 import requests
 from structlog import wrap_logger

@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from behave import step
 from tenacity import retry, retry_if_exception_type, stop_after_delay, wait_fixed
 
@@ -25,7 +27,14 @@ def get_qid_by_case_id(uac_updated_events, case_id):
 @step("a print file is created with correct rows")
 def check_print_file_in_sftp(context):
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
-    expected_print_file_rows = generate_expected_print_file_rows(template, context.emitted_cases, context.uac_created_events)
+    uac_created_events = context.uac_created_events if hasattr(context, 'uac_created_events') else None
+    test_helper.assertFalse(('__uac__' in template or '__qid__' in template) and not uac_created_events,
+                            'Print file template expects UACs or QIDs but no corresponding uac_created_events found in '
+                            'the scenario context')
+
+    expected_print_file_rows = generate_expected_print_file_rows(template,
+                                                                 context.emitted_cases,
+                                                                 uac_created_events)
 
     actual_print_file_rows = get_print_file_rows_from_sftp(context.test_start_local_datetime, context.pack_code)
     check_print_file_matches_expected(actual_print_file_rows, expected_print_file_rows)
@@ -35,20 +44,23 @@ def generate_expected_print_file_rows(template, cases, uac_updated_events):
     print_file_rows = []
 
     for case in cases:
-        print_file_components = []
+        print_row_components = []
         for field in template:
             if field == '__uac__':
                 uac = get_uac_by_case_id(uac_updated_events, case['caseId'])
-                print_file_components.append(uac)
-            if field == '__qid__':
+                print_row_components.append(uac)
+            elif field == '__qid__':
                 qid = get_qid_by_case_id(uac_updated_events, case['caseId'])
-                print_file_components.append(qid)
+                print_row_components.append(qid)
             else:
-                print_file_components.append(case["sample"][field])
-
-        print_file_rows = '|'.join(print_file_components)
-
+                print_row_components.append(case["sample"][field])
+        print_file_rows.append(format_expected_print_file_row(print_row_components))
     return print_file_rows
+
+
+def format_expected_print_file_row(print_row_components: Iterable[str]):
+    # The print file format is tab separated and always double quote wrapped CSV
+    return '|'.join(f'"{component}"' for component in print_row_components)
 
 
 def check_print_file_matches_expected(actual_print_file, expected_print_file):
@@ -58,7 +70,7 @@ def check_print_file_matches_expected(actual_print_file, expected_print_file):
     test_helper.assertEquals(actual_print_file, expected_print_file, 'Print file contents did not match expected')
 
 
-@retry(retry_if_exception_type(FileNotFoundError), wait=wait_fixed(1), stop=stop_after_delay(120))
+@retry(retry=retry_if_exception_type(FileNotFoundError), wait=wait_fixed(1), stop=stop_after_delay(120))
 def get_print_file_rows_from_sftp(after_datetime, pack_code):
     with SftpUtility() as sftp_utility:
         supplier = Config.SUPPLIERS_CONFIG['SUPPLIER_A'].get('sftpDirectory')
@@ -67,17 +79,3 @@ def get_print_file_rows_from_sftp(after_datetime, pack_code):
         if not print_file_rows:
             raise FileNotFoundError
         return print_file_rows
-
-# @step("a print file is created expected row count of {expected_row_count}")
-# def check_created_printfile_has_correct_number_of_rows(context, expected_row_count):
-#     check_right_number_of_lines_written_to_file(context, expected_row_count)
-#
-#
-# @retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)
-# def check_right_number_of_lines_written_to_file(context, expected_row_count):
-#     actual_file_rows = get_print_file_rows_from_sftp(context, context.pack_code)
-#
-#     if not actual_file_rows:
-#         raise FileNotFoundError
-#
-#     test_helper.assertEquals(len(actual_file_rows), int(expected_row_count))

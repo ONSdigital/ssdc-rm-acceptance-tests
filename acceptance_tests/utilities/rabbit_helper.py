@@ -49,17 +49,20 @@ def _get_all_queues():
     return [queue['name'] for queue in response_data]
 
 
-def store_all_msgs_in_list(ch, method, _properties, body, received_messages: List, expected_msg_count, type_filter=None):
-    """Consumes expected_msg_count number of messages where the event type matches the type_filter
+def store_all_msgs_in_list(ch, method, _properties, body,
+                           messages_received: List = None,
+                           expected_msg_count=None,
+                           type_filter=None):
+    """Consumes expected_msg_count number of messages where t   he event type matches the type_filter
      and appends them to the received_messages list"""
     parsed_body = json.loads(body)
 
     if type_filter is None or parsed_body['event']['type'] == type_filter:
-        received_messages.append(parsed_body)
+        messages_received.append(parsed_body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
     else:
         # take it, ignore it?
         ch.basic_nack(delivery_tag=method.delivery_tag)
 
-    if len(received_messages) == expected_msg_count:
+    if len(messages_received) == expected_msg_count:
         ch.stop_consuming()

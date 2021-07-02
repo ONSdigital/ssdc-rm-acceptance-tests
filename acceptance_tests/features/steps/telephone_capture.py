@@ -1,5 +1,4 @@
 import requests
-
 from behave import step
 
 from acceptance_tests.utilities.test_case_helper import test_helper

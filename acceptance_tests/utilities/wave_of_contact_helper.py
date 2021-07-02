@@ -27,8 +27,9 @@ def create_wave_of_contact(collex_id, classifiers, template):
         'classifiers': classifiers,
         'template': json.loads(template),
         'printSupplier': 'SUPPLIER_A',
-        'collectionExercise':  'collectionExercises/' + collex_id
+        'collectionExercise': 'collectionExercises/' + collex_id
     }
 
     response = requests.post(url, json=body)
     response.raise_for_status()
+    return pack_code
