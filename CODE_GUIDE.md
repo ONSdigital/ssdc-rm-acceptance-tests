@@ -24,6 +24,8 @@ To prevent the context from becoming cluttered and confusing to use we define so
 
 #### Context Index
 
+Every context attribute used by the tests should be described here.
+
 | Attribute                 | Description                                                                                     |
 | ------------------------- | ----------------------------------------------------------------------------------------------- |
 | test_start_local_datetime | Stores the local time at the beginning of each scenario in an environment hook                  |
