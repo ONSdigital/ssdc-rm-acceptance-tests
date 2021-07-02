@@ -2,7 +2,7 @@ import json
 
 from behave import step
 
-from acceptance_tests.utilities.rabbit_context import RabbitContext
+from acceptance_tests.utilities.rabbit_helper import publish_json_message
 from config import Config
 
 
@@ -25,9 +25,5 @@ def send_respondent_authenticated_msg(context):
             }
         }
     )
-
-    with RabbitContext(exchange=Config.RABBITMQ_EVENT_EXCHANGE) as rabbit:
-        rabbit.publish_message(
-            message=message,
-            content_type='application/json',
-            routing_key=Config.RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY)
+    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
+                         routing_key=Config.RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY)

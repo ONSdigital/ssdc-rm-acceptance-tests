@@ -9,7 +9,7 @@ import requests
 from config import Config
 
 
-def create_wave_of_contact(collex_id, classifiers, template):
+def create_print_wave_of_contact(collex_id, classifiers, template):
     # whilst WOCs are created to get a UAC for example to receipt, a printfile will still be created after
     # that test has finished, this interferes with other tests as the printfile timestamps is often after the start
     # of the next test.

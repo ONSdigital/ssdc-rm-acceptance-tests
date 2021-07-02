@@ -5,7 +5,7 @@ from datetime import datetime
 from behave import step
 
 from acceptance_tests.utilities.database_helper import open_write_cursor
-from acceptance_tests.utilities.rabbit_context import RabbitContext
+from acceptance_tests.utilities.rabbit_helper import publish_json_message
 from config import Config
 
 
@@ -27,12 +27,7 @@ def request_print_fulfilment_step(context):
                 }
             }
         })
-
-    with RabbitContext(exchange='') as rabbit:
-        rabbit.publish_message(
-            message=message,
-            content_type='application/json',
-            routing_key=Config.RABBITMQ_FULFILMENT_QUEUE)
+    publish_json_message(message, routing_key=Config.RABBITMQ_FULFILMENT_QUEUE)
 
 
 @step('a print fulfilment template has been created with template "{template}" and print supplier "{supplier}"')

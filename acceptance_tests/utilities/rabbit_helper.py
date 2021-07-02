@@ -13,6 +13,14 @@ from config import Config
 logger = wrap_logger(logging.getLogger(__name__))
 
 
+def publish_json_message(message, routing_key, exchange=''):
+    with RabbitContext(exchange=exchange) as rabbit:
+        rabbit.publish_message(
+            message=message,
+            content_type='application/json',
+            routing_key=routing_key)
+
+
 def start_listening_to_rabbit_queue(queue, on_message_callback, timeout=60):
     rabbit = RabbitContext(queue_name=queue)
     connection = rabbit.open_connection()

@@ -2,7 +2,7 @@ import json
 
 from behave import step
 
-from acceptance_tests.utilities.rabbit_context import RabbitContext
+from acceptance_tests.utilities.rabbit_helper import publish_json_message
 from config import Config
 
 
@@ -27,8 +27,4 @@ def send_refusal_msg(context):
             }
         })
 
-    with RabbitContext(exchange='') as rabbit:
-        rabbit.publish_message(
-            message=message,
-            content_type='application/json',
-            routing_key=Config.RABBITMQ_REFUSAL_QUEUE)
+    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE, routing_key=Config.RABBITMQ_REFUSAL_QUEUE)
