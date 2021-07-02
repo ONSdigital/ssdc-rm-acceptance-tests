@@ -24,7 +24,7 @@ def get_emitted_cases(type_filter, expected_msg_count=1):
     return case_payloads
 
 
-def get_emitted_case():
+def get_emitted_case_update():
     messages_received = []
     start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE,
                                     functools.partial(
@@ -33,12 +33,12 @@ def get_emitted_case():
                                         expected_msg_count=1,
                                         type_filter='CASE_UPDATED'))
 
-    test_helper.assertEqual(len(messages_received), 1)
+    test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one CASE_UPDATED message')
 
     return messages_received[0]['payload']['collectionCase']
 
 
-def get_emitted_uac():
+def get_emitted_uac_update():
     messages_received = []
     start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE,
                                     functools.partial(
@@ -47,7 +47,7 @@ def get_emitted_uac():
                                         expected_msg_count=1,
                                         type_filter='UAC_UPDATED'))
 
-    test_helper.assertEqual(len(messages_received), 1, 'Only expected to receive one UAC_UPDATED message')
+    test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one UAC_UPDATED message')
 
     return messages_received[0]['payload']['uac']
 

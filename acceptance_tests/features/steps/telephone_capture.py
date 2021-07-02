@@ -14,5 +14,7 @@ def request_telephone_capture(context):
 
 @step('a UAC and QID with questionnaire type "{qid_type}" type are generated and returned')
 def check_telephone_capture_generated(context, qid_type):
-    test_helper.assertIsNotNone(context.telephone_capture_request.get('uac'))
-    test_helper.assertEqual(context.telephone_capture_request['qid'][:2], qid_type)
+    test_helper.assertIsNotNone(context.telephone_capture_request.get('uac'),
+                                'The telephone capture response must include a UAC')
+    test_helper.assertEqual(context.telephone_capture_request['qid'][:2], qid_type,
+                            'The telephone capture response must include a QID of the expected type')

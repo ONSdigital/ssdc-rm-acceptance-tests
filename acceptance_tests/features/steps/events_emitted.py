@@ -1,22 +1,26 @@
 from behave import step
 
-from acceptance_tests.utilities.event_helper import get_emitted_case, get_emitted_uac, get_uac_updated_events
+from acceptance_tests.utilities.event_helper import get_emitted_case_update, get_emitted_uac_update, \
+    get_uac_updated_events
 from acceptance_tests.utilities.test_case_helper import test_helper
 
 
 @step("a UAC_UPDATED message is emitted with active set to false")
 def uac_updated_msg_emitted(context):
-    emitted_uac = get_emitted_uac()
-    test_helper.assertEqual(emitted_uac['caseId'], context.emitted_cases_id[0])
+    emitted_uac = get_emitted_uac_update()
+    test_helper.assertEqual(emitted_uac['caseId'], context.emitted_cases_id[0],
+                            'The UAC_UPDATED message case ID must match the first case ID')
     test_helper.assertFalse(emitted_uac['active'], 'The UAC_UPDATED message should active flag "false"')
 
 
 @step('a CASE_UPDATED message is emitted where "{case_field}" is "{expected_field_value}"')
 def case_updated_msg_sent_with_values(context, case_field, expected_field_value):
-    emitted_case = get_emitted_case()
+    emitted_case = get_emitted_case_update()
 
-    test_helper.assertEqual(emitted_case['caseId'], context.emitted_uacs[0]['caseId'])
-    test_helper.assertEqual(str(emitted_case[case_field]), expected_field_value)
+    test_helper.assertEqual(emitted_case['caseId'], context.emitted_cases[0]['caseId'],
+                            'The updated case is expected to be the first stored emitted case')
+    test_helper.assertEqual(str(emitted_case[case_field]), expected_field_value,
+                            'The updated case field must match the expected value')
 
 
 @step("UAC_UPDATED messages are emitted with active set to true")
@@ -46,6 +50,7 @@ def _check_new_uacs_are_active(emitted_uacs):
 
 def _check_uacs_updated_match_cases(uac_updated_events, case_ids):
     test_helper.assertSetEqual(set(uac['caseId'] for uac in uac_updated_events),
-                               set(case_ids))
+                               set(case_ids), 'The UAC updated events should be linked to the given set of case IDs')
 
-    test_helper.assertEqual(len(uac_updated_events), len(case_ids))
+    test_helper.assertEqual(len(uac_updated_events), len(case_ids),
+                            'There should be one and only one UAC updated event for each given case ID')

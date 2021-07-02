@@ -49,3 +49,8 @@ the same file, or the shared code should be factored out into the utilities modu
 
 Steps should be written in full and concise sentences, avoiding unnecessary abbreviations and shorthand. They should be
 as understandable and non-technical possible.
+
+### Assertions
+
+Assertions should use the [`test_helper`](acceptance_tests/utilities/test_case_helper.py) assertion methods and should
+always include a message with relevant data and or explanation.
