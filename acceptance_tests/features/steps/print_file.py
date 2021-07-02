@@ -1,5 +1,5 @@
 from behave import step
-from retrying import retry
+from tenacity import retry, retry_if_exception_type, stop_after_delay, wait_fixed
 
 from acceptance_tests.utilities.sftp_helper import SftpUtility
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -58,7 +58,7 @@ def check_print_file_matches_expected(actual_print_file, expected_print_file):
     test_helper.assertEquals(actual_print_file, expected_print_file, 'Print file contents did not match expected')
 
 
-@retry(retry_on_exception=lambda e: isinstance(e, FileNotFoundError), wait_fixed=1000, stop_max_attempt_number=120)
+@retry(retry_if_exception_type(FileNotFoundError), wait=wait_fixed(1), stop=stop_after_delay(120))
 def get_print_file_rows_from_sftp(after_datetime, pack_code):
     with SftpUtility() as sftp_utility:
         supplier = Config.SUPPLIERS_CONFIG['SUPPLIER_A'].get('sftpDirectory')

@@ -1,5 +1,5 @@
 import requests
-from retrying import retry
+from tenacity import retry, stop_after_delay, wait_fixed
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -12,7 +12,7 @@ def get_logged_events_for_case_by_id(case_id):
     return response_json['caseEvents']
 
 
-@retry(stop_max_attempt_number=30, wait_fixed=1000)
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def check_if_event_list_is_exact_match(event_type_list, case_id):
     actual_logged_events = get_logged_events_for_case_by_id(case_id)
     expected_logged_event_types = event_type_list.replace('[', '').replace(']', '').split(',')
