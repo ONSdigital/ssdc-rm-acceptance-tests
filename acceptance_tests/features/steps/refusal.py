@@ -6,7 +6,7 @@ from acceptance_tests.utilities.rabbit_context import RabbitContext
 from config import Config
 
 
-@step("a case refused msg is put on the queue")
+@step("a REFUSAL_RECEIVED event is received")
 def send_refusal_msg(context):
     message = json.dumps(
         {

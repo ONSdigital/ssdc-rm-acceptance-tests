@@ -6,7 +6,7 @@ from acceptance_tests.utilities.rabbit_context import RabbitContext
 from config import Config
 
 
-@step("a survey launched msg is put on the queue")
+@step("a SURVEY_LAUNCHED event is received")
 def send_survey_launched_msg(context):
     message = json.dumps(
         {

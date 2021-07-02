@@ -6,7 +6,7 @@ from acceptance_tests.utilities.rabbit_context import RabbitContext
 from config import Config
 
 
-@step("a respondent authenticated msg is put on the queue")
+@step("a RESPONDENT_AUTHENTICATED event is received")
 def send_respondent_authenticated_msg(context):
     message = json.dumps(
         {

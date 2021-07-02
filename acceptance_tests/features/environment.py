@@ -19,7 +19,7 @@ def purge_fulfilment_triggers():
         cur.execute(delete_trigger_query)
 
 
-def before_all(_):
+def before_all(_context):
     logging.getLogger("pika").setLevel(logging.WARNING)
 
 
@@ -33,7 +33,7 @@ def after_all(_context):
     purge_queues()
 
 
-def after_scenario(_, scenario):
+def after_scenario(_context, scenario):
     if "clear_for_bad_messages" not in scenario.tags:
         response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessages')
         response.raise_for_status()

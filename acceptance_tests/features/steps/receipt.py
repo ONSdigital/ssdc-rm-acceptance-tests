@@ -7,7 +7,7 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("the receipt msg is put on the GCP pubsub")
+@step("a receipt message is published to the pubsub receipting topic")
 def send_receipt(context):
     _publish_object_finalize(context,
                              questionnaire_id=context.uac_created_events[0]['payload']['uac']['questionnaireId'])

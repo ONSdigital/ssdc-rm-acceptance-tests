@@ -2,8 +2,8 @@ Feature: Print files can be created and sent with correct data
 
   Scenario Outline: A case is loaded, wave of contact triggered and print file created with differing templates
     Given sample file "<sample file>" is loaded successfully
-    When a wave of contact has been created with template "<template>" and classifiers "1=1"
-    Then uac_updated msgs are emitted with active set to true
+    When a print wave of contact has been created with template "<template>" and classifiers "1=1"
+    Then UAC_UPDATED messages are emitted with active set to true
     And a print file is created with correct rows
 
     Examples:
@@ -14,7 +14,7 @@ Feature: Print files can be created and sent with correct data
 
   Scenario Outline: A case is loaded wave of contact triggered and print file created with differing classifiers
     Given sample file "<sample file>" is loaded successfully
-    When a wave of contact has been created with template "["__uac__"]" and classifiers "<classifiers>"
+    When a print wave of contact has been created with template "["__uac__"]" and classifiers "<classifiers>"
     Then a print file is created with correct rows
 #    Then a print file is created expected row count of <expected row count>
 
