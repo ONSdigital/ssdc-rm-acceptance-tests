@@ -10,16 +10,16 @@ from config import Config
 
 def get_uac_by_case_id(uac_updated_events, case_id):
     for uac_dto in uac_updated_events:
-        if uac_dto["payload"]["uac"]['caseId'] == case_id:
-            return uac_dto["payload"]["uac"]['uac']
+        if uac_dto['caseId'] == case_id:
+            return uac_dto['uac']
 
     test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATED events")
 
 
 def get_qid_by_case_id(uac_updated_events, case_id):
     for uac_dto in uac_updated_events:
-        if uac_dto["payload"]["uac"]['caseId'] == case_id:
-            return uac_dto["payload"]["uac"]['questionnaireId']
+        if uac_dto['caseId'] == case_id:
+            return uac_dto['questionnaireId']
 
     test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATED events ")
 
@@ -27,14 +27,14 @@ def get_qid_by_case_id(uac_updated_events, case_id):
 @step("a print file is created with correct rows")
 def check_print_file_in_sftp(context):
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
-    uac_created_events = context.uac_created_events if hasattr(context, 'uac_created_events') else None
-    test_helper.assertFalse(('__uac__' in template or '__qid__' in template) and not uac_created_events,
-                            'Print file template expects UACs or QIDs but no corresponding uac_created_events found in '
+    emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
+    test_helper.assertFalse(('__uac__' in template or '__qid__' in template) and not emitted_uacs,
+                            'Print file template expects UACs or QIDs but no corresponding emitted_uacs found in '
                             'the scenario context')
 
     expected_print_file_rows = generate_expected_print_file_rows(template,
                                                                  context.emitted_cases,
-                                                                 uac_created_events)
+                                                                 emitted_uacs)
 
     actual_print_file_rows = get_print_file_rows_from_sftp(context.test_start_local_datetime, context.pack_code)
     check_print_file_matches_expected(actual_print_file_rows, expected_print_file_rows)

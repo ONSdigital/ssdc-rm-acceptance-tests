@@ -52,14 +52,15 @@ def get_emitted_uac():
     return messages_received[0]['payload']['uac']
 
 
-def get_uac_updated_events(context, expected_number):
+def get_uac_updated_events(collex_id, expected_number):
     messages_received = []
     start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE,
                                     functools.partial(store_all_uac_updated_msgs_by_collex_id,
                                                       messages_received=messages_received,
                                                       expected_msg_count=expected_number,
-                                                      collex_id=context.collex_id))
-    return messages_received
+                                                      collex_id=collex_id))
+    uac_payloads = [uac_event['payload']['uac'] for uac_event in messages_received]
+    return uac_payloads
 
 
 def store_all_uac_updated_msgs_by_collex_id(ch, method, _properties, body,

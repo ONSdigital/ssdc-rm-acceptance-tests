@@ -31,4 +31,3 @@ Feature: Print files can be created and sent with correct data
       | sample file                 | classifiers                                                                             | expected row count |
       | business_sample_6_lines.csv | sample ->> 'ORG_SIZE' = 'HUGE'                                                          | 2                  |
       | business_sample_6_lines.csv | sample ->> 'INDUSTRY' IN ('MARKETING','FRUIT') AND (sample ->>'EMPLOYEES')::INT > 10000 | 3                  |
-
