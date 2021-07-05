@@ -21,7 +21,7 @@ def send_refusal_msg(context):
                 "refusal": {
                     "type": "EXTRAORDINARY_REFUSAL",
                     "collectionCase": {
-                        "caseId": context.emitted_cases_id[0],
+                        "caseId": context.emitted_cases[0]['caseId'],
                     }
                 }
             }

@@ -40,7 +40,6 @@ def load_sample_file_step(context, sample_file_name):
     upload_sample_file(context.collex_id, sample_file_path)
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
-    context.emitted_cases_id = [emitted_case['caseId'] for emitted_case in context.emitted_cases]
 
 
 def upload_sample_file(collex_id, sample_file_path):
