@@ -1,8 +1,8 @@
 Feature: Print files can be created and sent with correct data
 
-  Scenario Outline: A case is loaded, wave of contact triggered and print file created with differing templates with UACs
+  Scenario Outline: A case is loaded, action rule triggered and print file created with differing templates with UACs
     Given sample file "<sample file>" is loaded successfully
-    When a print wave of contact has been created with template "<template>" and classifiers "1=1"
+    When a print action rule has been created with template "<template>" and classifiers "1=1"
     Then UAC_UPDATED messages are emitted with active set to true
     And a print file is created with correct rows
 
@@ -11,9 +11,9 @@ Feature: Print files can be created and sent with correct data
       | social_sample_3_lines_fields.csv | ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE","__uac__"]       |
       | business_sample_6_lines.csv      | ["BUSINESS_NAME","TOWN_NAME","__uac__","__qid__","INDUSTRY"] |
 
-  Scenario Outline: A case is loaded, wave of contact triggered and print file created with differing templates no UACs
+  Scenario Outline: A case is loaded, action rule triggered and print file created with differing templates no UACs
     Given sample file "<sample file>" is loaded successfully
-    When a print wave of contact has been created with template "<template>" and classifiers "1=1"
+    When a print action rule has been created with template "<template>" and classifiers "1=1"
     And a print file is created with correct rows
 
     Examples:
@@ -21,9 +21,9 @@ Feature: Print files can be created and sent with correct data
       | social_sample_3_lines_fields.csv | ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE"] |
       | business_sample_6_lines.csv      | ["BUSINESS_NAME","TOWN_NAME","INDUSTRY"]     |
 
-  Scenario Outline: A case is loaded wave of contact triggered and print file created with differing classifiers
+  Scenario Outline: A case is loaded action rule triggered and print file created with differing classifiers
     Given sample file "<sample file>" is loaded successfully
-    When a print wave of contact has been created with template "["__uac__"]" and classifiers "<classifiers>"
+    When a print action rule has been created with template "["__uac__"]" and classifiers "<classifiers>"
     Then <expected row count> UAC_UPDATED messages are emitted with active set to true
     Then a print file is created with correct rows
 
