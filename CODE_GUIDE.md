@@ -17,10 +17,21 @@ make lint
 We make use of the [Behave Context](https://behave.readthedocs.io/en/stable/tutorial.html#context) object to store data
 that is needed across multiple steps of a scenario.
 
-To prevent the context from becoming cluttered and confusing to use we define some rules for how we interact with it:
+To prevent the context from becoming cluttered and confusing to use, we define some rules for how we interact with it:
 
-- Only step functions and environment hooks should interact with the context attributes
-- Context attributes should be documented in the [Context Index](#Context Index)
+#### Only step functions and environment hooks should interact with the context attributes
+
+Other none step or hook functions shouldn't be passed the entire context and should certainly not modify it. Instead,
+pass in explicit variables from the context and return new ones as required. Try to make all none step functions
+pure/deterministic.
+
+e.g.
+
+```python
+@step('a thing happens')
+def step_to_do_a_thing(context):
+    context.some_var = helper_function(context.emitted_cases[0])
+```
 
 #### Context Index
 
