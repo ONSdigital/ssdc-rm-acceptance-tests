@@ -1,5 +1,3 @@
-from distutils.util import strtobool
-
 from behave import step
 
 from acceptance_tests.utilities.event_helper import get_emitted_case_update, get_emitted_uac_update, \
