@@ -2,7 +2,8 @@ import requests
 from behave import step
 from requests_toolbelt import MultipartEncoder
 
-from acceptance_tests.utilities.collex_and_survey_helper import add_collex, add_survey
+from acceptance_tests.utilities.survey_helper import add_survey
+from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_and_validation_rules
@@ -33,8 +34,8 @@ def load_sample_file_step(context, sample_file_name):
     sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path)
 
-    context.survey_id, context.survey_name = add_survey(sample_validation_rules)
-    context.collex_id, context.collex_name = add_collex(context.survey_id)
+    survey_id = add_survey(sample_validation_rules)
+    context.collex_id = add_collex(survey_id)
 
     upload_sample_file(context.collex_id, sample_file_path)
 

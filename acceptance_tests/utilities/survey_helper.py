@@ -18,15 +18,4 @@ def add_survey(sample_validation_rules):
 
     response = requests.post(url, json=body)
     response.raise_for_status()
-    return survey_id, survey_name
-
-
-def add_collex(survey_id):
-    collex_id = str(uuid.uuid4())
-    collex_name = 'test collex ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-
-    url = f'{Config.SUPPORT_TOOL}/collectionExercises'
-    body = {'id': collex_id, 'name': collex_name, 'survey': 'surveys/' + survey_id}
-    response = requests.post(url, json=body)
-    response.raise_for_status()
-    return collex_id, collex_name
+    return survey_id

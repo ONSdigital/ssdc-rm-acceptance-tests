@@ -29,7 +29,6 @@ Every context attribute used by the tests should be described here.
 | Attribute                 | Description                                                                                     |
 | ------------------------- | ----------------------------------------------------------------------------------------------- |
 | test_start_local_datetime | Stores the local time at the beginning of each scenario in an environment hook                  |
-| survey_id                 | Stores the ID of the survey generated and or used by the scenario                               |
 | collex_id                 | Stores the ID of the collection exercise generated and or used by the scenario                  |
 | emitted_cases             | Stores the collectionCase DTO objects emitted on `CASE_CREATED` events                          |
 | emitted_cases_id          | Stores the case IDs from the emitted `CASE_CREATED` events                                      |
