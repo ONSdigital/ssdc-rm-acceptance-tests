@@ -2,6 +2,7 @@ import json
 import uuid
 from datetime import datetime
 
+import requests
 from behave import step
 
 from acceptance_tests.utilities.database_helper import open_write_cursor
@@ -23,23 +24,11 @@ def request_print_fulfilment_step(context):
             "payload": {
                 "fulfilment": {
                     "caseId": context.emitted_cases[0]['caseId'],
-                    "fulfilmentCode": context.unique_template_code
+                    "packCode": context.pack_code
                 }
             }
         })
     publish_json_message(message, routing_key=Config.RABBITMQ_FULFILMENT_QUEUE)
-
-
-@step('a print fulfilment template has been created with template "{template}" and print supplier "{supplier}"')
-def print_fulfilment_template_step(context, template, supplier):
-    with open_write_cursor() as cur:
-        add_template_query = """INSERT INTO casev3.fulfilment_template
-                                (fulfilment_code, template, print_supplier) VALUES(%s,%s,%s)"""
-        context.unique_template_code = 'AT_TEMPLATE_' + str(uuid.uuid4())
-        context.template = template
-        context.pack_code = context.unique_template_code
-        template_vars = (context.unique_template_code, template, supplier)
-        cur.execute(add_template_query, vars=template_vars)
 
 
 @step('print fulfilments are triggered to be sent for printing')
@@ -48,3 +37,16 @@ def print_fulfilments_trigger_step(context):
         add_trigger_query = """INSERT INTO casev3.fulfilment_next_trigger (id, trigger_date_time) VALUES(%s,%s)"""
         trigger_vars = (str(uuid.uuid4()), datetime.utcnow())
         cur.execute(add_trigger_query, vars=trigger_vars)
+
+
+@step("fulfilments are authorised on print template")
+def authorise_pack_code(context):
+    url = f'{Config.SUPPORT_TOOL}/fulfilmentSurveyPrintTemplates'
+    body = {
+        'id': str(uuid.uuid4()),
+        'survey': 'surveys/' + context.survey_id,
+        'printTemplate': 'printTemplates/' + context.pack_code
+    }
+
+    response = requests.post(url, json=body)
+    response.raise_for_status()

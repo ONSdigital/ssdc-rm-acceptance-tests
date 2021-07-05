@@ -2,7 +2,8 @@ Feature: Print files can be created and sent with correct data
 
   Scenario Outline: A case is loaded, action rule triggered and print file created with differing templates with UACs
     Given sample file "<sample file>" is loaded successfully
-    When a print action rule has been created with template "<template>" and classifiers "1=1"
+    And a print template has been created with template "<template>"
+    When a print action rule has been created with classifiers "1=1"
     Then UAC_UPDATED messages are emitted with active set to true
     And a print file is created with correct rows
 
@@ -13,7 +14,8 @@ Feature: Print files can be created and sent with correct data
 
   Scenario Outline: A case is loaded, action rule triggered and print file created with differing templates no UACs
     Given sample file "<sample file>" is loaded successfully
-    When a print action rule has been created with template "<template>" and classifiers "1=1"
+    And a print template has been created with template "<template>"
+    When a print action rule has been created with classifiers "1=1"
     And a print file is created with correct rows
 
     Examples:
@@ -23,7 +25,8 @@ Feature: Print files can be created and sent with correct data
 
   Scenario Outline: A case is loaded action rule triggered and print file created with differing classifiers
     Given sample file "<sample file>" is loaded successfully
-    When a print action rule has been created with template "["__uac__"]" and classifiers "<classifiers>"
+    And a print template has been created with template "["__uac__"]"
+    When a print action rule has been created with classifiers "<classifiers>"
     Then <expected row count> UAC_UPDATED messages are emitted with active set to true
     Then a print file is created with correct rows
 
