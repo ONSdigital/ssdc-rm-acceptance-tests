@@ -25,15 +25,15 @@ def case_updated_msg_sent_with_values(context, case_field, expected_field_value)
 
 @step("UAC_UPDATED messages are emitted with active set to true")
 def check_uac_updated_msgs_emitted_with_qid_active(context):
-    context.emitted_uacs = get_uac_updated_events(context.collex_id, len(context.emitted_cases))
+    context.emitted_uacs = get_uac_updated_events(len(context.emitted_cases))
     _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
-    _check_new_uacs_are_active(context.emitted_uacs)
+    _check_uac_updated_events(context.emitted_uacs, context.collex_id)
 
 
 @step("{expected_count:d} UAC_UPDATED messages are emitted with active set to true")
 def check_expected_number_of_uac_updated_msgs_emitted(context, expected_count):
-    context.emitted_uacs = get_uac_updated_events(context.collex_id, expected_count)
-    _check_new_uacs_are_active(context.emitted_uacs)
+    context.emitted_uacs = get_uac_updated_events(expected_count)
+    _check_uac_updated_events(context.emitted_uacs, context.collex_id)
 
     included_case_ids = {event['caseId'] for event in context.emitted_uacs}
 
@@ -41,10 +41,15 @@ def check_expected_number_of_uac_updated_msgs_emitted(context, expected_count):
     context.emitted_cases = [case for case in context.emitted_cases if case['caseId'] in included_case_ids]
 
 
-def _check_new_uacs_are_active(emitted_uacs):
+def _check_uac_updated_events(emitted_uacs, collex_id):
     for uac in emitted_uacs:
-        test_helper.assertTrue(uac['active'], f'Newly created UAC QID pairs should be active,'
-                                              f' QID: {uac["questionnaireId"]}')
+        test_helper.assertEqual(uac['collectionExerciseId'], str(collex_id),
+                                f'UAC updates should all be for the current collection exericse,'
+                                f' QID: {uac["questionnaireId"]}')
+        test_helper.assertTrue(uac['active'],
+                               f'Newly created UAC QID pairs should be active, QID: {uac["questionnaireId"]}')
+        test_helper.assertIsNotNone(uac['caseId'], f'Newly created UAC QID pairs should always be linked to a case, '
+                                                   f'QID without link: {uac["questionnaireId"]}')
 
 
 def _check_uacs_updated_match_cases(uac_updated_events, cases):
