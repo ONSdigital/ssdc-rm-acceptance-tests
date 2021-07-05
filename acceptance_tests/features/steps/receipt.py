@@ -3,20 +3,15 @@ import json
 from behave import step
 
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
-from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("the receipt msg is put on the GCP pubsub")
+@step("a receipt message is published to the pubsub receipting topic")
 def send_receipt(context):
-    _publish_object_finalize(context,
-                             questionnaire_id=context.uac_created_events[0]['payload']['uac']['questionnaireId'])
-    test_helper.assertTrue(context.sent_to_gcp)
+    _publish_object_finalize(questionnaire_id=context.emitted_uacs[0]['questionnaireId'])
 
 
-def _publish_object_finalize(context, case_id="0", tx_id="3d14675d-a25d-4672-a0fe-b960586653e8", questionnaire_id="0"):
-    context.sent_to_gcp = False
-
+def _publish_object_finalize(case_id="0", tx_id="3d14675d-a25d-4672-a0fe-b960586653e8", questionnaire_id="0"):
     data = json.dumps({
         "timeCreated": "2008-08-24T00:00:00Z",
         "metadata": {
@@ -32,5 +27,3 @@ def _publish_object_finalize(context, case_id="0", tx_id="3d14675d-a25d-4672-a0f
                       eventType='OBJECT_FINALIZE',
                       bucketId='eq-bucket',
                       objectId=tx_id)
-
-    context.sent_to_gcp = True

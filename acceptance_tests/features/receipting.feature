@@ -1,11 +1,10 @@
-
-Feature: receipting a case
+Feature: A case can be receipted with an event
 
   Scenario: A case is loaded and can be receipted
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
-    And a wave of contact has been created with template "["__uac__"]" and classifiers "1=1"
-    And uac_updated msgs are emitted with active set to true
-    When the receipt msg is put on the GCP pubsub
-    Then a uac_updated msg is emitted with active set to false
-    And a case_updated msg is emitted where "receiptReceived" is "True"
-    And the events logged for the receipted case are [SAMPLE_LOADED,PRINTED_PACK_CODE,RESPONSE_RECEIVED]
+    And a print wave of contact has been created with template "["__uac__"]" and classifiers "1=1"
+    And UAC_UPDATED messages are emitted with active set to true
+    When a receipt message is published to the pubsub receipting topic
+    Then a UAC_UPDATED message is emitted with active set to false
+    And a CASE_UPDATED message is emitted where "receiptReceived" is "True"
+    And the events logged against the case are [SAMPLE_LOADED,PRINTED_PACK_CODE,RESPONSE_RECEIVED]

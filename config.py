@@ -48,7 +48,7 @@ class Config:
     SUPPLIER_CONFIG_JSON_PATH = Path(
         os.getenv('SUPPLIER_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath('dummy_supplier_config.json'))
     SUPPLIERS_CONFIG = json.loads(
-        SUPPLIER_CONFIG_JSON_PATH.read_text())\
+        SUPPLIER_CONFIG_JSON_PATH.read_text()) \
         if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
 
     RECEIPT_TOPIC_PROJECT = os.getenv('RECEIPT_TOPIC_PROJECT', 'project')
@@ -60,3 +60,5 @@ class Config:
     CASEAPI_SERVICE_PORT = os.getenv('CASEAPI_SERVICE_PORT', '8161')
     CASEAPI_SERVICE = f'{PROTOCOL}://{CASEAPI_SERVICE_HOST}:{CASEAPI_SERVICE_PORT}'
     CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
+
+    RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))

@@ -1,4 +1,3 @@
-
 [tool.vulture]
 ignore_decorators = ["@step"]
 ignore_names = ["before_all", "after_all", "before_scenario", "after_scenario"]

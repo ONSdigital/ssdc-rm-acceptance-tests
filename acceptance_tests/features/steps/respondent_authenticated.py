@@ -2,11 +2,11 @@ import json
 
 from behave import step
 
-from acceptance_tests.utilities.rabbit_context import RabbitContext
+from acceptance_tests.utilities.rabbit_helper import publish_json_message
 from config import Config
 
 
-@step("a respondent authenticated msg is put on the queue")
+@step("a RESPONDENT_AUTHENTICATED event is received")
 def send_respondent_authenticated_msg(context):
     message = json.dumps(
         {
@@ -19,15 +19,11 @@ def send_respondent_authenticated_msg(context):
             },
             "payload": {
                 "response": {
-                    "questionnaireId": context.uac_created_events[0]['payload']['uac']['questionnaireId'],
+                    "questionnaireId": context.emitted_uacs[0]['questionnaireId'],
                     "agentId": "cc_000351"
                 }
             }
         }
     )
-
-    with RabbitContext(exchange=Config.RABBITMQ_EVENT_EXCHANGE) as rabbit:
-        rabbit.publish_message(
-            message=message,
-            content_type='application/json',
-            routing_key=Config.RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY)
+    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
+                         routing_key=Config.RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY)

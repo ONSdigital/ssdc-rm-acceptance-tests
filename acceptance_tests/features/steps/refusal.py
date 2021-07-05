@@ -2,11 +2,11 @@ import json
 
 from behave import step
 
-from acceptance_tests.utilities.rabbit_context import RabbitContext
+from acceptance_tests.utilities.rabbit_helper import publish_json_message
 from config import Config
 
 
-@step("a case refused msg is put on the queue")
+@step("a REFUSAL_RECEIVED event is received")
 def send_refusal_msg(context):
     message = json.dumps(
         {
@@ -21,14 +21,10 @@ def send_refusal_msg(context):
                 "refusal": {
                     "type": "EXTRAORDINARY_REFUSAL",
                     "collectionCase": {
-                        "caseId": context.emitted_cases_id[0],
+                        "caseId": context.emitted_cases[0]['caseId'],
                     }
                 }
             }
         })
 
-    with RabbitContext(exchange='') as rabbit:
-        rabbit.publish_message(
-            message=message,
-            content_type='application/json',
-            routing_key=Config.RABBITMQ_REFUSAL_QUEUE)
+    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE, routing_key=Config.RABBITMQ_REFUSAL_QUEUE)
