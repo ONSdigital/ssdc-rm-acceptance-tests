@@ -2,9 +2,9 @@ import requests
 from behave import step
 from requests_toolbelt import MultipartEncoder
 
-from acceptance_tests.utilities.survey_helper import add_survey
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
+from acceptance_tests.utilities.survey_helper import add_survey
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_and_validation_rules
 from config import Config

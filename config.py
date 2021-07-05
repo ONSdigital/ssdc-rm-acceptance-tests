@@ -48,7 +48,7 @@ class Config:
     SUPPLIER_CONFIG_JSON_PATH = Path(
         os.getenv('SUPPLIER_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath('dummy_supplier_config.json'))
     SUPPLIERS_CONFIG = json.loads(
-        SUPPLIER_CONFIG_JSON_PATH.read_text())\
+        SUPPLIER_CONFIG_JSON_PATH.read_text()) \
         if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
 
     RECEIPT_TOPIC_PROJECT = os.getenv('RECEIPT_TOPIC_PROJECT', 'project')

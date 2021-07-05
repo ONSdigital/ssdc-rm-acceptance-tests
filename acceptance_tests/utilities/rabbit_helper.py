@@ -57,20 +57,23 @@ def _get_all_queues():
     return [queue['name'] for queue in response_data]
 
 
-def store_all_msgs_in_list(ch, method, _properties, body,
-                           messages_received: List = None,
-                           expected_msg_count=None,
-                           type_filter=None):
-    """Consumes expected_msg_count number of messages where t   he event type matches the type_filter
-     and appends them to the received_messages list"""
+def store_in_message_list(ch, method, _properties, body,
+                          message_list: List = None,
+                          expected_msg_count: int = None,
+                          type_filter: str = None):
+    """
+    Callback function to parse and store rabbit messages in the passed message_list
+    Stops consumption once it has stored expected_msg_count number of messages
+    If a type_filter is given, only stores events with matching type
+    """
     parsed_body = json.loads(body)
 
     if type_filter is None or parsed_body['event']['type'] == type_filter:
-        messages_received.append(parsed_body)
+        message_list.append(parsed_body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
     else:
         # take it, ignore it?
         ch.basic_nack(delivery_tag=method.delivery_tag)
 
-    if len(messages_received) == expected_msg_count:
+    if len(message_list) == expected_msg_count:
         ch.stop_consuming()
