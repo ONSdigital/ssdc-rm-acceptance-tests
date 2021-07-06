@@ -14,7 +14,7 @@ from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
 
-register_type(Boolean=lambda text: strtobool(text))
+register_type(boolean=lambda text: strtobool(text))
 
 
 def purge_fulfilment_triggers():
