@@ -1,5 +1,3 @@
-from distutils.util import strtobool
-
 from behave import step
 
 from acceptance_tests.utilities.event_helper import get_emitted_case_update, get_emitted_uac_update, \
@@ -25,19 +23,19 @@ def case_updated_msg_sent_with_values(context, case_field, expected_field_value)
                             'The updated case field must match the expected value')
 
 
-@step("UAC_UPDATED messages are emitted with active set to {active}")
+@step("UAC_UPDATED messages are emitted with active set to {active:Boolean}")
 def check_uac_updated_msgs_emitted_with_qid_active(context, active):
     context.emitted_uacs = get_uac_updated_events(len(context.emitted_cases))
     _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
 
-    _check_new_uacs_are_as_expected(context.emitted_uacs, strtobool(active))
+    _check_new_uacs_are_as_expected(context.emitted_uacs, active)
 
 
-@step("{expected_count:d} UAC_UPDATED messages are emitted with active set to {active}")
+@step("{expected_count:d} UAC_UPDATED messages are emitted with active set to {active:Boolean}")
 def check_expected_number_of_uac_updated_msgs_emitted(context, expected_count, active):
     context.emitted_uacs = get_uac_updated_events(expected_count)
 
-    _check_new_uacs_are_as_expected(context.emitted_uacs, strtobool(active))
+    _check_new_uacs_are_as_expected(context.emitted_uacs, active)
 
     included_case_ids = {event['caseId'] for event in context.emitted_uacs}
 
