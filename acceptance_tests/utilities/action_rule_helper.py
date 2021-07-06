@@ -9,7 +9,7 @@ import requests
 from config import Config
 
 
-def create_print_action_rule(collex_id, classifiers, template):
+def create_print_action_rule(collex_id, template, classifiers=None):
     # whilst action rules are created to get a UAC for example to receipt, a printfile will still be created after
     # that test has finished, this interferes with other tests as the printfile timestamps is often after the start
     # of the next test.
@@ -24,7 +24,7 @@ def create_print_action_rule(collex_id, classifiers, template):
         'packCode': pack_code,
         'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
         'hasTriggered': False,
-        'classifiers': classifiers,
+        'classifiers': classifiers if classifiers else '',
         'template': json.loads(template),
         'printSupplier': 'SUPPLIER_A',
         'collectionExercise': 'collectionExercises/' + collex_id
