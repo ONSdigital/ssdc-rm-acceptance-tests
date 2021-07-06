@@ -1,8 +1,10 @@
 import logging
 import time
 from datetime import datetime
+from distutils.util import strtobool
 
 import requests
+from behave import register_type
 from structlog import wrap_logger
 
 from acceptance_tests.utilities.database_helper import open_write_cursor
@@ -11,6 +13,8 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
+
+register_type(boolean=lambda text: strtobool(text))
 
 
 def purge_fulfilment_triggers():
