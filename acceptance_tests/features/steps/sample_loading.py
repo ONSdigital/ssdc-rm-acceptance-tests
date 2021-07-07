@@ -34,8 +34,8 @@ def load_sample_file_step(context, sample_file_name):
     sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path)
 
-    survey_id = add_survey(sample_validation_rules)
-    context.collex_id = add_collex(survey_id)
+    context.survey_id = add_survey(sample_validation_rules)
+    context.collex_id = add_collex(context.survey_id)
 
     upload_sample_file(context.collex_id, sample_file_path)
 

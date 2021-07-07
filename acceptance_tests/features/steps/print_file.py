@@ -1,5 +1,9 @@
+import json
+import random
+import string
 from typing import Iterable
 
+import requests
 from behave import step
 from tenacity import retry, retry_if_exception_type, stop_after_delay, wait_fixed
 
@@ -79,3 +83,22 @@ def get_print_file_rows_from_sftp(after_datetime, pack_code):
         if not print_file_rows:
             raise FileNotFoundError
         return print_file_rows
+
+
+@step('a print template has been created with template "{template}"')
+def create_print_template(context, template):
+    context.template = template
+
+    # By using a unique random pack_code we have better filter options
+    # We can change/remove this if we get UACS differently or a better solution is found
+    context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+
+    url = f'{Config.SUPPORT_TOOL}/printTemplates'
+    body = {
+        'packCode': context.pack_code,
+        'printSupplier': 'SUPPLIER_A',
+        'template': json.loads(template)
+    }
+
+    response = requests.post(url, json=body)
+    response.raise_for_status()
