@@ -39,4 +39,5 @@ def sensitive_data_on_case_changed(context):
         cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (context.emitted_cases[0]['caseId'],))
         result = cur.fetchone()
 
-        test_helper.assertEqual(result[0]['PHONE_NUMBER'], '07898787878', "The phone number should have been updated, but it hasn't been")
+        test_helper.assertEqual(result[0]['PHONE_NUMBER'], '07898787878',
+                                "The phone number should have been updated, but it hasn't been")

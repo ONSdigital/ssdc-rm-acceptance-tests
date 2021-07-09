@@ -30,8 +30,8 @@ def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_row=None):
 
 
 def equal_dicts(d1, d2, ignore_keys):
-    d1_filtered = {k:v for k,v in d1.items() if k not in ignore_keys}
-    d2_filtered = {k:v for k,v in d2.items() if k not in ignore_keys}
+    d1_filtered = {k: v for k, v in d1.items() if k not in ignore_keys}
+    d2_filtered = {k: v for k, v in d2.items() if k not in ignore_keys}
     return d1_filtered == d2_filtered
 
 
@@ -47,8 +47,9 @@ def load_sample_file_step(context, sample_file_name):
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
+
 @step('sample file "{sample_file_name}" with sensitive column {sensitive_column} is loaded successfully')
-def load_sample_file_step(context, sample_file_name, sensitive_column):
+def load_sample_file_step_for_sensitive_data(context, sample_file_name, sensitive_column):
     sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path, sensitive_column)
 
