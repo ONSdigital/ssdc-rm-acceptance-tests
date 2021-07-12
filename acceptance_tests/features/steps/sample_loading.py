@@ -10,14 +10,14 @@ from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_an
 from config import Config
 
 
-def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_row=None):
+def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=None):
     emitted_cases = get_emitted_cases('CASE_CREATED', len(sample_rows))
 
     for emitted_case in emitted_cases:
         matched_row = None
         for sample_row in sample_rows:
 
-            if equal_dicts(sample_row, emitted_case['sample'], sensitive_row):
+            if equal_dicts(sample_row, emitted_case['sample'], sensitive_columns):
                 matched_row = sample_row
                 break
 
@@ -58,7 +58,7 @@ def load_sample_file_step_for_sensitive_data(context, sample_file_name, sensitiv
 
     upload_sample_file(context.collex_id, sample_file_path)
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_column)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, {sensitive_column})
 
 
 def upload_sample_file(collex_id, sample_file_path):

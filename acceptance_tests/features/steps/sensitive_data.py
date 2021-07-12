@@ -9,8 +9,8 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("an UPDATE_SAMPLE_SENSITIVE event is received")
-def send_update_sample_sensitive_msg(context):
+@step("an UPDATE_SAMPLE_SENSITIVE event is received updating the {sensitive_column}")
+def send_update_sample_sensitive_msg(context, sensitive_column):
     message = json.dumps(
         {
             "event": {
@@ -23,17 +23,17 @@ def send_update_sample_sensitive_msg(context):
             "payload": {
                 "updateSampleSensitive": {
                     "caseId": context.emitted_cases[0]['caseId'],
-                    "sampleSensitive": {"PHONE_NUMBER": "07898787878"}
+                    "sampleSensitive": {sensitive_column: "07898787878"}
                 }
             }
         })
 
     publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
-                         routing_key=Config.RABBITMQ_UPDATE_SAMPLE_SENSITIVE_QUEUE)
+                         routing_key=Config.RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY)
 
 
-@step("the sensitive data on the case is changed")
-def sensitive_data_on_case_changed(context):
+@step("the {sensitive_column} in the sensitive data on the case is updated")
+def sensitive_data_on_case_changed(context, sensitive_column):
     sleep(3)
     with open_write_cursor() as cur:
         cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (context.emitted_cases[0]['caseId'],))

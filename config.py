@@ -17,7 +17,7 @@ class Config:
     RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY = os.getenv('RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY',
                                                      'events.caseProcessor.surveyLaunched')
     RABBITMQ_DEACTIVATE_UAC_QUEUE = os.getenv('RABBITMQ_DEACTIVATE_UAC_QUEUE', 'events.caseProcessor.deactivateUac')
-    RABBITMQ_UPDATE_SAMPLE_SENSITIVE_QUEUE = os.getenv('RABBITMQ_UPDATE_SAMPLE_SENSITIVE_QUEUE',
+    RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY = os.getenv('RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY',
                                                        'events.caseProcessor.updateSampleSensitive')
 
     RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'events.rh.uacUpdate')
