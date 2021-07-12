@@ -10,7 +10,7 @@ from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_an
 from config import Config
 
 
-def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=None):
+def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]):
     emitted_cases = get_emitted_cases('CASE_CREATED', len(sample_rows))
 
     for emitted_case in emitted_cases:

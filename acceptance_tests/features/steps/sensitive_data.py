@@ -32,12 +32,16 @@ def send_update_sample_sensitive_msg(context, sensitive_column):
                          routing_key=Config.RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY)
 
 
-@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 @step("the {sensitive_column} in the sensitive data on the case is updated")
 def sensitive_data_on_case_changed(context, sensitive_column):
     with open_write_cursor() as cur:
-        cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (context.emitted_cases[0]['caseId'],))
+        _retry_database_query(context, cur)
         result = cur.fetchone()
 
         test_helper.assertEqual(result[0]['PHONE_NUMBER'], '07898787878',
                                 "The phone number should have been updated, but it hasn't been")
+
+
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+def _retry_database_query(context, cur):
+    cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (context.emitted_cases[0]['caseId'],))
