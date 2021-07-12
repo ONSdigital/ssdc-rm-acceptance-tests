@@ -1,7 +1,7 @@
 import json
-from time import sleep
 
 from behave import step
+from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.utilities.database_helper import open_write_cursor
 from acceptance_tests.utilities.rabbit_helper import publish_json_message
@@ -32,9 +32,9 @@ def send_update_sample_sensitive_msg(context, sensitive_column):
                          routing_key=Config.RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY)
 
 
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 @step("the {sensitive_column} in the sensitive data on the case is updated")
 def sensitive_data_on_case_changed(context, sensitive_column):
-    sleep(3)
     with open_write_cursor() as cur:
         cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (context.emitted_cases[0]['caseId'],))
         result = cur.fetchone()
