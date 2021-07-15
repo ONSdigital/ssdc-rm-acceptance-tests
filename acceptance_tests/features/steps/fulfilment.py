@@ -5,7 +5,7 @@ from datetime import datetime
 import requests
 from behave import step
 
-from acceptance_tests.utilities.database_helper import open_write_cursor
+from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.rabbit_helper import publish_json_message
 from config import Config
 
@@ -33,7 +33,7 @@ def request_print_fulfilment_step(context):
 
 @step('print fulfilments are triggered to be sent for printing')
 def print_fulfilments_trigger_step(context):
-    with open_write_cursor() as cur:
+    with open_cursor() as cur:
         add_trigger_query = """INSERT INTO casev3.fulfilment_next_trigger (id, trigger_date_time) VALUES(%s,%s)"""
         trigger_vars = (str(uuid.uuid4()), datetime.utcnow())
         cur.execute(add_trigger_query, vars=trigger_vars)
