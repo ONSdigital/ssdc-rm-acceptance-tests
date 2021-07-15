@@ -28,7 +28,8 @@ def request_print_fulfilment_step(context):
                 }
             }
         })
-    publish_json_message(message, routing_key=Config.RABBITMQ_FULFILMENT_QUEUE)
+    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
+                         routing_key=Config.RABBITMQ_FULFILMENT_ROUTING_KEY)
 
 
 @step('print fulfilments are triggered to be sent for printing')
