@@ -6,4 +6,4 @@ Feature: Handle respondent authenticated events
     And a print action rule has been created
     And UAC_UPDATED messages are emitted with active set to true
     When a RESPONDENT_AUTHENTICATED event is received
-    Then the events logged against the case are [SAMPLE_LOADED,PRINTED_PACK_CODE,RESPONDENT_AUTHENTICATED]
+    Then the events logged against the case are [CASE_CREATED,PRINTED_PACK_CODE,RESPONDENT_AUTHENTICATED]
