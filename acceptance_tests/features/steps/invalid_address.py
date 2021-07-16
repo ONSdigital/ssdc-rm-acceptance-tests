@@ -27,4 +27,4 @@ def send_invalid_address_msg(context):
         })
 
     publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
-                         routing_key=Config.RABBITMQ_INVALID_ADDRESS_QUEUE)
+                         routing_key=Config.RABBITMQ_INVALID_ADDRESS_ROUTING_KEY)

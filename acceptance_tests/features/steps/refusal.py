@@ -27,4 +27,5 @@ def send_refusal_msg(context):
             }
         })
 
-    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE, routing_key=Config.RABBITMQ_REFUSAL_QUEUE)
+    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
+                         routing_key=Config.RABBITMQ_REFUSAL_ROUTING_KEY)

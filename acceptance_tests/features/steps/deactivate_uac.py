@@ -25,4 +25,4 @@ def step_impl(context):
         })
 
     publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
-                         routing_key=Config.RABBITMQ_DEACTIVATE_UAC_QUEUE)
+                         routing_key=Config.RABBITMQ_DEACTIVATE_UAC_ROUTING_KEY)

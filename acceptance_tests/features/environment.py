@@ -7,7 +7,7 @@ import requests
 from behave import register_type
 from structlog import wrap_logger
 
-from acceptance_tests.utilities.database_helper import open_write_cursor
+from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.rabbit_helper import purge_queues
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -18,7 +18,7 @@ register_type(boolean=lambda text: strtobool(text))
 
 
 def purge_fulfilment_triggers():
-    with open_write_cursor() as cur:
+    with open_cursor() as cur:
         delete_trigger_query = """DELETE FROM casev3.fulfilment_next_trigger"""
         cur.execute(delete_trigger_query)
 
