@@ -14,7 +14,9 @@ def add_survey(sample_validation_rules):
 
     body = {"id": survey_id,
             "name": survey_name,
-            "sampleValidationRules": sample_validation_rules}
+            "sampleValidationRules": sample_validation_rules,
+            "sampleWithHeaderRow": True,
+            "sampleSeparator": ','}
 
     response = requests.post(url, json=body)
     response.raise_for_status()
