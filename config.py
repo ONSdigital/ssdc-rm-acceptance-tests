@@ -11,14 +11,14 @@ class Config:
 
     RABBITMQ_EVENT_EXCHANGE = os.getenv('RABBITMQ_EVENT_EXCHANGE', 'events')
 
-    RABBITMQ_REFUSAL_QUEUE = os.getenv('RABBITMQ_REFUSAL_QUEUE', 'events.caseProcessor.refusal')
-    RABBITMQ_INVALID_ADDRESS_QUEUE = os.getenv('RABBITMQ_INVALID_ADDRESS_QUEUE', 'events.caseProcessor.invalidAddress')
-    RABBITMQ_FULFILMENT_QUEUE = os.getenv('RABBITMQ_FULFILMENT_QUEUE', 'events.caseProcessor.fulfilment')
+    RABBITMQ_REFUSAL_ROUTING_KEY = os.getenv('RABBITMQ_REFUSAL_ROUTING_KEY', 'events.refusal')
+    RABBITMQ_INVALID_ADDRESS_ROUTING_KEY = os.getenv('RABBITMQ_INVALID_ADDRESS_ROUTING_KEY', 'events.invalidAddress')
+    RABBITMQ_FULFILMENT_ROUTING_KEY = os.getenv('RABBITMQ_FULFILMENT_ROUTING_KEY', 'events.fulfilment')
     RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY = os.getenv('RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY',
-                                                     'events.caseProcessor.surveyLaunched')
-    RABBITMQ_DEACTIVATE_UAC_QUEUE = os.getenv('RABBITMQ_DEACTIVATE_UAC_QUEUE', 'events.caseProcessor.deactivateUac')
+                                                     'events.surveyLaunched')
+    RABBITMQ_DEACTIVATE_UAC_ROUTING_KEY = os.getenv('RABBITMQ_DEACTIVATE_UAC_ROUTING_KEY', 'events.deactivateUac')
     RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY = os.getenv('RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY',
-                                                             'events.caseProcessor.updateSampleSensitive')
+                                                             'events.updateSampleSensitive')
 
     RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'events.rh.uacUpdate')
     RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'events.rh.caseUpdate')
