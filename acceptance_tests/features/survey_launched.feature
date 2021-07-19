@@ -7,4 +7,4 @@ Feature: Handle survey launch events
     And UAC_UPDATED messages are emitted with active set to true
     When a SURVEY_LAUNCHED event is received
     Then a CASE_UPDATED message is emitted where "surveyLaunched" is "True"
-    And the events logged against the case are [SAMPLE_LOADED,PRINTED_PACK_CODE,SURVEY_LAUNCHED]
+    And the events logged against the case are [CASE_CREATED,PRINTED_PACK_CODE,SURVEY_LAUNCHED]

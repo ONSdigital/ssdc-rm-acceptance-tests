@@ -8,4 +8,4 @@ Feature: Fulfilments can be requested for a case
     When print fulfilments are triggered to be sent for printing
     Then UAC_UPDATED messages are emitted with active set to true
     And a print file is created with correct rows
-    And the events logged against the case are [SAMPLE_LOADED,PRINTED_PACK_CODE,FULFILMENT]
+    And the events logged against the case are [CASE_CREATED,PRINTED_PACK_CODE,FULFILMENT]

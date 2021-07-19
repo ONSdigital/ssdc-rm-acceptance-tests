@@ -8,4 +8,4 @@ Feature: A case can be receipted with an event
     When a receipt message is published to the pubsub receipting topic
     Then a UAC_UPDATED message is emitted with active set to false
     And a CASE_UPDATED message is emitted where "receiptReceived" is "True"
-    And the events logged against the case are [SAMPLE_LOADED,PRINTED_PACK_CODE,RESPONSE_RECEIVED]
+    And the events logged against the case are [CASE_CREATED,PRINTED_PACK_CODE,RESPONSE_RECEIVED]
