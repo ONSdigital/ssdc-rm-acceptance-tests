@@ -1,3 +1,6 @@
+import csv
+from pathlib import Path
+
 import requests
 from behave import step
 from requests_toolbelt import MultipartEncoder
@@ -41,6 +44,57 @@ def load_sample_file_step(context, sample_file_name):
     sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path)
 
     context.survey_id = add_survey(sample_validation_rules)
+    context.collex_id = add_collex(context.survey_id)
+
+    upload_sample_file(context.collex_id, sample_file_path)
+
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+
+
+def get_business_sample_columns_and_validation_rules(sample_file_path: Path):
+    sample_columns = ["ruref",
+                      "checkletter",
+                      "frosic92",
+                      "rusic92",
+                      "frosic2007",
+                      "rusic2007",
+                      "froempment",
+                      "frotover",
+                      "entref",
+                      "legalstatus",
+                      "entrepmkr",
+                      "region",
+                      "birthdate",
+                      "entname1",
+                      "entname2",
+                      "entname3",
+                      "runame1",
+                      "runame2",
+                      "runame3",
+                      "tradstyle1",
+                      "tradstyle2",
+                      "tradstyle3",
+                      "seltype",
+                      "inclexcl",
+                      "cell_no",
+                      "formtype",
+                      "currency"]
+
+    validation_rules = [{'columnName': column, 'rules': []} for column in sample_columns]
+
+    with open(sample_file_path) as sample_file:
+        reader = csv.DictReader(sample_file, fieldnames=sample_columns, delimiter=':')
+        sample_rows = [row for row in reader]
+
+    return sample_rows, validation_rules
+
+
+@step('business sample file is loaded successfully')
+def load_business_sample_file_step(context):
+    sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', 'business_rsi_example_sample.csv')
+    sample_rows, validation_rules = get_business_sample_columns_and_validation_rules(sample_file_path)
+
+    context.survey_id = add_survey(validation_rules, False, ':')
     context.collex_id = add_collex(context.survey_id)
 
     upload_sample_file(context.collex_id, sample_file_path)
