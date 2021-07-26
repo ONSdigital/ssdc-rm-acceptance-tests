@@ -40,7 +40,7 @@ class Config:
 
     SUPPORT_TOOL_HOST = os.getenv('SUPPORT_TOOL_HOST', 'localhost')
     SUPPORT_TOOL_PORT = os.getenv('SUPPORT_TOOL_PORT', '9999')
-    SUPPORT_TOOL = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}'
+    SUPPORT_TOOL_API = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}/api'
 
     SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
     SFTP_PORT = os.getenv('SFTP_PORT', '122')
