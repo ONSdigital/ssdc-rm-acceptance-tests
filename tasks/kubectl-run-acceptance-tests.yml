@@ -10,11 +10,9 @@ params:
   GCP_PROJECT_NAME:
   KUBERNETES_CLUSTER:
   ACCEPTANCE_TESTS_IMAGE:
-  BATCH_RUNNER_CONFIG:
 
 inputs:
 - name: acceptance-tests-repo
-- name: batch-runner-repo
 
 run:
   path: bash
@@ -42,13 +40,3 @@ run:
       "sleep 2; behave acceptance_tests/features --tags=~@local-docker --tags=~@regression --no-skipped"
 
       kubectl delete pod acceptance-tests || true
-
-      # Run acceptance tests for unaddressed batch
-      # Pre-delete to avoid unintentionally running with an old image
-      kubectl delete deploy qid-batch-runner --force --now || true
-      kubectl apply -f ${BATCH_RUNNER_CONFIG}
-      kubectl rollout status deploy qid-batch-runner --watch=true
-      sleep 60s
-      kubectl exec -it $(kubectl get pods --selector=app=qid-batch-runner -o jsonpath='{.items[*].metadata.name}') \
-      -- /bin/bash /home/qidbatchrunner/run_acceptance_tests.sh
-      kubectl delete deploy qid-batch-runner --force --now

@@ -4,7 +4,8 @@ metadata:
   name: acceptance-tests
   labels:
     app: acceptance-tests
-    env: dev
+    rabbit: "true"
+    database: "true"
 spec:
   serviceAccountName: acceptance-tests
   securityContext:
