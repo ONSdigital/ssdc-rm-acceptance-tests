@@ -10,7 +10,7 @@ def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_
     survey_id = str(uuid.uuid4())
     survey_name = 'test survey ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
-    url = f'{Config.SUPPORT_TOOL}/surveys'
+    url = f'{Config.SUPPORT_TOOL_API}/surveys'
 
     body = {"id": survey_id,
             "name": survey_name,

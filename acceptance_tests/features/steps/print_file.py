@@ -93,7 +93,7 @@ def create_print_template(context, template):
     # We can change/remove this if we get UACS differently or a better solution is found
     context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
-    url = f'{Config.SUPPORT_TOOL}/printTemplates'
+    url = f'{Config.SUPPORT_TOOL_API}/printTemplates'
     body = {
         'packCode': context.pack_code,
         'printSupplier': 'SUPPLIER_A',

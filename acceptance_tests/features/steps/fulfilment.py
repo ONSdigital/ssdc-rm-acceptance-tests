@@ -42,7 +42,7 @@ def print_fulfilments_trigger_step(context):
 
 @step("fulfilments are authorised on print template")
 def authorise_pack_code(context):
-    url = f'{Config.SUPPORT_TOOL}/fulfilmentSurveyPrintTemplates'
+    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyPrintTemplates'
     body = {
         'id': str(uuid.uuid4()),
         'survey': 'surveys/' + context.survey_id,

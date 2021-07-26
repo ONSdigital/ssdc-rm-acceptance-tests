@@ -120,7 +120,7 @@ def upload_sample_file(collex_id, sample_file_path):
         'collectionExerciseId': collex_id,
         'file': ('sample_file', open(sample_file_path, 'rb'), 'text/plain')
     })
-    url = f'{Config.SUPPORT_TOOL}/upload'
+    url = f'{Config.SUPPORT_TOOL_API}/upload'
 
     response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
     response.raise_for_status()

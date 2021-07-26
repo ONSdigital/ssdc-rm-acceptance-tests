@@ -7,7 +7,7 @@ from config import Config
 
 
 def create_print_action_rule(collex_id, classifiers, pack_code):
-    url = f'{Config.SUPPORT_TOOL}/actionRules'
+    url = f'{Config.SUPPORT_TOOL_API}/actionRules'
     body = {
         'id': str(uuid.uuid4()),
         'type': 'PRINT',
@@ -24,7 +24,7 @@ def create_print_action_rule(collex_id, classifiers, pack_code):
 
 
 def setup_deactivate_uac_action_rule(collex_id):
-    url = f'{Config.SUPPORT_TOOL}/actionRules'
+    url = f'{Config.SUPPORT_TOOL_API}/actionRules'
     body = {
         'id': str(uuid.uuid4()),
         'type': 'DEACTIVATE_UAC',
