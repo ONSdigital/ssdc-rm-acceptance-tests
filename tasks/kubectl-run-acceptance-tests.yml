@@ -1,0 +1,42 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: gcr.io/google.com/cloudsdktool/cloud-sdk
+
+params:
+  SERVICE_ACCOUNT_JSON:
+  GCP_PROJECT_NAME:
+  KUBERNETES_CLUSTER:
+  ACCEPTANCE_TESTS_IMAGE:
+
+inputs:
+- name: acceptance-tests-repo
+
+run:
+  path: bash
+  args:
+    - -exc
+    - |
+      cat >~/gcloud-service-key.json <<EOL
+      $SERVICE_ACCOUNT_JSON
+      EOL
+
+      # Use gcloud service account to configure kubectl
+      gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
+      gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
+
+      # Create an acceptance tests pod and run the acceptance tests in it
+      # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
+
+      kubectl delete pod acceptance-tests --wait || true
+
+      kubectl apply -f acceptance-tests-repo/acceptance_tests_pod.yml
+
+      kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
+
+      kubectl exec -it acceptance-tests -- /bin/bash -c \
+      "sleep 2; behave acceptance_tests/features --tags=~@local-docker --tags=~@regression --no-skipped"
+
+      kubectl delete pod acceptance-tests || true

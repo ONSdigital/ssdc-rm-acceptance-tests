@@ -10,3 +10,19 @@ The Python Behave BDD tests for SSDC RM
     ```bash
     make test
     ```
+
+## Run tests against a GCP project
+
+Run the `run_gke.sh` bash script.
+
+NB: assumes infrastructure and services exist in respective projects.
+
+To run a locally-modified version of the acceptance tests in a pod you will have to build and tag the image, push it to the GCR and change the image in [acceptance_tests_pod.yml](./acceptance_tests_pod.yml) to point to your modified image
+```shell script
+IMAGE_TAG=<YOUR_TAG>
+make build
+docker tag eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests:latest eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests:$IMAGE_TAG
+docker push eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests:$IMAGE_TAG
+```
+
+Then run the tests with the run GKE script
