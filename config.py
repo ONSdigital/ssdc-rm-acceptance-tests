@@ -4,28 +4,18 @@ from pathlib import Path
 
 
 class Config:
-    RABBITMQ_HOST = os.getenv('RABBITMQ_SERVICE_HOST', 'localhost')
-    RABBITMQ_PORT = os.getenv('RABBITMQ_SERVICE_PORT', '6672')
-    RABBITMQ_HTTP_PORT = os.getenv('RABBITMQ_HTTP_PORT', '16672')
-    RABBITMQ_VHOST = os.getenv('RABBITMQ_VHOST', '/')
+    PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'project')
+    PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'events.caseProcessor.refusal.topic')
+    PUBSUB_INVALID_ADDRESS_TOPIC = os.getenv('PUBSUB_INVALID_ADDRESS_TOPIC', 'events.caseProcessor.invalidAddress.topic')
+    PUBSUB_FULFILMENT_TOPIC = os.getenv('PUBSUB_FULFILMENT_TOPIC', 'events.caseProcessor.fulfilment.topic')
+    PUBSUB_SURVEY_LAUNCHED_TOPIC = os.getenv('PUBSUB_SURVEY_LAUNCHED_TOPIC',
+                                             'events.caseProcessor.surveyLaunched.topic')
+    PUBSUB_DEACTIVATE_UAC_TOPIC = os.getenv('PUBSUB_DEACTIVATE_UAC_TOPIC', 'events.caseProcessor.deactivateUac.topic')
+    PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC',
+                                                     'events.caseProcessor.updateSampleSensitive.topic')
 
-    RABBITMQ_EVENT_EXCHANGE = os.getenv('RABBITMQ_EVENT_EXCHANGE', 'events')
-
-    RABBITMQ_REFUSAL_ROUTING_KEY = os.getenv('RABBITMQ_REFUSAL_ROUTING_KEY', 'events.refusal')
-    RABBITMQ_INVALID_ADDRESS_ROUTING_KEY = os.getenv('RABBITMQ_INVALID_ADDRESS_ROUTING_KEY', 'events.invalidAddress')
-    RABBITMQ_FULFILMENT_ROUTING_KEY = os.getenv('RABBITMQ_FULFILMENT_ROUTING_KEY', 'events.fulfilment')
-    RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY = os.getenv('RABBITMQ_SURVEY_LAUNCHED_ROUTING_KEY',
-                                                     'events.surveyLaunched')
-    RABBITMQ_DEACTIVATE_UAC_ROUTING_KEY = os.getenv('RABBITMQ_DEACTIVATE_UAC_ROUTING_KEY', 'events.deactivateUac')
-    RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY = os.getenv('RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY',
-                                                             'events.updateSampleSensitive')
-
-    RABBITMQ_RH_OUTBOUND_UAC_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_UAC_QUEUE', 'events.rh.uacUpdate')
-    RABBITMQ_RH_OUTBOUND_CASE_QUEUE = os.getenv('RABBITMQ_RH_OUTBOUND_CASE_QUEUE', 'events.rh.caseUpdate')
-
-    RABBITMQ_EXCHANGE = os.getenv('RABBITMQ_EXCHANGE', '')
-    RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'guest')
-    RABBITMQ_PASSWORD = os.getenv('RABBITMQ_PASSWORD', 'guest')
+    PUBSUB_OUTBOUND_UAC_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_UAC_SUBSCRIPTION', 'events.uacUpdate.subscription')
+    PUBSUB_OUTBOUND_CASE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_CASE_SUBSCRIPTION', 'events.caseUpdate.subscription')
 
     DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')

@@ -29,12 +29,13 @@ def before_all(_context):
 
 def before_scenario(context, _):
     context.test_start_local_datetime = datetime.now()
-    purge_queues()
+    # purge_queues()
     purge_fulfilment_triggers()
 
 
 def after_all(_context):
-    purge_queues()
+    # purge_queues()
+    pass
 
 
 def after_scenario(_context, scenario):
