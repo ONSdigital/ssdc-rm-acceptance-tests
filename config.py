@@ -45,7 +45,7 @@ class Config:
         if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
 
     RECEIPT_TOPIC_PROJECT = os.getenv('RECEIPT_TOPIC_PROJECT', 'project')
-    RECEIPT_TOPIC_ID = os.getenv('RECEIPT_TOPIC_ID', 'eq-submission-topic')
+    RECEIPT_TOPIC_ID = os.getenv('RECEIPT_TOPIC_ID', 'events.caseProcessor.response.topic')
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 

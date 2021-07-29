@@ -7,8 +7,6 @@ from acceptance_tests.utilities.rabbit_helper import start_listening_to_rabbit_q
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
-subscriber = pubsub_v1.SubscriberClient()
-
 
 def get_emitted_cases(type_filter, expected_msg_count=1):
     messages_received = []
@@ -26,6 +24,7 @@ def get_emitted_cases(type_filter, expected_msg_count=1):
 
 
 def start_listening_to_pubsub_subscription(subscription, expected_msg_count, message_list, type_filter):
+    subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT,
                                                      subscription)
     response = subscriber.pull(subscription_path, max_messages=expected_msg_count, timeout=30)
@@ -44,15 +43,15 @@ def start_listening_to_pubsub_subscription(subscription, expected_msg_count, mes
     if ack_ids:
         subscriber.acknowledge(subscription_path, ack_ids)
 
+    subscriber.close()
+
 
 def get_emitted_case_update():
     messages_received = []
-    start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_CASE_QUEUE,
-                                    functools.partial(
-                                        store_in_message_list,
-                                        message_list=messages_received,
-                                        expected_msg_count=1,
-                                        type_filter='CASE_UPDATED'))
+    start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
+                                           message_list=messages_received,
+                                           expected_msg_count=1,
+                                           type_filter='CASE_UPDATED')
 
     test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one CASE_UPDATED message')
 
@@ -61,12 +60,10 @@ def get_emitted_case_update():
 
 def get_emitted_uac_update():
     messages_received = []
-    start_listening_to_rabbit_queue(Config.RABBITMQ_RH_OUTBOUND_UAC_QUEUE,
-                                    functools.partial(
-                                        store_in_message_list,
-                                        message_list=messages_received,
-                                        expected_msg_count=1,
-                                        type_filter='UAC_UPDATED'))
+    start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
+                                           message_list=messages_received,
+                                           expected_msg_count=1,
+                                           type_filter='UAC_UPDATED')
 
     test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one UAC_UPDATED message')
 

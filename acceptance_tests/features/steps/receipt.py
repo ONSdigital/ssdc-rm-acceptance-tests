@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from behave import step
 
@@ -8,22 +9,23 @@ from config import Config
 
 @step("a receipt message is published to the pubsub receipting topic")
 def send_receipt(context):
-    _publish_object_finalize(questionnaire_id=context.emitted_uacs[0]['questionnaireId'])
-
-
-def _publish_object_finalize(case_id="0", tx_id="3d14675d-a25d-4672-a0fe-b960586653e8", questionnaire_id="0"):
-    data = json.dumps({
-        "timeCreated": "2008-08-24T00:00:00Z",
-        "metadata": {
-            "case_id": case_id,
-            "tx_id": tx_id,
-            "questionnaire_id": questionnaire_id,
+    message = json.dumps({
+        "event": {
+            "type": "RESPONSE_RECEIVED",
+            "source": "RH",
+            "channel": "RH",
+            "dateTime": "2021-06-09T14:10:11.910719Z",
+            "transactionId": str(uuid.uuid4())
+        },
+        "payload": {
+            "response": {
+                "questionnaireId": context.emitted_uacs[0]['questionnaireId'],
+                "dateTime": "2021-06-09T14:10:11.909472Z"
+            }
         }
     })
 
-    publish_to_pubsub(data,
+    publish_to_pubsub(message,
                       Config.RECEIPT_TOPIC_PROJECT,
                       Config.RECEIPT_TOPIC_ID,
-                      eventType='OBJECT_FINALIZE',
-                      bucketId='eq-bucket',
-                      objectId=tx_id)
+                      eventType='OBJECT_FINALIZE')
