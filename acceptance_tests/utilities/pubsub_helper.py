@@ -1,7 +1,11 @@
 import logging
 
+from google.api_core.exceptions import MethodNotImplemented
 from google.cloud import pubsub_v1
+from google.protobuf.timestamp_pb2 import Timestamp
 from structlog import wrap_logger
+
+from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -15,3 +19,37 @@ def publish_to_pubsub(message, project, topic, **kwargs):
 
     future.result(timeout=30)
     logger.info("Sent PubSub message", topic=topic, project=project)
+
+
+def purge_queues():
+    _purge_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION)
+    _purge_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION)
+
+
+def _purge_subscription(subscription):
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
+
+    timestamp = Timestamp()
+    timestamp.GetCurrentTime()
+    try:
+        # Try purging via the seek method
+        # Seeking to now should ack any messages published before this moment
+        subscriber.seek(subscription_path, time=timestamp)
+    except MethodNotImplemented:
+        # Seek is not implemented by the pubsub-emulator
+        _ack_all_on_subscription()
+
+
+def _ack_all_on_subscription(subscriber, subscription_path):
+    max_messages_per_attempt = 100
+    response = subscriber.pull(subscription_path, max_messages=max_messages_per_attempt, timeout=5)
+
+    ack_ids = [message.ack_id for message in response.received_messages]
+
+    if ack_ids:
+        subscriber.acknowledge(subscription_path, ack_ids)
+
+    # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
+    if len(response.received_messages) == max_messages_per_attempt:
+        _ack_all_on_subscription(subscriber, subscription_path)

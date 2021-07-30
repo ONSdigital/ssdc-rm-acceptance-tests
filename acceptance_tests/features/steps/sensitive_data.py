@@ -4,7 +4,7 @@ from behave import step
 from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.utilities.database_helper import open_cursor
-from acceptance_tests.utilities.rabbit_helper import publish_json_message
+from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -28,8 +28,7 @@ def send_update_sample_sensitive_msg(context, sensitive_column, new_value):
             }
         })
 
-    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
-                         routing_key=Config.RABBITMQ_UPDATE_SAMPLE_SENSITIVE_ROUTING_KEY)
+    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC)
 
 
 @step("the {sensitive_column} in the sensitive data on the case has been updated to {expected_value}")

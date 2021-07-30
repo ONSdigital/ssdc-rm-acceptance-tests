@@ -8,7 +8,7 @@ from behave import register_type
 from structlog import wrap_logger
 
 from acceptance_tests.utilities.database_helper import open_cursor
-from acceptance_tests.utilities.rabbit_helper import purge_queues
+from acceptance_tests.utilities.pubsub_helper import purge_queues
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -29,12 +29,12 @@ def before_all(_context):
 
 def before_scenario(context, _):
     context.test_start_local_datetime = datetime.now()
-    # purge_queues()
+    purge_queues()
     purge_fulfilment_triggers()
 
 
 def after_all(_context):
-    # purge_queues()
+    purge_queues()
     pass
 
 

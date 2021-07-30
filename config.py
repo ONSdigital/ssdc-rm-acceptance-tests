@@ -6,7 +6,8 @@ from pathlib import Path
 class Config:
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'project')
     PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'events.caseProcessor.refusal.topic')
-    PUBSUB_INVALID_ADDRESS_TOPIC = os.getenv('PUBSUB_INVALID_ADDRESS_TOPIC', 'events.caseProcessor.invalidAddress.topic')
+    PUBSUB_INVALID_ADDRESS_TOPIC = os.getenv('PUBSUB_INVALID_ADDRESS_TOPIC',
+                                             'events.caseProcessor.invalidAddress.topic')
     PUBSUB_FULFILMENT_TOPIC = os.getenv('PUBSUB_FULFILMENT_TOPIC', 'events.caseProcessor.fulfilment.topic')
     PUBSUB_SURVEY_LAUNCHED_TOPIC = os.getenv('PUBSUB_SURVEY_LAUNCHED_TOPIC',
                                              'events.caseProcessor.surveyLaunched.topic')

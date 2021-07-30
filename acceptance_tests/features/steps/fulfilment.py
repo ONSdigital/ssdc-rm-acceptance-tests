@@ -6,7 +6,7 @@ import requests
 from behave import step
 
 from acceptance_tests.utilities.database_helper import open_cursor
-from acceptance_tests.utilities.rabbit_helper import publish_json_message
+from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
@@ -28,8 +28,7 @@ def request_print_fulfilment_step(context):
                 }
             }
         })
-    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
-                         routing_key=Config.RABBITMQ_FULFILMENT_ROUTING_KEY)
+    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_FULFILMENT_TOPIC)
 
 
 @step('print fulfilments are triggered to be sent for printing')

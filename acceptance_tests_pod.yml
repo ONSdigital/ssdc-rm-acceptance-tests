@@ -112,22 +112,6 @@ spec:
         configMapKeyRef:
           key: sent-print-file-bucket
           name: project-config
-    - name: RABBITMQ_HTTP_PORT
-      value: "15672"
-    - name: RABBITMQ_USER
-      valueFrom:
-        secretKeyRef:
-          name: rabbitmq
-          key: rabbitmq-username
-    - name: RABBITMQ_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: rabbitmq
-          key: rabbitmq-password
-    - name: RABBITMQ_SERVICE_HOST
-      value: "rm-rabbitmq"
-    - name: RABBITMQ_SERVICE_PORT
-      value: "5672"
     - name: CASEAPI_SERVICE_HOST
       value: "case-api"
     - name: CASEAPI_SERVICE_PORT
