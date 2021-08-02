@@ -5,18 +5,18 @@ from pathlib import Path
 
 class Config:
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'project')
-    PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'events.caseProcessor.refusal.topic')
+    PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'event.refusal')
     PUBSUB_INVALID_ADDRESS_TOPIC = os.getenv('PUBSUB_INVALID_ADDRESS_TOPIC',
-                                             'events.caseProcessor.invalidAddress.topic')
-    PUBSUB_FULFILMENT_TOPIC = os.getenv('PUBSUB_FULFILMENT_TOPIC', 'events.caseProcessor.fulfilment.topic')
+                                             'event.invalid')
+    PUBSUB_FULFILMENT_TOPIC = os.getenv('PUBSUB_FULFILMENT_TOPIC', 'event.paper-fulfilment')
     PUBSUB_SURVEY_LAUNCHED_TOPIC = os.getenv('PUBSUB_SURVEY_LAUNCHED_TOPIC',
-                                             'events.caseProcessor.surveyLaunched.topic')
-    PUBSUB_DEACTIVATE_UAC_TOPIC = os.getenv('PUBSUB_DEACTIVATE_UAC_TOPIC', 'events.caseProcessor.deactivateUac.topic')
+                                             'event.survey-launched')
+    PUBSUB_DEACTIVATE_UAC_TOPIC = os.getenv('PUBSUB_DEACTIVATE_UAC_TOPIC', 'event.deactivate-uac')
     PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC',
-                                                     'events.caseProcessor.updateSampleSensitive.topic')
+                                                     'event.update-sample-sensitive')
 
-    PUBSUB_OUTBOUND_UAC_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_UAC_SUBSCRIPTION', 'events.uacUpdate.subscription')
-    PUBSUB_OUTBOUND_CASE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_CASE_SUBSCRIPTION', 'events.caseUpdate.subscription')
+    PUBSUB_OUTBOUND_UAC_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_UAC_SUBSCRIPTION', 'event.uac-update.rh')
+    PUBSUB_OUTBOUND_CASE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_CASE_SUBSCRIPTION', 'event.case-update.rh')
 
     DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
@@ -46,7 +46,7 @@ class Config:
         if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
 
     RECEIPT_TOPIC_PROJECT = os.getenv('RECEIPT_TOPIC_PROJECT', 'project')
-    RECEIPT_TOPIC_ID = os.getenv('RECEIPT_TOPIC_ID', 'events.caseProcessor.response.topic')
+    RECEIPT_TOPIC_ID = os.getenv('RECEIPT_TOPIC_ID', 'event.receipt')
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 
