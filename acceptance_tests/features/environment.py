@@ -35,7 +35,6 @@ def before_scenario(context, _):
 
 def after_all(_context):
     purge_queues()
-    pass
 
 
 def after_scenario(_context, scenario):
