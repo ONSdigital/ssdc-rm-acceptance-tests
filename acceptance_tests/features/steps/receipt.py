@@ -27,5 +27,4 @@ def send_receipt(context):
 
     publish_to_pubsub(message,
                       Config.RECEIPT_TOPIC_PROJECT,
-                      Config.RECEIPT_TOPIC_ID,
-                      eventType='OBJECT_FINALIZE')
+                      Config.RECEIPT_TOPIC_ID)
