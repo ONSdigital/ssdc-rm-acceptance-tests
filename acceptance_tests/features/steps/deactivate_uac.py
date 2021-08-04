@@ -2,7 +2,7 @@ import json
 
 from behave import step
 
-from acceptance_tests.utilities.rabbit_helper import publish_json_message
+from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
@@ -24,5 +24,4 @@ def step_impl(context):
             }
         })
 
-    publish_json_message(message, exchange=Config.RABBITMQ_EVENT_EXCHANGE,
-                         routing_key=Config.RABBITMQ_DEACTIVATE_UAC_ROUTING_KEY)
+    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_DEACTIVATE_UAC_TOPIC)

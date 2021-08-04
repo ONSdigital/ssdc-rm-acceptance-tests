@@ -4,7 +4,7 @@ metadata:
   name: acceptance-tests
   labels:
     app: acceptance-tests
-    rabbit: "true"
+    pubsub: "true"
     database: "true"
 spec:
   serviceAccountName: acceptance-tests
@@ -72,6 +72,11 @@ spec:
         configMapKeyRef:
           name: project-config
           key: project-name
+    - name: PUBSUB_PROJECT_NAME
+      valueFrom:
+        configMapKeyRef:
+          name: project-config
+          key: project-name
     - name: SUPPLIER_CONFIG_JSON_PATH
       value: "/home/acceptancetests/dummy_supplier_config.json"
     - name: SFTP_HOST
@@ -112,36 +117,10 @@ spec:
         configMapKeyRef:
           key: sent-print-file-bucket
           name: project-config
-    - name: RABBITMQ_HTTP_PORT
-      value: "15672"
-    - name: RABBITMQ_USER
-      valueFrom:
-        secretKeyRef:
-          name: rabbitmq
-          key: rabbitmq-username
-    - name: RABBITMQ_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: rabbitmq
-          key: rabbitmq-password
-    - name: RABBITMQ_SERVICE_HOST
-      value: "rm-rabbitmq"
-    - name: RABBITMQ_SERVICE_PORT
-      value: "5672"
     - name: CASEAPI_SERVICE_HOST
       value: "case-api"
     - name: CASEAPI_SERVICE_PORT
       value: "80"
-    - name: RECEIPT_TOPIC_ID
-      valueFrom:
-        configMapKeyRef:
-          name: pubsub-config
-          key: receipt-topic-name
-    - name: RECEIPT_TOPIC_PROJECT
-      valueFrom:
-        configMapKeyRef:
-          name: pubsub-config
-          key: receipt-topic-project-id
   volumes:
   - name: case-cloud-sql-certs
     secret:
