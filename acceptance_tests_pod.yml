@@ -72,7 +72,7 @@ spec:
         configMapKeyRef:
           name: project-config
           key: project-name
-    - name: PUBSUB_PROJECT_NAME
+    - name: PUBSUB_PROJECT
       valueFrom:
         configMapKeyRef:
           name: project-config
