@@ -4,7 +4,7 @@ metadata:
   name: acceptance-tests
   labels:
     app: acceptance-tests
-    rabbit: "true"
+    pubsub: "true"
     database: "true"
 spec:
   serviceAccountName: acceptance-tests
