@@ -5,6 +5,7 @@ from pathlib import Path
 
 class Config:
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'project')
+    PUBSUB_RECEIPT_TOPIC = os.getenv('PUBSUB_RECEIPT_TOPIC', 'event_receipt')
     PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'event_refusal')
     PUBSUB_INVALID_ADDRESS_TOPIC = os.getenv('PUBSUB_INVALID_ADDRESS_TOPIC',
                                              'event_invalid')
@@ -44,9 +45,6 @@ class Config:
     SUPPLIERS_CONFIG = json.loads(
         SUPPLIER_CONFIG_JSON_PATH.read_text()) \
         if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
-
-    RECEIPT_TOPIC_PROJECT = os.getenv('RECEIPT_TOPIC_PROJECT', 'project')
-    RECEIPT_TOPIC_ID = os.getenv('RECEIPT_TOPIC_ID', 'event_receipt')
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 
