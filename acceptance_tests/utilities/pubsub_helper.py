@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, timedelta
 
 from google.api_core.exceptions import MethodNotImplemented
 from google.cloud import pubsub_v1
@@ -31,14 +32,15 @@ def _purge_subscription(subscription):
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
 
     timestamp = Timestamp()
-    timestamp.GetCurrentTime()
+    time_a_bit_in_the_future = datetime.utcnow() + timedelta(minutes=5)
+    timestamp.FromDatetime(time_a_bit_in_the_future)
     try:
         # Try purging via the seek method
         # Seeking to now should ack any messages published before this moment
         subscriber.seek(subscription_path, time=timestamp)
     except MethodNotImplemented:
         # Seek is not implemented by the pubsub-emulator
-        _ack_all_on_subscription()
+        _ack_all_on_subscription(subscriber, subscription_path)
 
 
 def _ack_all_on_subscription(subscriber, subscription_path):
