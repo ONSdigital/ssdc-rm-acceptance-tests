@@ -1,5 +1,4 @@
 import logging
-from time import sleep
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
@@ -43,15 +42,13 @@ def _purge_subscription(subscription):
 
     # Call ack all with 5 seconds in-between to catch any stubborn stragglers
     _ack_all_on_subscription(subscriber, subscription_path)
-    sleep(5)
-    _ack_all_on_subscription(subscriber, subscription_path)
 
 
 def _ack_all_on_subscription(subscriber, subscription_path):
     max_messages_per_attempt = 100
 
     try:
-        response = subscriber.pull(subscription_path, max_messages=max_messages_per_attempt, timeout=5)
+        response = subscriber.pull(subscription_path, max_messages=max_messages_per_attempt, timeout=2)
     except DeadlineExceeded:
         return
 
