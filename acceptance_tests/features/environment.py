@@ -32,6 +32,9 @@ def before_scenario(context, _):
     purge_queues()
     purge_fulfilment_triggers()
 
+    # TODO - this is a hack and should be removed/refactored when we understand better what's going on
+    time.sleep(5)
+
 
 def after_all(_context):
     purge_queues()
