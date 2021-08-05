@@ -1,6 +1,7 @@
 import json
 import uuid
 from datetime import datetime
+from time import sleep
 
 import requests
 from behave import step
@@ -29,6 +30,9 @@ def request_print_fulfilment_step(context):
             }
         })
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_FULFILMENT_TOPIC)
+
+    # TODO - maybe trigger the fulfilments a few seconds in the future instead, but this should work for now, I hope!
+    sleep(10)
 
 
 @step('print fulfilments are triggered to be sent for printing')
