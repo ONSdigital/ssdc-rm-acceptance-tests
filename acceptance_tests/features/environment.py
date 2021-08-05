@@ -29,37 +29,20 @@ def before_all(_context):
 
 def before_scenario(context, _):
     # TODO - this is a hack and should be removed/refactored when we understand better what's going on
-    time.sleep(10)
+    time.sleep(5)
 
     purge_queues()
     purge_fulfilment_triggers()
-    
-    # TODO - this is a hack and should be removed/refactored when we understand better what's going on
-    time.sleep(10)
 
     context.test_start_local_datetime = datetime.now()
 
 
 def after_all(_context):
-    # TODO - this is a hack and should be removed/refactored when we understand better what's going on
-    time.sleep(10)
-
     purge_queues()
     purge_fulfilment_triggers()
 
-    # TODO - this is a hack and should be removed/refactored when we understand better what's going on
-    time.sleep(10)
-
 
 def after_scenario(_context, scenario):
-    # TODO - this is a hack and should be removed/refactored when we understand better what's going on
-    time.sleep(10)
-
-    purge_queues()
-
-    # TODO - this is a hack and should be removed/refactored when we understand better what's going on
-    time.sleep(10)
-
     if "clear_for_bad_messages" not in scenario.tags:
         response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessages')
         response.raise_for_status()
