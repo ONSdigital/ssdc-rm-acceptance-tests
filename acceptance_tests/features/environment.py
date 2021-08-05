@@ -29,7 +29,7 @@ def before_all(_context):
 
 def before_scenario(context, _):
     # TODO - this is a hack and should be removed/refactored when we understand better what's going on
-    time.sleep(5)
+    time.sleep(2)
 
     purge_queues()
     purge_fulfilment_triggers()
