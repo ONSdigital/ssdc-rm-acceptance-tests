@@ -1,5 +1,6 @@
 import logging
 
+from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
 from structlog import wrap_logger
 
@@ -44,7 +45,11 @@ def _purge_subscription(subscription):
 
 def _ack_all_on_subscription(subscriber, subscription_path):
     max_messages_per_attempt = 100
-    response = subscriber.pull(subscription_path, max_messages=max_messages_per_attempt, timeout=5)
+
+    try:
+        response = subscriber.pull(subscription_path, max_messages=max_messages_per_attempt, timeout=5)
+    except DeadlineExceeded:
+        return
 
     ack_ids = [message.ack_id for message in response.received_messages]
 
