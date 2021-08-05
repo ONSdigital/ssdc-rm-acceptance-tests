@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
@@ -40,6 +41,9 @@ def _purge_subscription(subscription):
     # except MethodNotImplemented:
     #     # Seek is not implemented by the pubsub-emulator
 
+    # Call ack all with 5 seconds in-between to catch any stubborn stragglers
+    _ack_all_on_subscription(subscriber, subscription_path)
+    sleep(5)
     _ack_all_on_subscription(subscriber, subscription_path)
 
 
