@@ -31,6 +31,7 @@ def before_scenario(context, _):
     context.test_start_local_datetime = datetime.now()
     purge_queues()
     purge_fulfilment_triggers()
+    time.sleep(5)
 
 
 def after_all(_context):
