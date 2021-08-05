@@ -1,9 +1,6 @@
 import logging
-from datetime import datetime, timedelta
 
-from google.api_core.exceptions import MethodNotImplemented
 from google.cloud import pubsub_v1
-from google.protobuf.timestamp_pb2 import Timestamp
 from structlog import wrap_logger
 
 from config import Config
@@ -31,16 +28,18 @@ def _purge_subscription(subscription):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
 
-    timestamp = Timestamp()
-    time_a_bit_in_the_future = datetime.utcnow() + timedelta(minutes=5)
-    timestamp.FromDatetime(time_a_bit_in_the_future)
-    try:
-        # Try purging via the seek method
-        # Seeking to now should ack any messages published before this moment
-        subscriber.seek(subscription_path, time=timestamp)
-    except MethodNotImplemented:
-        # Seek is not implemented by the pubsub-emulator
-        _ack_all_on_subscription(subscriber, subscription_path)
+    # TODO - the seek method should be quick and clean, but it doesn't seem reliable in our GCP CI pipeline
+    # timestamp = Timestamp()
+    # time_a_bit_in_the_future = datetime.utcnow() + timedelta(minutes=5)
+    # timestamp.FromDatetime(time_a_bit_in_the_future)
+    # try:
+    #     # Try purging via the seek method
+    #     # Seeking to now should ack any messages published before this moment
+    #     subscriber.seek(subscription_path, time=timestamp)
+    # except MethodNotImplemented:
+    #     # Seek is not implemented by the pubsub-emulator
+
+    _ack_all_on_subscription(subscriber, subscription_path)
 
 
 def _ack_all_on_subscription(subscriber, subscription_path):
