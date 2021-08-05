@@ -28,16 +28,16 @@ def before_all(_context):
 
 
 def before_scenario(context, _):
-    context.test_start_local_datetime = datetime.now()
-
     # TODO - this is a hack and should be removed/refactored when we understand better what's going on
     time.sleep(10)
 
     purge_queues()
     purge_fulfilment_triggers()
-
+    
     # TODO - this is a hack and should be removed/refactored when we understand better what's going on
     time.sleep(10)
+
+    context.test_start_local_datetime = datetime.now()
 
 
 def after_all(_context):
