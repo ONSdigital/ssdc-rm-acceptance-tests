@@ -124,7 +124,7 @@ def upload_sample_file(collex_id, sample_file_path):
     response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
     response.raise_for_status()
 
-    file_id = eval(response.text)
+    file_id = response.json()
 
     form_data = {
         'fileId': file_id,
