@@ -54,3 +54,41 @@ def authorise_pack_code(context):
 
     response = requests.post(url, json=body)
     response.raise_for_status()
+
+
+@step("fulfilments are authorised on sms template")
+def authorise_pack_code(context):
+    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveySmsTemplates'
+    body = {
+        'id': str(uuid.uuid4()),
+        'survey': 'surveys/' + context.survey_id,
+        'smsTemplate': 'smsTemplates/' + context.pack_code
+    }
+
+    response = requests.post(url, json=body)
+    response.raise_for_status()
+
+
+@step("a request has been made for a replacement UAC by SMS by the phone number \"{phone_number}\"")
+def request_replacement_uac_by_sms(context, phone_number):
+    requests.get(f'{Config.NOTIFY_STUB_SERVICE}/reset')
+    url = f'{Config.NOTIFY_SERVICE_API}sms-fulfilment'
+    body = {
+        "event": {
+            "type": "SMS_FULFILMENT",
+            "source": "CC",
+            "channel": "CC",
+            "dateTime": "2021-06-09T13:49:19.716761Z",
+            "transactionId": "92df974c-f03e-4519-8d55-05e9c0ecea43"
+        },
+        "payload": {
+            "smsFulfilment": {
+                "caseId": context.emitted_cases[0]['caseId'],
+                "phoneNumber": phone_number,
+                "packCode": context.pack_code,
+            }
+        }
+    }
+
+    response = requests.post(url, json=body)
+    response.raise_for_status()
