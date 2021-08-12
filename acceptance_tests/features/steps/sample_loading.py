@@ -117,10 +117,21 @@ def load_sample_file_step_for_sensitive_data(context, sample_file_name, sensitiv
 
 def upload_sample_file(collex_id, sample_file_path):
     multipart_data = MultipartEncoder(fields={
-        'collectionExerciseId': collex_id,
         'file': ('sample_file', open(sample_file_path, 'rb'), 'text/plain')
     })
     url = f'{Config.SUPPORT_TOOL_API}/upload'
 
     response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
+    response.raise_for_status()
+
+    file_id = response.json()
+
+    form_data = {
+        'fileId': file_id,
+        'fileName': 'sample_file',
+        'collectionExerciseId': collex_id
+    }
+
+    create_job_url = f'{Config.SUPPORT_TOOL_API}/job'
+    response = requests.post(create_job_url, params=form_data)
     response.raise_for_status()
