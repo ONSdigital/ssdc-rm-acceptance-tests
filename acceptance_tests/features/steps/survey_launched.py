@@ -18,8 +18,7 @@ def send_survey_launched_msg(context):
                 "channel": "RH",
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
-                "correlationId": str(uuid.uuid4()),
-                "originatingUser": "foo@bar.com"
+                "correlationId": str(uuid.uuid4())
             },
             "payload": {
                 "surveyLaunch": {
