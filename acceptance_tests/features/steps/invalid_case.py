@@ -1,4 +1,6 @@
 import json
+import uuid
+from datetime import datetime
 
 from behave import step
 
@@ -10,12 +12,14 @@ from config import Config
 def send_invalid_case_msg(context):
     message = json.dumps(
         {
-            "event": {
-                "type": "INVALID_CASE",
+            "header": {
+                "topic": Config.PUBSUB_INVALID_CASE_TOPIC,
                 "source": "RH",
                 "channel": "RH",
-                "dateTime": "2021-06-09T13:49:19.716761Z",
-                "transactionId": "92df974c-f03e-4519-8d55-05e9c0ecea43"
+                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "messageId": str(uuid.uuid4()),
+                "correlationId": str(uuid.uuid4()),
+                "originatingUser": "foo@bar.com"
             },
             "payload": {
                 "invalidCase": {

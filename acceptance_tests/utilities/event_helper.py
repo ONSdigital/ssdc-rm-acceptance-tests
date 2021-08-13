@@ -6,22 +6,21 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def get_emitted_cases(type_filter, expected_msg_count=1):
+def get_emitted_cases(expected_msg_count=1):
     messages_received = []
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
                                            message_list=messages_received,
-                                           expected_msg_count=expected_msg_count,
-                                           type_filter=type_filter)
+                                           expected_msg_count=expected_msg_count)
 
     test_helper.assertEqual(len(messages_received), expected_msg_count,
-                            f'Did not find expected number of events, type: {type_filter}')
+                            'Did not find expected number of events')
 
     case_payloads = [message_received['payload']['caseUpdate'] for message_received in messages_received]
 
     return case_payloads
 
 
-def start_listening_to_pubsub_subscription(subscription, expected_msg_count, message_list, type_filter):
+def start_listening_to_pubsub_subscription(subscription, expected_msg_count, message_list):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT,
                                                      subscription)
@@ -31,12 +30,8 @@ def start_listening_to_pubsub_subscription(subscription, expected_msg_count, mes
 
     for received_message in received_messages:
         parsed_body = json.loads(received_message.message.data)
-        if type_filter is None or parsed_body['event']['type'] == type_filter:
-            message_list.append(parsed_body)
-            ack_ids.append(received_message.ack_id)
-        else:
-            # take it, ignore it?
-            assert False
+        message_list.append(parsed_body)
+        ack_ids.append(received_message.ack_id)
 
     if ack_ids:
         subscriber.acknowledge(subscription_path, ack_ids)
@@ -65,8 +60,7 @@ def get_emitted_case_update():
     messages_received = []
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
                                            message_list=messages_received,
-                                           expected_msg_count=1,
-                                           type_filter='CASE_UPDATE')
+                                           expected_msg_count=1)
 
     test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one CASE_UPDATE message')
 
@@ -77,8 +71,7 @@ def get_emitted_uac_update():
     messages_received = []
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
                                            message_list=messages_received,
-                                           expected_msg_count=1,
-                                           type_filter='UAC_UPDATE')
+                                           expected_msg_count=1)
 
     test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one UAC_UPDATE message')
 
@@ -89,8 +82,7 @@ def get_uac_update_events(expected_number):
     messages_received = []
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
                                            message_list=messages_received,
-                                           expected_msg_count=expected_number,
-                                           type_filter='UAC_UPDATE')
+                                           expected_msg_count=expected_number)
 
     uac_payloads = [uac_event['payload']['uacUpdate'] for uac_event in messages_received]
     return uac_payloads

@@ -1,4 +1,6 @@
 import json
+import uuid
+from datetime import datetime
 
 from behave import step
 
@@ -10,12 +12,13 @@ from config import Config
 def send_respondent_authenticated_msg(context):
     message = json.dumps(
         {
-            "event": {
-                "type": "UAC_AUTHENTICATION",
+            "header": {
+                "topic": Config.PUBSUB_UAC_AUTHENTICATION_TOPIC,
                 "source": "RH",
                 "channel": "RH",
-                "dateTime": "2011-08-12T20:17:46.384Z",
-                "transactionId": "c45de4dc-3c3b-11e9-b210-d663bd873d93"
+                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "messageId": str(uuid.uuid4()),
+                "correlationId": str(uuid.uuid4())
             },
             "payload": {
                 "uacAuthentication": {

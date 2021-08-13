@@ -1,4 +1,6 @@
 import json
+import uuid
+from datetime import datetime
 
 from behave import step
 
@@ -10,12 +12,14 @@ from config import Config
 def send_refusal_msg(context):
     message = json.dumps(
         {
-            "event": {
-                "type": "REFUSAL",
+            "header": {
+                "topic": Config.PUBSUB_REFUSAL_TOPIC,
                 "source": "RH",
                 "channel": "RH",
-                "dateTime": "2021-06-09T14:10:11.910719Z",
-                "transactionId": "730af73e-398d-41d2-893a-cd0722151f9c"
+                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "messageId": str(uuid.uuid4()),
+                "correlationId": str(uuid.uuid4()),
+                "originatingUser": "foo@bar.com"
             },
             "payload": {
                 "refusal": {
