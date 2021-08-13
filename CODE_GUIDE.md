@@ -47,6 +47,8 @@ Every context attribute used by the tests should be described here.
 | pack_code                 | Stores the pack code used for fulfilments or action rules                                        |
 | template                  | Stores the column template used for fulfilments or action rules                                  |
 | telephone_capture_request | Stores the UAC and QID returned by a telephone capture API call                                 |
+| notify_id                 | Stores the ID of the sms template used for the notify service                                 |
+| phone_number              | Stores the phone number needed to check the notify api                                 |
 
 ### Sharing Code Between Steps
 

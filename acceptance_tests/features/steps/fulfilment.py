@@ -98,15 +98,15 @@ def request_replacement_uac_by_sms(context):
     response.raise_for_status()
 
 
-def _check_notify_api_called_with_correct_template_id(phone_number, template_id):
+def _check_notify_api_called_with_correct_notify_id(phone_number, notify_id):
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log')
     test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
     response_json = response.json()
     test_helper.assertEqual(len(response_json), 1, "Incorrect number of responses")
     test_helper.assertEqual(response_json[0]["phone_number"], phone_number, "Incorrect phone number")
-    test_helper.assertEqual(response_json[0]["template_id"], template_id, "Incorrect template Id")
+    test_helper.assertEqual(response_json[0]["template_id"], notify_id, "Incorrect template Id")
 
 
-@step("notify api was called with SMS template for fulfilment code")
+@step("notify api was called with SMS template")
 def check_notify_api_call(context):
-    _check_notify_api_called_with_correct_template_id(context.phone_number, context.notify_id)
+    _check_notify_api_called_with_correct_notify_id(context.phone_number, context.notify_id)
