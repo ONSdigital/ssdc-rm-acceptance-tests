@@ -71,10 +71,10 @@ def authorise_sms_pack_code(context):
     response.raise_for_status()
 
 
-@step("a request has been made for a replacement UAC by SMS")
-def request_replacement_uac_by_sms(context):
+@step('a request has been made for a replacement UAC by SMS from phone number "{phone_number}"')
+def request_replacement_uac_by_sms(context, phone_number):
     requests.get(f'{Config.NOTIFY_STUB_SERVICE}/reset')
-    context.phone_number = "".join([str(random.randint(0, 9)) for i in range(1, 10)])
+    context.phone_number = phone_number
 
     url = f'{Config.NOTIFY_SERVICE_API}sms-fulfilment'
     body = {

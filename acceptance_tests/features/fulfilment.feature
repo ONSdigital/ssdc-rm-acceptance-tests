@@ -15,7 +15,7 @@ Feature: Fulfilments can be requested for a case
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And a sms template has been created with template "["__uac__", "__qid__"]"
     And fulfilments are authorised on sms template
-    When a request has been made for a replacement UAC by SMS
+    When a request has been made for a replacement UAC by SMS from phone number "07123456789"
     Then UAC_UPDATED messages are emitted with active set to true
     And the events logged against the case are [CASE_CREATED,SMS_FULFILMENT]
     And notify api was called with SMS template
@@ -25,6 +25,6 @@ Feature: Fulfilments can be requested for a case
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And a sms template has been created with template "[]"
     And fulfilments are authorised on sms template
-    When a request has been made for a replacement UAC by SMS
+    When a request has been made for a replacement UAC by SMS from phone number "07123456789"
     Then the events logged against the case are [CASE_CREATED,SMS_FULFILMENT]
     And notify api was called with SMS template
