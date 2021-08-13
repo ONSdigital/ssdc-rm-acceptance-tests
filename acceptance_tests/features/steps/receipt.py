@@ -12,6 +12,7 @@ from config import Config
 def send_receipt(context):
     message = json.dumps({
         "header": {
+            "version": Config.EVENT_SCHEMA_VERSION,
             "topic": Config.PUBSUB_RECEIPT_TOPIC,
             "source": "RH",
             "channel": "RH",

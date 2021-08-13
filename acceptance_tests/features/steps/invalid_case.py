@@ -13,6 +13,7 @@ def send_invalid_case_msg(context):
     message = json.dumps(
         {
             "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
                 "topic": Config.PUBSUB_INVALID_CASE_TOPIC,
                 "source": "RH",
                 "channel": "RH",

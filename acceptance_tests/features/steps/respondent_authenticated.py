@@ -13,6 +13,7 @@ def send_respondent_authenticated_msg(context):
     message = json.dumps(
         {
             "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
                 "topic": Config.PUBSUB_UAC_AUTHENTICATION_TOPIC,
                 "source": "RH",
                 "channel": "RH",

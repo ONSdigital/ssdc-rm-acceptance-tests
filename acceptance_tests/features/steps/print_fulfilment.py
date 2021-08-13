@@ -16,6 +16,7 @@ def request_print_fulfilment_step(context):
     message = json.dumps(
         {
             "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
                 "topic": Config.PUBSUB_PRINT_FULFILMENT_TOPIC,
                 "source": "RH",
                 "channel": "RH",

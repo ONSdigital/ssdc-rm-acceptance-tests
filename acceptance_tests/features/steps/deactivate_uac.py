@@ -13,6 +13,7 @@ def step_impl(context):
     message = json.dumps(
         {
             "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
                 "topic": Config.PUBSUB_DEACTIVATE_UAC_TOPIC,
                 "source": "CC",
                 "channel": "CC",

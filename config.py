@@ -4,6 +4,8 @@ from pathlib import Path
 
 
 class Config:
+    EVENT_SCHEMA_VERSION = "v0.2_RELEASE"
+
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'project')
     PUBSUB_RECEIPT_TOPIC = os.getenv('PUBSUB_RECEIPT_TOPIC', 'event_receipt')
     PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'event_refusal')

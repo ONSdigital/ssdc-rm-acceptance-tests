@@ -16,6 +16,7 @@ def send_update_sample_sensitive_msg(context, sensitive_column, new_value):
     message = json.dumps(
         {
             "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
                 "topic": Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC,
                 "source": "RH",
                 "channel": "RH",

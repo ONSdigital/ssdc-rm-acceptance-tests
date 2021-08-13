@@ -13,6 +13,7 @@ def send_refusal_msg(context):
     message = json.dumps(
         {
             "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
                 "topic": Config.PUBSUB_REFUSAL_TOPIC,
                 "source": "RH",
                 "channel": "RH",
