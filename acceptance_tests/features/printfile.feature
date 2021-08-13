@@ -4,7 +4,7 @@ Feature: Print files can be created and sent with correct data
     Given sample file "<sample file>" is loaded successfully
     And a print template has been created with template "<template>"
     When a print action rule has been created
-    Then UAC_UPDATED messages are emitted with active set to true
+    Then UAC_UPDATE messages are emitted with active set to true
     And a print file is created with correct rows
 
     Examples:
@@ -27,7 +27,7 @@ Feature: Print files can be created and sent with correct data
     Given sample file "<sample file>" is loaded successfully
     And a print template has been created with template "["__uac__"]"
     When a print action rule has been created with classifiers "<classifiers>"
-    Then <expected row count> UAC_UPDATED messages are emitted with active set to true
+    Then <expected row count> UAC_UPDATE messages are emitted with active set to true
     Then a print file is created with correct rows
 
     Examples:

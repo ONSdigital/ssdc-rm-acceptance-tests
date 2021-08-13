@@ -16,7 +16,7 @@ def get_emitted_cases(type_filter, expected_msg_count=1):
     test_helper.assertEqual(len(messages_received), expected_msg_count,
                             f'Did not find expected number of events, type: {type_filter}')
 
-    case_payloads = [message_received['payload']['collectionCase'] for message_received in messages_received]
+    case_payloads = [message_received['payload']['caseUpdate'] for message_received in messages_received]
 
     return case_payloads
 
@@ -66,11 +66,11 @@ def get_emitted_case_update():
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
                                            message_list=messages_received,
                                            expected_msg_count=1,
-                                           type_filter='CASE_UPDATED')
+                                           type_filter='CASE_UPDATE')
 
-    test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one CASE_UPDATED message')
+    test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one CASE_UPDATE message')
 
-    return messages_received[0]['payload']['collectionCase']
+    return messages_received[0]['payload']['caseUpdate']
 
 
 def get_emitted_uac_update():
@@ -78,19 +78,19 @@ def get_emitted_uac_update():
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
                                            message_list=messages_received,
                                            expected_msg_count=1,
-                                           type_filter='UAC_UPDATED')
+                                           type_filter='UAC_UPDATE')
 
-    test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one UAC_UPDATED message')
+    test_helper.assertEqual(len(messages_received), 1, 'Expected to receive one and only one UAC_UPDATE message')
 
-    return messages_received[0]['payload']['uac']
+    return messages_received[0]['payload']['uacUpdate']
 
 
-def get_uac_updated_events(expected_number):
+def get_uac_update_events(expected_number):
     messages_received = []
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
                                            message_list=messages_received,
                                            expected_msg_count=expected_number,
-                                           type_filter='UAC_UPDATED')
+                                           type_filter='UAC_UPDATE')
 
-    uac_payloads = [uac_event['payload']['uac'] for uac_event in messages_received]
+    uac_payloads = [uac_event['payload']['uacUpdate'] for uac_event in messages_received]
     return uac_payloads

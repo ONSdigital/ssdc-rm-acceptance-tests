@@ -1,4 +1,4 @@
-Feature: Fulfilments can be requested for a case
+Feature: Print fulfilments can be requested for a case
 
   Scenario: A print fulfilment is requested for a case
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
@@ -6,6 +6,6 @@ Feature: Fulfilments can be requested for a case
     And fulfilments are authorised on print template
     And a print fulfilment has been requested
     When print fulfilments are triggered to be sent for printing
-    Then UAC_UPDATED messages are emitted with active set to true
+    Then UAC_UPDATE messages are emitted with active set to true
     And a print file is created with correct rows
-    And the events logged against the case are [CASE_CREATED,PRINTED_PACK_CODE,FULFILMENT]
+    And the events logged against the case are [NEW_CASE,PRINT_FILE,PRINT_FULFILMENT]

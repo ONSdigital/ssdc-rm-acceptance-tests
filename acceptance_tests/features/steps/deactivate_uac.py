@@ -19,7 +19,7 @@ def step_impl(context):
             },
             "payload": {
                 "deactivateUac": {
-                    "qid": context.emitted_uacs[0]['questionnaireId'],
+                    "qid": context.emitted_uacs[0]['qid'],
                 }
             }
         })

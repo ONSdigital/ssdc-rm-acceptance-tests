@@ -11,16 +11,15 @@ from config import Config
 def send_receipt(context):
     message = json.dumps({
         "event": {
-            "type": "RESPONSE_RECEIVED",
+            "type": "RECEIPT",
             "source": "RH",
             "channel": "RH",
             "dateTime": "2021-06-09T14:10:11.910719Z",
             "transactionId": str(uuid.uuid4())
         },
         "payload": {
-            "response": {
-                "questionnaireId": context.emitted_uacs[0]['questionnaireId'],
-                "dateTime": "2021-06-09T14:10:11.909472Z"
+            "receipt": {
+                "qid": context.emitted_uacs[0]['qid']
             }
         }
     })

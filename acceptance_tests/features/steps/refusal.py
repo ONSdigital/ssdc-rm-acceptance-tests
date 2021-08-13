@@ -6,12 +6,12 @@ from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
-@step("a REFUSAL_RECEIVED event is received")
+@step("a REFUSAL event is received")
 def send_refusal_msg(context):
     message = json.dumps(
         {
             "event": {
-                "type": "REFUSAL_RECEIVED",
+                "type": "REFUSAL",
                 "source": "RH",
                 "channel": "RH",
                 "dateTime": "2021-06-09T14:10:11.910719Z",
@@ -19,10 +19,8 @@ def send_refusal_msg(context):
             },
             "payload": {
                 "refusal": {
-                    "type": "EXTRAORDINARY_REFUSAL",
-                    "collectionCase": {
-                        "caseId": context.emitted_cases[0]['caseId'],
-                    }
+                    "caseId": context.emitted_cases[0]['caseId'],
+                    "type": "EXTRAORDINARY_REFUSAL"
                 }
             }
         })

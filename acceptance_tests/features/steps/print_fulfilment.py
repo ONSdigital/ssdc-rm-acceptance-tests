@@ -16,20 +16,20 @@ def request_print_fulfilment_step(context):
     message = json.dumps(
         {
             "event": {
-                "type": "FULFILMENT",
+                "type": "PRINT_FULFILMENT",
                 "source": "RH",
                 "channel": "RH",
                 "dateTime": "2021-06-09T13:49:19.716761Z",
                 "transactionId": "92df974c-f03e-4519-8d55-05e9c0ecea43"
             },
             "payload": {
-                "fulfilment": {
+                "printFulfilment": {
                     "caseId": context.emitted_cases[0]['caseId'],
                     "packCode": context.pack_code
                 }
             }
         })
-    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_FULFILMENT_TOPIC)
+    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_PRINT_FULFILMENT_TOPIC)
 
     # TODO - maybe trigger the fulfilments a few seconds in the future instead, but this should work for now, I hope!
     sleep(2)

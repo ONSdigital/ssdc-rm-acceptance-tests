@@ -14,7 +14,7 @@ from config import Config
 
 
 def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]):
-    emitted_cases = get_emitted_cases('CASE_CREATED', len(sample_rows))
+    emitted_cases = get_emitted_cases('CASE_UPDATE', len(sample_rows))
 
     for emitted_case in emitted_cases:
         matched_row = None
