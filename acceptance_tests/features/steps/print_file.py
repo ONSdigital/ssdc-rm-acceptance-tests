@@ -106,7 +106,7 @@ def create_print_template(context, template):
 
 
 @step('a sms template has been created with template "{template}"')
-def create_print_template(context, template):
+def create_sms_template(context, template):
     context.template = template
 
     # By using a unique random pack_code we have better filter options

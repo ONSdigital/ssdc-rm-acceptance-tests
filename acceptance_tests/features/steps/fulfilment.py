@@ -59,7 +59,7 @@ def authorise_pack_code(context):
 
 
 @step("fulfilments are authorised on sms template")
-def authorise_pack_code(context):
+def authorise_sms_pack_code(context):
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveySmsTemplates'
     body = {
         'id': str(uuid.uuid4()),
