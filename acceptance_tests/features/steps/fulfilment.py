@@ -1,4 +1,5 @@
 import json
+import random
 import uuid
 from datetime import datetime
 from time import sleep
@@ -8,6 +9,7 @@ from behave import step
 
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
+from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
@@ -69,9 +71,11 @@ def authorise_pack_code(context):
     response.raise_for_status()
 
 
-@step("a request has been made for a replacement UAC by SMS by the phone number \"{phone_number}\"")
-def request_replacement_uac_by_sms(context, phone_number):
+@step("a request has been made for a replacement UAC by SMS")
+def request_replacement_uac_by_sms(context):
     requests.get(f'{Config.NOTIFY_STUB_SERVICE}/reset')
+    context.phone_number = "".join([str(random.randint(0, 9)) for i in range(1, 10)])
+
     url = f'{Config.NOTIFY_SERVICE_API}sms-fulfilment'
     body = {
         "event": {
@@ -84,7 +88,7 @@ def request_replacement_uac_by_sms(context, phone_number):
         "payload": {
             "smsFulfilment": {
                 "caseId": context.emitted_cases[0]['caseId'],
-                "phoneNumber": phone_number,
+                "phoneNumber": context.phone_number,
                 "packCode": context.pack_code,
             }
         }
@@ -92,3 +96,17 @@ def request_replacement_uac_by_sms(context, phone_number):
 
     response = requests.post(url, json=body)
     response.raise_for_status()
+
+
+def _check_notify_api_called_with_correct_template_id(phone_number, template_id):
+    response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log')
+    test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
+    response_json = response.json()
+    test_helper.assertEqual(len(response_json), 1, "Incorrect number of responses")
+    test_helper.assertEqual(response_json[0]["phone_number"], phone_number, "Incorrect phone number")
+    test_helper.assertEqual(response_json[0]["template_id"], template_id, "Incorrect template Id")
+
+
+@step("notify api was called with SMS template for fulfilment code")
+def check_notify_api_call(context):
+    _check_notify_api_called_with_correct_template_id(context.phone_number, context.notify_id)
