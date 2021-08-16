@@ -4,14 +4,18 @@ from pathlib import Path
 
 
 class Config:
+    EVENT_SCHEMA_VERSION = "v0.2_RELEASE"
+
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'project')
     PUBSUB_RECEIPT_TOPIC = os.getenv('PUBSUB_RECEIPT_TOPIC', 'event_receipt')
     PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'event_refusal')
-    PUBSUB_INVALID_ADDRESS_TOPIC = os.getenv('PUBSUB_INVALID_ADDRESS_TOPIC',
-                                             'event_invalid')
-    PUBSUB_FULFILMENT_TOPIC = os.getenv('PUBSUB_FULFILMENT_TOPIC', 'event_paper-fulfilment')
-    PUBSUB_SURVEY_LAUNCHED_TOPIC = os.getenv('PUBSUB_SURVEY_LAUNCHED_TOPIC',
-                                             'event_survey-launched')
+    PUBSUB_INVALID_CASE_TOPIC = os.getenv('PUBSUB_INVALID_CASE_TOPIC',
+                                          'event_invalid-case')
+    PUBSUB_PRINT_FULFILMENT_TOPIC = os.getenv('PUBSUB_PRINT_FULFILMENT_TOPIC', 'event_print-fulfilment')
+    PUBSUB_SURVEY_LAUNCH_TOPIC = os.getenv('PUBSUB_SURVEY_LAUNCH_TOPIC',
+                                           'event_survey-launch')
+    PUBSUB_UAC_AUTHENTICATION_TOPIC = os.getenv('PUBSUB_UAC_AUTHENTICATION_TOPIC',
+                                                'event_uac-authentication')
     PUBSUB_DEACTIVATE_UAC_TOPIC = os.getenv('PUBSUB_DEACTIVATE_UAC_TOPIC', 'event_deactivate-uac')
     PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC',
                                                      'event_update-sample-sensitive')
