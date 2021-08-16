@@ -1,4 +1,6 @@
 import json
+import uuid
+from datetime import datetime
 
 from behave import step
 from tenacity import retry, wait_fixed, stop_after_delay
@@ -13,12 +15,15 @@ from config import Config
 def send_update_sample_sensitive_msg(context, sensitive_column, new_value):
     message = json.dumps(
         {
-            "event": {
-                "type": "UPDATE_SAMPLE_SENSITIVE",
+            "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
+                "topic": Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC,
                 "source": "RH",
                 "channel": "RH",
-                "dateTime": "2021-06-09T13:49:19.716761Z",
-                "transactionId": "92df974c-f03e-4519-8d55-05e9c0ecea43"
+                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "messageId": str(uuid.uuid4()),
+                "correlationId": str(uuid.uuid4()),
+                "originatingUser": "foo@bar.com"
             },
             "payload": {
                 "updateSampleSensitive": {

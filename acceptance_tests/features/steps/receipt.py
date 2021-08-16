@@ -1,5 +1,6 @@
 import json
 import uuid
+from datetime import datetime
 
 from behave import step
 
@@ -10,17 +11,19 @@ from config import Config
 @step("a receipt message is published to the pubsub receipting topic")
 def send_receipt(context):
     message = json.dumps({
-        "event": {
-            "type": "RESPONSE_RECEIVED",
+        "header": {
+            "version": Config.EVENT_SCHEMA_VERSION,
+            "topic": Config.PUBSUB_RECEIPT_TOPIC,
             "source": "RH",
             "channel": "RH",
-            "dateTime": "2021-06-09T14:10:11.910719Z",
-            "transactionId": str(uuid.uuid4())
+            "dateTime": f'{datetime.utcnow().isoformat()}Z',
+            "messageId": str(uuid.uuid4()),
+            "correlationId": str(uuid.uuid4()),
+            "originatingUser": "foo@bar.com"
         },
         "payload": {
-            "response": {
-                "questionnaireId": context.emitted_uacs[0]['questionnaireId'],
-                "dateTime": "2021-06-09T14:10:11.909472Z"
+            "receipt": {
+                "qid": context.emitted_uacs[0]['qid']
             }
         }
     })

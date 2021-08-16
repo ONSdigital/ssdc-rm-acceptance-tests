@@ -4,7 +4,7 @@ Feature: Handle survey launch events
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And a print template has been created with template "["__uac__"]"
     And a print action rule has been created
-    And UAC_UPDATED messages are emitted with active set to true
-    When a SURVEY_LAUNCHED event is received
-    Then a CASE_UPDATED message is emitted where "surveyLaunched" is "True"
-    And the events logged against the case are [CASE_CREATED,PRINTED_PACK_CODE,SURVEY_LAUNCHED]
+    And UAC_UPDATE messages are emitted with active set to true
+    When a SURVEY_LAUNCH event is received
+    Then a CASE_UPDATE message is emitted where "surveyLaunched" is "True"
+    And the events logged against the case are [NEW_CASE,PRINT_FILE,SURVEY_LAUNCH]

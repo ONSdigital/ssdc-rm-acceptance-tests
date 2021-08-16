@@ -13,20 +13,20 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def get_uac_by_case_id(uac_updated_events, case_id):
-    for uac_dto in uac_updated_events:
+def get_uac_by_case_id(uac_update_events, case_id):
+    for uac_dto in uac_update_events:
         if uac_dto['caseId'] == case_id:
             return uac_dto['uac']
 
-    test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATED events")
+    test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATE events")
 
 
-def get_qid_by_case_id(uac_updated_events, case_id):
-    for uac_dto in uac_updated_events:
+def get_qid_by_case_id(uac_update_events, case_id):
+    for uac_dto in uac_update_events:
         if uac_dto['caseId'] == case_id:
-            return uac_dto['questionnaireId']
+            return uac_dto['qid']
 
-    test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATED events ")
+    test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATE events ")
 
 
 @step("a print file is created with correct rows")
@@ -45,17 +45,17 @@ def check_print_file_in_sftp(context):
     check_print_file_matches_expected(actual_print_file_rows, expected_print_file_rows)
 
 
-def generate_expected_print_file_rows(template, cases, uac_updated_events):
+def generate_expected_print_file_rows(template, cases, uac_update_events):
     print_file_rows = []
 
     for case in cases:
         print_row_components = []
         for field in template:
             if field == '__uac__':
-                uac = get_uac_by_case_id(uac_updated_events, case['caseId'])
+                uac = get_uac_by_case_id(uac_update_events, case['caseId'])
                 print_row_components.append(uac)
             elif field == '__qid__':
-                qid = get_qid_by_case_id(uac_updated_events, case['caseId'])
+                qid = get_qid_by_case_id(uac_update_events, case['caseId'])
                 print_row_components.append(qid)
             else:
                 print_row_components.append(case["sample"][field])
