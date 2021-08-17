@@ -50,9 +50,8 @@ def print_fulfilments_trigger_step(context):
 def authorise_pack_code(context):
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyPrintTemplates'
     body = {
-        'id': str(uuid.uuid4()),
-        'survey': 'surveys/' + context.survey_id,
-        'printTemplate': 'printTemplates/' + context.pack_code
+        'surveyId': context.survey_id,
+        'packCode': context.pack_code
     }
 
     response = requests.post(url, json=body)
