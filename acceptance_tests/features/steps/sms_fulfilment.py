@@ -29,12 +29,8 @@ def request_replacement_uac_by_sms(context, phone_number):
     url = f'{Config.NOTIFY_SERVICE_API}sms-fulfilment'
     body = {
         "header": {
-            "version": Config.EVENT_SCHEMA_VERSION,
-            "topic": Config.PUBSUB_DEACTIVATE_UAC_TOPIC,
             "source": "CC",
             "channel": "CC",
-            "dateTime": f'{datetime.utcnow().isoformat()}Z',
-            "messageId": str(uuid.uuid4()),
             "correlationId": str(uuid.uuid4()),
             "originatingUser": "foo@bar.com"
         },
