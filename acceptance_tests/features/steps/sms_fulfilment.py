@@ -55,7 +55,7 @@ def _check_notify_api_called_with_correct_notify_template_id(phone_number, notif
     response_json = response.json()
     test_helper.assertEqual(len(response_json), 1, "Incorrect number of responses")
     test_helper.assertEqual(response_json[0]["phone_number"], phone_number, "Incorrect phone number")
-    test_helper.assertEqual(response_json[0]["template_id"], notify_template_id, "Incorrect template Id")
+    test_helper.assertEqual(response_json[0]["template_id"], notify_template_id, "Incorrect Gov Notify template Id")
 
 
 @step("notify api was called with SMS template")
