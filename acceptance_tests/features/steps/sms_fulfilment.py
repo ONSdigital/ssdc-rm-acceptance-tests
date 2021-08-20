@@ -1,3 +1,6 @@
+import json
+import random
+import string
 import uuid
 
 import requests
@@ -46,15 +49,32 @@ def request_replacement_uac_by_sms(context, phone_number):
     response.raise_for_status()
 
 
-def _check_notify_api_called_with_correct_notify_id(phone_number, notify_id):
+def _check_notify_api_called_with_correct_notify_template_id(phone_number, notify_template_id):
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log')
     test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
     response_json = response.json()
     test_helper.assertEqual(len(response_json), 1, "Incorrect number of responses")
     test_helper.assertEqual(response_json[0]["phone_number"], phone_number, "Incorrect phone number")
-    test_helper.assertEqual(response_json[0]["template_id"], notify_id, "Incorrect template Id")
+    test_helper.assertEqual(response_json[0]["template_id"], notify_template_id, "Incorrect template Id")
 
 
 @step("notify api was called with SMS template")
 def check_notify_api_call(context):
-    _check_notify_api_called_with_correct_notify_id(context.phone_number, context.notify_id)
+    _check_notify_api_called_with_correct_notify_template_id(context.phone_number, context.notify_template_id)
+
+
+@step('a sms template has been created with template "{template}"')
+def create_sms_template(context, template):
+    # By using a unique random pack_code we have better filter options
+    # We can change/remove this if we get UACS differently or a better solution is found
+    context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    context.notify_template_id = str(uuid.uuid4())
+    url = f'{Config.SUPPORT_TOOL_API}/smsTemplates'
+    body = {
+        'notifyId': context.notify_template_id,
+        'template': json.loads(template),
+        'packCode': context.pack_code
+    }
+
+    response = requests.post(url, json=body)
+    response.raise_for_status()

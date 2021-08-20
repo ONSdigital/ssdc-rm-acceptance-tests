@@ -1,7 +1,6 @@
 import json
 import random
 import string
-import uuid
 from typing import Iterable
 
 import requests
@@ -99,25 +98,6 @@ def create_print_template(context, template):
         'packCode': context.pack_code,
         'printSupplier': 'SUPPLIER_A',
         'template': json.loads(template)
-    }
-
-    response = requests.post(url, json=body)
-    response.raise_for_status()
-
-
-@step('a sms template has been created with template "{template}"')
-def create_sms_template(context, template):
-    context.template = template
-
-    # By using a unique random pack_code we have better filter options
-    # We can change/remove this if we get UACS differently or a better solution is found
-    context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-    context.notify_id = str(uuid.uuid4())
-    url = f'{Config.SUPPORT_TOOL_API}/smsTemplates'
-    body = {
-        'notifyId': context.notify_id,
-        'template': json.loads(context.template),
-        'packCode': context.pack_code
     }
 
     response = requests.post(url, json=body)
