@@ -71,7 +71,7 @@ def create_sms_template(context, template):
     context.notify_template_id = str(uuid.uuid4())
     url = f'{Config.SUPPORT_TOOL_API}/smsTemplates'
     body = {
-        'notifyId': context.notify_template_id,
+        'notifyTemplateId': context.notify_template_id,
         'template': json.loads(template),
         'packCode': context.pack_code
     }
