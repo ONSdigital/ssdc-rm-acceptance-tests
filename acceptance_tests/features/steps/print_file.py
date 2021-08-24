@@ -13,7 +13,7 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def get_uac_by_case_id(uac_update_events, case_id):
+def get_uac_hash_by_case_id(uac_update_events, case_id):
     for uac_dto in uac_update_events:
         if uac_dto['caseId'] == case_id:
             return uac_dto['uacHash']
@@ -66,7 +66,7 @@ def generate_expected_print_file_rows(template, cases, uac_update_events, unhash
         print_row_components = []
         for field in template:
             if field == '__uac__':
-                hashed_uac = get_uac_by_case_id(uac_update_events, case['caseId'])
+                hashed_uac = get_uac_hash_by_case_id(uac_update_events, case['caseId'])
                 _hashing_expected_uacs(hashed_uac, print_row_components, unhashed_uacs_list)
             elif field == '__qid__':
                 qid = get_qid_by_case_id(uac_update_events, case['caseId'])
