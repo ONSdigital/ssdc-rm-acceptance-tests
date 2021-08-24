@@ -8,6 +8,7 @@ def get_sample_rows_and_validation_rules(sample_file_path: Path, sensitive_colum
         header = reader.fieldnames
         sample_rows = [row for row in reader]
 
-    validation_rules = [{'columnName': column, 'rules': [], 'sensitive': column in sensitive_column}
+    validation_rules = [{'columnName': column, 'rules': [], 'sensitive': column == sensitive_column}
                         for column in header]
+
     return sample_rows, validation_rules

@@ -104,7 +104,6 @@ def load_business_sample_file_step(context):
 
 @step('sample file "{sample_file_name}" with sensitive column {sensitive_column} is loaded successfully')
 def load_sample_file_step_for_sensitive_data(context, sample_file_name, sensitive_column):
-    sensitive_column = {sensitive_column, 'WEIGHT'}
     sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path, sensitive_column)
 
