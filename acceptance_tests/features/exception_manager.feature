@@ -1,7 +1,7 @@
 Feature:
 
   @clear_for_bad_messages
-  Scenario: Bad Msg sent to every topic, msg arrives in exception manager
+  Scenario: Bad Json Msg sent to every topic, msg arrives in exception manager
     When a bad json msg is sent to every topic consumed by RM
     Then each bad msg is seen by exception manager with the message containing "com.fasterxml.jackson.core.JsonParseException"
 

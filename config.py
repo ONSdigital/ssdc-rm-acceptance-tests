@@ -9,37 +9,23 @@ class Config:
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'shared-project')
 
     PUBSUB_RECEIPT_TOPIC = os.getenv('PUBSUB_RECEIPT_TOPIC', 'event_receipt')
-    PUBSUB_RECEIPT_SUBSCRIPTION = os.getenv('PUBSUB_RECEIPT_SUBSCRIPTION', 'event_receipt_rm-case-processor')
 
     PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'event_refusal')
-    PUBSUB_REFUSAL_RM_SUBSCRIPTION = os.getenv('PUBSUB_REFUSAL_RM_SUBSCRIPTION', 'event_refusal_rm-case-processor')
 
     PUBSUB_INVALID_CASE_TOPIC = os.getenv('PUBSUB_INVALID_CASE_TOPIC',
                                           'event_invalid-case')
-    PUBSUB_INVALID_CASE_SUBSCRIPTION = os.getenv('PUBSUB_INVALID_CASE_SUBSCRIPTION',
-                                                 'event_invalid-case_rm-case-processor')
     PUBSUB_PRINT_FULFILMENT_TOPIC = os.getenv('PUBSUB_PRINT_FULFILMENT_TOPIC', 'event_print-fulfilment')
-    PUBSUB_PRINT_FULFILMENT_SUBSCRIPTION = os.getenv('PUBSUB_PRINT_FULFILMENT_SUBSCRIPTION',
-                                                     'event_print-fulfilment_rm-case-processor')
 
     PUBSUB_SURVEY_LAUNCH_TOPIC = os.getenv('PUBSUB_SURVEY_LAUNCH_TOPIC',
                                            'event_survey-launch')
-    PUBSUB_SURVEY_LAUNCH_SUBSCRIPTION = os.getenv('PUBSUB_SURVEY_LAUNCH_SUBSCRIPTION',
-                                                  'event_survey-launch_rm-case-processor')
 
     PUBSUB_UAC_AUTHENTICATION_TOPIC = os.getenv('PUBSUB_UAC_AUTHENTICATION_TOPIC',
                                                 'event_uac-authentication')
-    PUBSUB_UAC_AUTHENTICATION_SUBSCRIPTION = os.getenv('PUBSUB_UAC_AUTHENTICATION_SUBSCRIPTION',
-                                                       'event_uac-authentication_rm-case-processor')
 
     PUBSUB_DEACTIVATE_UAC_TOPIC = os.getenv('PUBSUB_DEACTIVATE_UAC_TOPIC', 'event_deactivate-uac')
-    PUBSUB_DEACTIVATE_UAC_SUBSCRIPTION = os.getenv('PUBSUB_DEACTIVATE_UAC_SUBSCRIPTION',
-                                                   'event_deactivate-uac_rm-case-processor')
 
     PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC',
                                                      'event_update-sample-sensitive')
-    PUBSUB_UPDATE_SAMPLE_SENSITIVE_SUBSCRIPTION = os.getenv('PUBSUB_UPDATE_SAMPLE_SENSITIVE_SUBSCRIPTION',
-                                                            'event_update-sample-sensitive_rm-case-processor')
 
     PUBSUB_OUTBOUND_UAC_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_UAC_SUBSCRIPTION', 'event_uac-update_rh')
     PUBSUB_OUTBOUND_CASE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_CASE_SUBSCRIPTION', 'event_case-update_rh')

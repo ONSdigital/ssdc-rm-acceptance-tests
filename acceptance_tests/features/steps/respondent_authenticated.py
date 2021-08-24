@@ -55,4 +55,3 @@ def a_bad_respondent_authenticated_event_is_out_on_the_topic(context):
 
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_UAC_AUTHENTICATION_TOPIC)
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
-    context.subscriptions_to_purge = [Config.PUBSUB_UAC_AUTHENTICATION_SUBSCRIPTION]

@@ -56,4 +56,3 @@ def step_impl(context):
 
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_SURVEY_LAUNCH_TOPIC)
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
-    context.subscriptions_to_purge = [Config.PUBSUB_SURVEY_LAUNCH_SUBSCRIPTION]

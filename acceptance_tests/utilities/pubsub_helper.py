@@ -25,24 +25,6 @@ def purge_outbound_topics():
     _purge_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION)
 
 
-def purge_all_topics():
-    _purge_subscription(Config.PUBSUB_RECEIPT_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_REFUSAL_RM_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_INVALID_CASE_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_PRINT_FULFILMENT_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_SURVEY_LAUNCH_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_UAC_AUTHENTICATION_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_DEACTIVATE_UAC_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION)
-
-
-def purge_subscriptions(subscriptions_to_purge):
-    for subscription in subscriptions_to_purge:
-        _purge_subscription(subscription)
-
-
 def _purge_subscription(subscription):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
@@ -78,3 +60,5 @@ def _ack_all_on_subscription(subscriber, subscription_path):
     # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
     if len(response.received_messages) == max_messages_per_attempt:
         _ack_all_on_subscription(subscriber, subscription_path)
+
+    ack_ids

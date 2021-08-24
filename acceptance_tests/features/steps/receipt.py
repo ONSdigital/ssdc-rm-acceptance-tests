@@ -58,4 +58,3 @@ def a_bad_receipt_message_is_put_on_the_topic(context):
                       Config.PUBSUB_PROJECT,
                       Config.PUBSUB_RECEIPT_TOPIC)
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
-    context.subscriptions_to_purge = [Config.PUBSUB_RECEIPT_SUBSCRIPTION]

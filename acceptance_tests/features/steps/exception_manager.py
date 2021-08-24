@@ -14,12 +14,6 @@ ALL_INCOMING_TOPICS = [Config.PUBSUB_RECEIPT_TOPIC, Config.PUBSUB_REFUSAL_TOPIC,
                        Config.PUBSUB_DEACTIVATE_UAC_TOPIC, Config.PUBSUB_PRINT_FULFILMENT_TOPIC,
                        Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC, Config.PUBSUB_UAC_AUTHENTICATION_TOPIC]
 
-ALL_INCOMING_SUBSCRIPTIONS = [Config.PUBSUB_RECEIPT_SUBSCRIPTION, Config.PUBSUB_REFUSAL_RM_SUBSCRIPTION,
-                              Config.PUBSUB_INVALID_CASE_SUBSCRIPTION, Config.PUBSUB_PRINT_FULFILMENT_SUBSCRIPTION,
-                              Config.PUBSUB_SURVEY_LAUNCH_SUBSCRIPTION, Config.PUBSUB_UAC_AUTHENTICATION_SUBSCRIPTION,
-                              Config.PUBSUB_DEACTIVATE_UAC_SUBSCRIPTION,
-                              Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_SUBSCRIPTION]
-
 
 @step("a bad json msg is sent to every topic consumed by RM")
 def put_a_bad_msg_on_every_topic_on(context):
@@ -33,8 +27,6 @@ def put_a_bad_msg_on_every_topic_on(context):
                           topic)
 
         context.message_hashes.append(hashlib.sha256(message.encode('utf-8')).hexdigest())
-
-    context.subscriptions_to_purge = ALL_INCOMING_SUBSCRIPTIONS
 
 
 @step('each bad msg is seen by exception manager with the message containing "{expected_exception_msg}"')
