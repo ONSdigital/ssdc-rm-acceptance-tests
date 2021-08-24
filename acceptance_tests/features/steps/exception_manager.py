@@ -5,6 +5,7 @@ import uuid
 import requests
 from behave import step
 
+from acceptance_tests.utilities.exception_manager_helper import quarantine_bad_messages
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -59,3 +60,18 @@ def _check_message_exception_as_expected(bad_message_hash, expected_exception):
 @step('a bad message appears in exception manager with exception message containing "{expected_exception_msg}"')
 def bad_message_appears_in_exception_manager(context, expected_exception_msg):
     look_for_each_bad_msg(context, expected_exception_msg)
+
+
+@step("each bad msg can be successfully quarantined")
+def each_bad_msg_can_be_successfully_quarantined(context):
+    quarantine_bad_messages(context.message_hashes)
+
+    # locally this was enough time for the reset messages to re appear, leaving it longer would be 'better'
+    # to check that quarantine has worked, but for example 30 seconds would slow the tests hugely
+    time.sleep(4)
+
+    response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessages/summary')
+    response.raise_for_status()
+    bad_messages = response.json()
+
+    test_helper.assertEqual(len(bad_messages), 0)
