@@ -1,3 +1,4 @@
+import hashlib
 import json
 import random
 import string
@@ -12,10 +13,10 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def get_uac_by_case_id(uac_update_events, case_id):
+def get_uac_hash_by_case_id(uac_update_events, case_id):
     for uac_dto in uac_update_events:
         if uac_dto['caseId'] == case_id:
-            return uac_dto['uac']
+            return uac_dto['uacHash']
 
     test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATE events")
 
@@ -36,23 +37,37 @@ def check_print_file_in_sftp(context):
                             'Print file template expects UACs or QIDs but no corresponding emitted_uacs found in '
                             'the scenario context')
 
+    actual_print_file_rows = get_print_file_rows_from_sftp(context.test_start_local_datetime, context.pack_code)
+
+    unhashed_uacs_from_actual_print_file = _get_unhashed_uacs_from_actual_print_file(actual_print_file_rows, template)
+
     expected_print_file_rows = generate_expected_print_file_rows(template,
                                                                  context.emitted_cases,
-                                                                 emitted_uacs)
+                                                                 emitted_uacs, unhashed_uacs_from_actual_print_file)
 
-    actual_print_file_rows = get_print_file_rows_from_sftp(context.test_start_local_datetime, context.pack_code)
     check_print_file_matches_expected(actual_print_file_rows, expected_print_file_rows)
 
 
-def generate_expected_print_file_rows(template, cases, uac_update_events):
+def _get_unhashed_uacs_from_actual_print_file(actual_print_file_rows, template):
+    unhashed_uacs_list = []
+    for print_file_rows in actual_print_file_rows:
+        unpacked_print_file = print_file_rows.split("|")
+
+        for row, template_column in zip(unpacked_print_file, template):
+            if template_column == "__uac__":
+                unhashed_uacs_list.append(row)
+    return unhashed_uacs_list
+
+
+def generate_expected_print_file_rows(template, cases, uac_update_events, unhashed_uacs_list):
     print_file_rows = []
 
     for case in cases:
         print_row_components = []
         for field in template:
             if field == '__uac__':
-                uac = get_uac_by_case_id(uac_update_events, case['caseId'])
-                print_row_components.append(uac)
+                hashed_uac = get_uac_hash_by_case_id(uac_update_events, case['caseId'])
+                _hashing_expected_uacs(hashed_uac, print_row_components, unhashed_uacs_list)
             elif field == '__qid__':
                 qid = get_qid_by_case_id(uac_update_events, case['caseId'])
                 print_row_components.append(qid)
@@ -60,6 +75,14 @@ def generate_expected_print_file_rows(template, cases, uac_update_events):
                 print_row_components.append(case["sample"][field])
         print_file_rows.append(format_expected_print_file_row(print_row_components))
     return print_file_rows
+
+
+def _hashing_expected_uacs(hashed_uac, print_row_components, unhashed_uacs_list):
+    for unhashed_uac in unhashed_uacs_list:
+        temp_hashed_uac = hashlib.sha256(unhashed_uac.strip('"').encode('utf-8')).hexdigest()
+        if temp_hashed_uac == hashed_uac:
+            print_row_components.append(unhashed_uac.strip('"'))
+            break
 
 
 def format_expected_print_file_row(print_row_components: Iterable[str]):
