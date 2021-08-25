@@ -1,4 +1,4 @@
-Feature:
+Feature: Check exception manager is called for every topic and handles them as expected
 
   Scenario: Bad Json Msg sent to every topic, msg arrives in exception manager
     When a bad json msg is sent to every topic consumed by RM

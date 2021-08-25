@@ -37,7 +37,8 @@ def look_for_each_bad_msg(context, expected_exception_msg):
     response.raise_for_status()
     bad_messages = response.json()
 
-    test_helper.assertEqual(len(bad_messages), len(context.message_hashes))
+    test_helper.assertEqual(len(bad_messages), len(context.message_hashes),
+                            msg=f'actual number of bad msgs does not match expected number of hashes')
 
     for bad_message in bad_messages:
         test_helper.assertGreater(bad_message['seenCount'], 1,
