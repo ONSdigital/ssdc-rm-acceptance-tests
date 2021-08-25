@@ -112,7 +112,7 @@ def load_sample_file_step_for_sensitive_data(context, sample_file_name, sensitiv
 
     upload_sample_file(context.collex_id, sample_file_path)
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_column)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, {sensitive_column})
 
 
 def upload_sample_file(collex_id, sample_file_path):
