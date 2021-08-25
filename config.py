@@ -45,6 +45,14 @@ class Config:
     SUPPORT_TOOL_PORT = os.getenv('SUPPORT_TOOL_PORT', '9999')
     SUPPORT_TOOL_API = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}/api'
 
+    NOTIFY_SERVICE_HOST = os.getenv('NOTIFY_SERVICE_HOST', 'localhost')
+    NOTIFY_SERVICE_PORT = os.getenv('NOTIFY_SERVICE_PORT', '8162')
+    NOTIFY_SERVICE_API = f'http://{NOTIFY_SERVICE_HOST}:{NOTIFY_SERVICE_PORT}/'
+
+    NOTIFY_STUB_HOST = os.getenv('NOTIFY_STUB_HOST', 'localhost')
+    NOTIFY_STUB_PORT = os.getenv('NOTIFY_STUB_PORT', '8917')
+    NOTIFY_STUB_SERVICE = f'http://{NOTIFY_STUB_HOST}:{NOTIFY_STUB_PORT}'
+
     SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
     SFTP_PORT = os.getenv('SFTP_PORT', '122')
     SFTP_USERNAME = os.getenv('SFTP_USERNAME', 'centos')

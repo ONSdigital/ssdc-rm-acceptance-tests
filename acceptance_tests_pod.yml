@@ -121,6 +121,10 @@ spec:
       value: "case-api"
     - name: CASEAPI_SERVICE_PORT
       value: "80"
+    - name: NOTIFY_SERVICE_HOST
+      value: "notify-service"
+    - name: NOTIFY_SERVICE_PORT
+      value: "80"
   volumes:
   - name: case-cloud-sql-certs
     secret:
