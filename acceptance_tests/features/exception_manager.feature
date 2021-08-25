@@ -26,7 +26,7 @@ Feature:
     And each bad msg can be successfully quarantined
 
   Scenario: Bad respondent authenticated message turns up in exception manager
-    When a bad respondent authenticated event is out on the topic
+    When a bad respondent authenticated event is put on the topic
     Then a bad message appears in exception manager with exception message containing "Questionnaire Id '666' not found!"
     And each bad msg can be successfully quarantined
 

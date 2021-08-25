@@ -32,7 +32,7 @@ def send_respondent_authenticated_msg(context):
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_UAC_AUTHENTICATION_TOPIC)
 
 
-@step("a bad respondent authenticated event is out on the topic")
+@step("a bad respondent authenticated event is put on the topic")
 def a_bad_respondent_authenticated_event_is_out_on_the_topic(context):
     message = json.dumps(
         {
