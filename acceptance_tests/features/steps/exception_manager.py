@@ -38,7 +38,7 @@ def look_for_each_bad_msg(context, expected_exception_msg):
     bad_messages = response.json()
 
     test_helper.assertEqual(len(bad_messages), len(context.message_hashes),
-                            msg=f'actual number of bad msgs does not match expected number of hashes')
+                            msg='actual number of bad msgs does not match expected number of hashes')
 
     for bad_message in bad_messages:
         test_helper.assertGreater(bad_message['seenCount'], 1,
@@ -55,7 +55,8 @@ def _check_message_exception_as_expected(bad_message_hash, expected_exception):
     response.raise_for_status()
     message_details = response.json()
 
-    test_helper.assertIn(expected_exception, message_details[0]['exceptionReport']['exceptionMessage'])
+    test_helper.assertIn(expected_exception, message_details[0]['exceptionReport']['exceptionMessage'],
+                         msg='Execption manager exception messsge differs from expected message')
 
 
 @step('a bad message appears in exception manager with exception message containing "{expected_exception_msg}"')
@@ -75,4 +76,4 @@ def each_bad_msg_can_be_successfully_quarantined(context):
     response.raise_for_status()
     bad_messages = response.json()
 
-    test_helper.assertEqual(len(bad_messages), 0)
+    test_helper.assertEqual(len(bad_messages), 0, msg=f'Zero bad messages were expected. Received {len(bad_messages)}')
