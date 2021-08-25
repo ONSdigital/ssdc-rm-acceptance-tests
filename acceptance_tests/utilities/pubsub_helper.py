@@ -60,5 +60,3 @@ def _ack_all_on_subscription(subscriber, subscription_path):
     # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
     if len(response.received_messages) == max_messages_per_attempt:
         _ack_all_on_subscription(subscriber, subscription_path)
-
-    ack_ids
