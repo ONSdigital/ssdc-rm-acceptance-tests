@@ -56,7 +56,7 @@ def _check_message_exception_as_expected(bad_message_hash, expected_exception):
     message_details = response.json()
 
     test_helper.assertIn(expected_exception, message_details[0]['exceptionReport']['exceptionMessage'],
-                         msg='Execption manager exception messsge differs from expected message')
+                         msg='Exception manager exception message differs from expected message')
 
 
 @step('a bad message appears in exception manager with exception message containing "{expected_exception_msg}"')
