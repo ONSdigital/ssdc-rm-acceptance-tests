@@ -66,9 +66,9 @@ def bad_message_appears_in_exception_manager(context, expected_exception_msg):
 def each_bad_msg_can_be_successfully_quarantined(context):
     quarantine_bad_messages(context.message_hashes)
 
-    # locally this was enough time for the reset messages to re appear, leaving it longer would be 'better'
+    # test locally this was enough time for the reset messages to re appear, leaving it longer would be 'better'
     # to check that quarantine has worked, but for example 30 seconds would slow the tests hugely
-    time.sleep(4)
+    time.sleep(3)
 
     response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessages/summary')
     response.raise_for_status()
