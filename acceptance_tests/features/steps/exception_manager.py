@@ -70,7 +70,7 @@ def each_bad_msg_can_be_successfully_quarantined(context):
 
     # test locally this was enough time for the reset messages to re appear, leaving it longer would be 'better'
     # to check that quarantine has worked, but for example 30 seconds would slow the tests hugely
-    time.sleep(3)
+    time.sleep(10)
 
     response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessages/summary')
     response.raise_for_status()
