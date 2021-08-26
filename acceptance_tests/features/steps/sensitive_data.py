@@ -1,3 +1,4 @@
+import hashlib
 import json
 import uuid
 from datetime import datetime
@@ -49,3 +50,29 @@ def retry_check_sensitive_data_change(context, sensitive_column, expected_value)
 
         test_helper.assertEqual(result[0][sensitive_column], expected_value,
                                 f"The {sensitive_column} should have been updated, but it hasn't been")
+
+
+@step("a bad sensitive data event is put on the topic")
+def a_bad_sensitive_data_event_is_put_on_the_topic(context):
+    message = json.dumps(
+        {
+            "header": {
+                "version": Config.EVENT_SCHEMA_VERSION,
+                "topic": Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC,
+                "source": "RH",
+                "channel": "RH",
+                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "messageId": str(uuid.uuid4()),
+                "correlationId": str(uuid.uuid4()),
+                "originatingUser": "foo@bar.com"
+            },
+            "payload": {
+                "updateSampleSensitive": {
+                    "caseId": "386a50b8-6ba0-40f6-bd3c-34333d58be90",
+                    "sampleSensitive": {'favouriteColor': 'Blue'}
+                }
+            }
+        })
+
+    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC)
+    context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]

@@ -49,6 +49,7 @@ Every context attribute used by the tests should be described here.
 | telephone_capture_request | Stores the UAC and QID returned by a telephone capture API call                 |
 | notify_template_id        | Stores the ID of the sms template used for the notify service                   |
 | phone_number              | Stores the phone number needed to check the notify api                          |
+| message_hashes            | Stores the hash of sent messages, for testing exception management              |
 
 ### Sharing Code Between Steps
 

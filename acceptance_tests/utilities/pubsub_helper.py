@@ -20,7 +20,7 @@ def publish_to_pubsub(message, project, topic, **kwargs):
     logger.info("Sent PubSub message", topic=topic, project=project)
 
 
-def purge_queues():
+def purge_outbound_topics():
     _purge_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION)
     _purge_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION)
 
