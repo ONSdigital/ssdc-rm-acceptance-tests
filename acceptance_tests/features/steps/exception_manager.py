@@ -32,7 +32,7 @@ def put_a_bad_msg_on_every_topic_on(context):
 
 @step('each bad msg is seen by exception manager with the message containing "{expected_exception_msg}"')
 def look_for_each_bad_msg(context, expected_exception_msg):
-    time.sleep(5)
+    time.sleep(10)
     response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessages/summary')
     response.raise_for_status()
     bad_messages = response.json()
