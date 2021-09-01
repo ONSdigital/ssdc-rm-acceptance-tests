@@ -8,7 +8,7 @@ def quarantine_bad_messages(bad_message_hashes):
         response = requests.get(f"{Config.EXCEPTION_MANAGER_URL}/skipmessage/{message_hash}")
         response.raise_for_status()
 
-    time.sleep(1)
+    time.sleep(3)
     requests.get(f'{Config.EXCEPTION_MANAGER_URL}/reset')
 
 
