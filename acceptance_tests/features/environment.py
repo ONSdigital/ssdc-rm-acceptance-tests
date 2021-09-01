@@ -36,6 +36,8 @@ def before_scenario(context, _):
     purge_fulfilment_triggers()
 
     context.test_start_local_datetime = datetime.now()
+    context.correlation_id = None
+    context.originating_user = None
 
 
 def after_all(_context):

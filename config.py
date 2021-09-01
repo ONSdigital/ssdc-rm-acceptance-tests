@@ -65,3 +65,5 @@ class Config:
     CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
 
     RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
+
+    SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')

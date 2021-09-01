@@ -6,6 +6,7 @@ from datetime import datetime
 from behave import step
 from tenacity import retry, wait_fixed, stop_after_delay
 
+from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -14,6 +15,9 @@ from config import Config
 
 @step("an UPDATE_SAMPLE_SENSITIVE event is received updating the {sensitive_column} to {new_value}")
 def send_update_sample_sensitive_msg(context, sensitive_column, new_value):
+    context.correlation_id = str(uuid.uuid4())
+    context.originating_user = get_unique_user_email()
+
     message = json.dumps(
         {
             "header": {
@@ -23,8 +27,8 @@ def send_update_sample_sensitive_msg(context, sensitive_column, new_value):
                 "channel": "RH",
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
-                "correlationId": str(uuid.uuid4()),
-                "originatingUser": "foo@bar.com"
+                "correlationId": context.correlation_id,
+                "originatingUser": context.originating_user
             },
             "payload": {
                 "updateSampleSensitive": {

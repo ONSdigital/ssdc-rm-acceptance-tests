@@ -6,6 +6,7 @@ import uuid
 import requests
 from behave import step
 
+from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -27,14 +28,16 @@ def authorise_sms_pack_code(context):
 def request_replacement_uac_by_sms(context, phone_number):
     requests.get(f'{Config.NOTIFY_STUB_SERVICE}/reset')
     context.phone_number = phone_number
+    context.correlation_id = str(uuid.uuid4())
+    context.originating_user = get_unique_user_email()
 
     url = f'{Config.NOTIFY_SERVICE_API}sms-fulfilment'
     body = {
         "header": {
             "source": "CC",
             "channel": "CC",
-            "correlationId": str(uuid.uuid4()),
-            "originatingUser": "foo@bar.com"
+            "correlationId": context.correlation_id,
+            "originatingUser": context.originating_user
         },
         "payload": {
             "smsFulfilment": {

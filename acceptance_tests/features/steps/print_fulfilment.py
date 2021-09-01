@@ -6,6 +6,7 @@ from time import sleep
 import requests
 from behave import step
 
+from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
@@ -23,7 +24,7 @@ def request_print_fulfilment_step(context):
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
                 "correlationId": str(uuid.uuid4()),
-                "originatingUser": "foo@bar.com"
+                "originatingUser": get_unique_user_email()
             },
             "payload": {
                 "printFulfilment": {

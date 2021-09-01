@@ -7,7 +7,7 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 
 @step("a UAC_UPDATE message is emitted with active set to false")
 def uac_update_msg_emitted(context):
-    emitted_uac = get_emitted_uac_update()
+    emitted_uac = get_emitted_uac_update(context.correlation_id, context.originating_user)
     test_helper.assertEqual(emitted_uac['caseId'], context.emitted_cases[0]['caseId'],
                             'The UAC_UPDATE message case ID must match the first case ID')
     test_helper.assertFalse(emitted_uac['active'], 'The UAC_UPDATE message should active flag "false"')
@@ -15,7 +15,7 @@ def uac_update_msg_emitted(context):
 
 @step('a CASE_UPDATE message is emitted where "{case_field}" is "{expected_field_value}"')
 def case_update_msg_sent_with_values(context, case_field, expected_field_value):
-    emitted_case = get_emitted_case_update()
+    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user)
 
     test_helper.assertEqual(emitted_case['caseId'], context.emitted_cases[0]['caseId'],
                             'The updated case is expected to be the first stored emitted case')
@@ -25,7 +25,8 @@ def case_update_msg_sent_with_values(context, case_field, expected_field_value):
 
 @step("UAC_UPDATE messages are emitted with active set to {active:boolean}")
 def check_uac_update_msgs_emitted_with_qid_active(context, active):
-    context.emitted_uacs = get_uac_update_events(len(context.emitted_cases))
+    context.emitted_uacs = get_uac_update_events(len(context.emitted_cases), context.correlation_id,
+                                                 context.originating_user)
     _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
 
     _check_new_uacs_are_as_expected(context.emitted_uacs, active)
@@ -33,7 +34,7 @@ def check_uac_update_msgs_emitted_with_qid_active(context, active):
 
 @step("{expected_count:d} UAC_UPDATE messages are emitted with active set to {active:boolean}")
 def check_expected_number_of_uac_update_msgs_emitted(context, expected_count, active):
-    context.emitted_uacs = get_uac_update_events(expected_count)
+    context.emitted_uacs = get_uac_update_events(expected_count, context.correlation_id, context.originating_user)
 
     _check_new_uacs_are_as_expected(context.emitted_uacs, active)
 
