@@ -50,6 +50,9 @@ Every context attribute used by the tests should be described here.
 | notify_template_id        | Stores the ID of the sms template used for the notify service                   |
 | phone_number              | Stores the phone number needed to check the notify api                          |
 | message_hashes            | Stores the hash of sent messages, for testing exception management              |
+| correlation_id            | Stores the ID which connects all related events together                        |
+| originating_user          | Stores the email of the ONS employee who originally initiated a business event  |
+
 
 ### Sharing Code Between Steps
 
