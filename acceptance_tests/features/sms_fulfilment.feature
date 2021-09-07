@@ -6,6 +6,7 @@ Feature: Sms fulfilment
     And fulfilments are authorised on sms template
     When a request has been made for a replacement UAC by SMS from phone number "07123456789"
     Then UAC_UPDATE messages are emitted with active set to true
+    And the UAC_UPDATE message matches the SMS fulfilment UAC
     And the events logged against the case are [NEW_CASE,SMS_FULFILMENT]
     And notify api was called with SMS template
 

@@ -51,6 +51,22 @@ def request_replacement_uac_by_sms(context, phone_number):
     response = requests.post(url, json=body)
     response.raise_for_status()
 
+    context.sms_fulfilment_response = response.json()
+
+    _check_sms_fulfilment_response_from_template(context.sms_fulfilment_response, context.template)
+
+
+def _check_sms_fulfilment_response_from_template(sms_fulfilment_response, template):
+    expect_uac_hash_and_qid_in_response = any(
+        template_item in json.loads(template) for template_item in ['__qid__', '__uac__'])
+
+    if expect_uac_hash_and_qid_in_response:
+        test_helper.assertTrue(sms_fulfilment_response['uacHash'])
+        test_helper.assertTrue(sms_fulfilment_response['qid'])
+    else:
+        test_helper.assertFalse(
+            sms_fulfilment_response)  # Empty JSON is expected response for non-UAC/QID template
+
 
 def _check_notify_api_called_with_correct_notify_template_id(phone_number, notify_template_id):
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log')
@@ -66,16 +82,23 @@ def check_notify_api_call(context):
     _check_notify_api_called_with_correct_notify_template_id(context.phone_number, context.notify_template_id)
 
 
+@step("the UAC_UPDATE message matches the SMS fulfilment UAC")
+def check_uac_message_matches_sms_uac(context):
+    test_helper.assertEqual(context.emitted_uacs[0]['uacHash'], context.sms_fulfilment_response['uacHash'])
+    test_helper.assertEqual(context.emitted_uacs[0]['qid'], context.sms_fulfilment_response['qid'])
+
+
 @step('a sms template has been created with template "{template}"')
 def create_sms_template(context, template):
     # By using a unique random pack_code we have better filter options
     # We can change/remove this if we get UACS differently or a better solution is found
     context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
     context.notify_template_id = str(uuid.uuid4())
+    context.template = template
     url = f'{Config.SUPPORT_TOOL_API}/smsTemplates'
     body = {
         'notifyTemplateId': context.notify_template_id,
-        'template': json.loads(template),
+        'template': json.loads(context.template),
         'packCode': context.pack_code
     }
 

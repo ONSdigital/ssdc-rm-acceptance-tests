@@ -48,6 +48,7 @@ Every context attribute used by the tests should be described here.
 | template                  | Stores the column template used for fulfilments or action rules                 |
 | telephone_capture_request | Stores the UAC and QID returned by a telephone capture API call                 |
 | notify_template_id        | Stores the ID of the sms template used for the notify service                   |
+| sms_fulfilment_response   | Stores the response JSON from a `POST` to the Notify API                        |
 | phone_number              | Stores the phone number needed to check the notify api                          |
 | message_hashes            | Stores the hash of sent messages, for testing exception management              |
 | correlation_id            | Stores the ID which connects all related events together                        |
@@ -62,7 +63,7 @@ the same file, or the shared code should be factored out into the utilities modu
 ### Step wording
 
 Steps should be written in full and concise sentences, avoiding unnecessary abbreviations and shorthand. They should be
-as understandable and non-technical possible.
+as understandable and as non-technical as possible.
 
 ### Assertions
 
