@@ -53,10 +53,10 @@ def request_replacement_uac_by_sms(context, phone_number):
 
     context.sms_fulfilment_response = response.json()
 
-    _check_sms_fulfilment_response_from_template(context.sms_fulfilment_response, context.template)
+    _check_sms_fulfilment_response(context.sms_fulfilment_response, context.template)
 
 
-def _check_sms_fulfilment_response_from_template(sms_fulfilment_response, template):
+def _check_sms_fulfilment_response(sms_fulfilment_response, template):
     expect_uac_hash_and_qid_in_response = any(
         template_item in json.loads(template) for template_item in ['__qid__', '__uac__'])
 
