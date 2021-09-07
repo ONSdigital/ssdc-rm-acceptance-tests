@@ -1,6 +1,7 @@
 import json
 
 from google.cloud import pubsub_v1
+from tenacity import retry, stop_after_delay, wait_fixed
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -98,11 +99,16 @@ def get_emitted_uac_update(correlation_id, originating_user):
     return messages_received[0]['payload']['uacUpdate']
 
 
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def get_uac_update_events(expected_number, correlation_id, originating_user):
     messages_received = []
     start_listening_to_pubsub_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
                                            message_list=messages_received,
                                            expected_msg_count=expected_number)
+
+    test_helper.assertEqual(len(messages_received), expected_number,
+                            f'Expected to receive {expected_number} UAC_UPDATE message(s)')
+
     uac_payloads = []
     for uac_event in messages_received:
         if correlation_id:
