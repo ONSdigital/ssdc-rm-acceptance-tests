@@ -51,21 +51,9 @@ def request_replacement_uac_by_sms(context, phone_number):
     response = requests.post(url, json=body)
     response.raise_for_status()
 
-    context.sms_fulfilment_response = response.json()
+    context.sms_fulfilment_response_json = response.json()
 
-    _check_sms_fulfilment_response(context.sms_fulfilment_response, context.template)
-
-
-def _check_sms_fulfilment_response(sms_fulfilment_response, template):
-    expect_uac_hash_and_qid_in_response = any(
-        template_item in json.loads(template) for template_item in ['__qid__', '__uac__'])
-
-    if expect_uac_hash_and_qid_in_response:
-        test_helper.assertTrue(sms_fulfilment_response['uacHash'])
-        test_helper.assertTrue(sms_fulfilment_response['qid'])
-    else:
-        test_helper.assertFalse(
-            sms_fulfilment_response)  # Empty JSON is expected response for non-UAC/QID template
+    _check_sms_fulfilment_response(context.sms_fulfilment_response_json, context.template)
 
 
 def _check_notify_api_called_with_correct_notify_template_id(phone_number, notify_template_id):
@@ -84,8 +72,8 @@ def check_notify_api_call(context):
 
 @step("the UAC_UPDATE message matches the SMS fulfilment UAC")
 def check_uac_message_matches_sms_uac(context):
-    test_helper.assertEqual(context.emitted_uacs[0]['uacHash'], context.sms_fulfilment_response['uacHash'])
-    test_helper.assertEqual(context.emitted_uacs[0]['qid'], context.sms_fulfilment_response['qid'])
+    test_helper.assertEqual(context.emitted_uacs[0]['uacHash'], context.sms_fulfilment_response_json['uacHash'])
+    test_helper.assertEqual(context.emitted_uacs[0]['qid'], context.sms_fulfilment_response_json['qid'])
 
 
 @step('a sms template has been created with template "{template}"')
@@ -104,3 +92,15 @@ def create_sms_template(context, template):
 
     response = requests.post(url, json=body)
     response.raise_for_status()
+
+
+def _check_sms_fulfilment_response(sms_fulfilment_response, template):
+    expect_uac_hash_and_qid_in_response = any(
+        template_item in json.loads(template) for template_item in ['__qid__', '__uac__'])
+
+    if expect_uac_hash_and_qid_in_response:
+        test_helper.assertTrue(sms_fulfilment_response['uacHash'])
+        test_helper.assertTrue(sms_fulfilment_response['qid'])
+    else:
+        test_helper.assertFalse(
+            sms_fulfilment_response)  # Empty JSON is expected response for non-UAC/QID template
