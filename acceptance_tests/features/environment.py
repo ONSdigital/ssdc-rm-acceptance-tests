@@ -7,7 +7,6 @@ import requests
 from behave import register_type
 from structlog import wrap_logger
 
-from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages_and_clear
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -19,9 +18,17 @@ register_type(boolean=lambda text: strtobool(text))
 
 
 def purge_fulfilment_triggers():
-    with open_cursor() as cur:
-        delete_trigger_query = """DELETE FROM casev3.fulfilment_next_trigger"""
-        cur.execute(delete_trigger_query)
+    response = requests.get(f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers')
+    response.raise_for_status()
+
+    trigger_items = response.json()['_embedded']['fulfilmentNextTriggers']
+
+    for trigger_item in trigger_items:
+        trigger_id = trigger_item['_links']['self']['href'].split("/")[-1]
+        url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/{trigger_id}'
+
+        delete_response = requests.delete(url)
+        delete_response.raise_for_status()
 
 
 def before_all(_context):
