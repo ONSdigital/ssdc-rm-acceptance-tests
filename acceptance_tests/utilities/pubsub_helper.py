@@ -70,9 +70,9 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
     deadline = time.time() + timeout
 
     while len(messages) < expected_msg_count and not time.time() > deadline:
-        # Why not just set the `max_messages` in the subscriber.pull call to the expected number? Because the client
-        # will not wait for the timeout before returning if it finds just at least one message, where we want to
-        # instead allow the full time for all the expected messages time to be published and pulled
+        # Why not just set the `max_messages` in the subscriber.pull call to the expected number? Because the
+        # subscriber client does not wait for the timeout before returning if it finds just at least one message,
+        # where we want to instead allow the full time for all the expected messages time to be published and pulled
         response = subscriber.pull(subscription_path, return_immediately=True, max_messages=1)
         messages.extend(response.received_messages)
 
