@@ -71,7 +71,7 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
 
     # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
     # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
-    # the full time for all the expected messages to be published and pulled 
+    # the full time for all the expected messages to be published and pulled
     while len(received_messages) < expected_msg_count and not time.time() > deadline:
         try:
             response = subscriber.pull(subscription_path, max_messages=expected_msg_count, timeout=1)
@@ -83,7 +83,7 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
 
     test_helper.assertEqual(len(received_messages), expected_msg_count,
                             f'Expected to pull exactly {expected_msg_count} message(s) from '
-                            f'subscription {subscription_path} but only found {len(received_messages)} '
+                            f'subscription {subscription_path} but found {len(received_messages)} '
                             f'within the {timeout} second timeout')
     return received_messages
 
