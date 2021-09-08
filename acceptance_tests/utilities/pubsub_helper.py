@@ -1,9 +1,12 @@
+import json
 import logging
+import time
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
 from structlog import wrap_logger
 
+from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -53,10 +56,47 @@ def _ack_all_on_subscription(subscriber, subscription_path):
         return
 
     ack_ids = [message.ack_id for message in response.received_messages]
-
     if ack_ids:
         subscriber.acknowledge(subscription_path, ack_ids)
 
     # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
     if len(response.received_messages) == max_messages_per_attempt:
         _ack_all_on_subscription(subscriber, subscription_path)
+
+
+def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout):
+    # Synchronously pull messages one at at time until we either hit the expected number or the timeout passes.
+    messages = []
+    deadline = time.time() + timeout
+
+    while len(messages) < expected_msg_count and not time.time() > deadline:
+        # Why not just set the `max_messages` in the subscriber.pull call to the expected number? Because the client
+        # will not wait for the timeout before returning if it finds just at least one message, where we want to
+        # instead allow the full time for all the expected messages time to be published and pulled
+        response = subscriber.pull(subscription_path, return_immediately=True, max_messages=1)
+        messages.extend(response.received_messages)
+
+    test_helper.assertEqual(len(messages), expected_msg_count,
+                            f'Expected to pull exactly {expected_msg_count} message(s) from '
+                            f'subscription {subscription_path} but only found {len(messages)} '
+                            f'within the {timeout} second timeout')
+    return messages
+
+
+def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=30):
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
+    received_messages = _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout)
+    parsed_message_bodies = []
+    ack_ids = []
+
+    for received_message in received_messages:
+        parsed_body = json.loads(received_message.message.data)
+        parsed_message_bodies.append(parsed_body)
+        ack_ids.append(received_message.ack_id)
+
+    if ack_ids:
+        subscriber.acknowledge(subscription_path, ack_ids)
+
+    subscriber.close()
+    return parsed_message_bodies

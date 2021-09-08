@@ -39,7 +39,7 @@ def send_refusal_msg(context):
 
 
 @step("a bad REFUSAL event is put on the topic")
-def step_impl(context):
+def send_bad_refusal_message(context):
     message = json.dumps(
         {
             "header": {
@@ -54,6 +54,7 @@ def step_impl(context):
             },
             "payload": {
                 "refusal": {
+                    # This case will not exist
                     "caseId": "1c1e495d-8f49-4d4c-8318-6174454eb605",
                     "type": "EXTRAORDINARY_REFUSAL"
                 }
