@@ -16,23 +16,6 @@ def get_emitted_cases(expected_msg_count=1):
     return case_payloads
 
 
-# def _attempt_to_get_expected_number_of_messages(subscriber, subscription_path, expected_msg_count):
-#     messages = []
-#     remaining_messages_to_get = expected_msg_count
-#     last_one = False
-#
-#     while remaining_messages_to_get and not last_one:
-#         if remaining_messages_to_get == 1:
-#             last_one = True
-#
-#         response = subscriber.pull(subscription_path, max_messages=remaining_messages_to_get, timeout=30)
-#
-#         messages += response.received_messages
-#         remaining_messages_to_get -= len(response.received_messages)
-#
-#     return messages
-
-
 def get_emitted_case_update(correlation_id, originating_user):
     messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
                                                             expected_msg_count=1)
