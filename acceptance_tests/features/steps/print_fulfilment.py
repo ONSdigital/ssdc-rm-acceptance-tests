@@ -7,7 +7,6 @@ import requests
 from behave import step
 
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
-from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
@@ -41,10 +40,14 @@ def request_print_fulfilment_step(context):
 
 @step('print fulfilments are triggered to be sent for printing')
 def print_fulfilments_trigger_step(context):
-    with open_cursor() as cur:
-        add_trigger_query = """INSERT INTO casev3.fulfilment_next_trigger (id, trigger_date_time) VALUES(%s,%s)"""
-        trigger_vars = (str(uuid.uuid4()), datetime.utcnow())
-        cur.execute(add_trigger_query, vars=trigger_vars)
+    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers'
+    body = {
+        'id': str(uuid.uuid4()),
+        'triggerDateTime': f"{datetime.utcnow().replace(microsecond=0).isoformat()}Z"
+    }
+
+    response = requests.post(url, json=body)
+    response.raise_for_status()
 
 
 @step("fulfilments are authorised on print template")
