@@ -66,21 +66,26 @@ def _ack_all_on_subscription(subscriber, subscription_path):
 
 def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout):
     # Synchronously pull messages one at at time until we either hit the expected number or the timeout passes.
-    messages = []
+    received_messages = []
     deadline = time.time() + timeout
 
-    while len(messages) < expected_msg_count and not time.time() > deadline:
-        # Why not just set the `max_messages` in the subscriber.pull call to the expected number? Because the
-        # subscriber client does not wait for the timeout before returning if it finds just at least one message,
-        # where we want to instead allow the full time for all the expected messages time to be published and pulled
-        response = subscriber.pull(subscription_path, return_immediately=True, max_messages=1)
-        messages.extend(response.received_messages)
+    # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
+    # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
+    # the full time for all the expected messages to be published and pulled 
+    while len(received_messages) < expected_msg_count and not time.time() > deadline:
+        try:
+            response = subscriber.pull(subscription_path, max_messages=expected_msg_count, timeout=1)
+        except DeadlineExceeded:
+            continue
+        if response.received_messages:
+            subscriber.acknowledge(subscription_path, [message.ack_id for message in response.received_messages])
+            received_messages.extend(response.received_messages)
 
-    test_helper.assertEqual(len(messages), expected_msg_count,
+    test_helper.assertEqual(len(received_messages), expected_msg_count,
                             f'Expected to pull exactly {expected_msg_count} message(s) from '
-                            f'subscription {subscription_path} but only found {len(messages)} '
+                            f'subscription {subscription_path} but only found {len(received_messages)} '
                             f'within the {timeout} second timeout')
-    return messages
+    return received_messages
 
 
 def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=30):
@@ -88,15 +93,10 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
     received_messages = _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout)
     parsed_message_bodies = []
-    ack_ids = []
 
     for received_message in received_messages:
         parsed_body = json.loads(received_message.message.data)
         parsed_message_bodies.append(parsed_body)
-        ack_ids.append(received_message.ack_id)
-
-    if ack_ids:
-        subscriber.acknowledge(subscription_path, ack_ids)
 
     subscriber.close()
     return parsed_message_bodies
