@@ -5,7 +5,8 @@ from config import Config
 
 def get_emitted_cases(expected_msg_count=1):
     messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
-                                                            expected_msg_count=expected_msg_count)
+                                                            expected_msg_count=expected_msg_count,
+                                                            timeout=60)
 
     case_payloads = []
     for message_received in messages_received:
