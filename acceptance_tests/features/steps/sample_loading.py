@@ -39,12 +39,12 @@ def equal_dicts(d1, d2, ignore_keys):
 
 
 @step('BOM sample file "{sample_file_name}" is loaded successfully')
-def load_sample_file_step(context, sample_file_name):
+def load_bom_sample_file_step(context, sample_file_name):
     sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path)
 
+    # Fix the BOM mess
     sample_validation_rules[0]['columnName'] = 'TLA'
-
     for index in range(len(sample_rows)):
         sample_rows[index]['TLA'] = sample_rows[index].pop('\ufeffTLA')
 
