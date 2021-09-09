@@ -34,9 +34,6 @@ def request_print_fulfilment_step(context):
         })
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_PRINT_FULFILMENT_TOPIC)
 
-    # TODO - maybe trigger the fulfilments a few seconds in the future instead, but this should work for now, I hope!
-    sleep(2)
-
 
 @step('print fulfilments are triggered to be sent for printing')
 def print_fulfilments_trigger_step(context):
