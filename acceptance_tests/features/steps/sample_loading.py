@@ -38,6 +38,24 @@ def equal_dicts(d1, d2, ignore_keys):
     return d1_filtered == d2_filtered
 
 
+@step('BOM sample file "{sample_file_name}" is loaded successfully')
+def load_bom_sample_file_step(context, sample_file_name):
+    sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
+    sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path)
+
+    # Fix the BOM mess
+    sample_validation_rules[0]['columnName'] = 'TLA'
+    for index in range(len(sample_rows)):
+        sample_rows[index]['TLA'] = sample_rows[index].pop('\ufeffTLA')
+
+    context.survey_id = add_survey(sample_validation_rules)
+    context.collex_id = add_collex(context.survey_id)
+
+    upload_sample_file(context.collex_id, sample_file_path)
+
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+
+
 @step('sample file "{sample_file_name}" is loaded successfully')
 def load_sample_file_step(context, sample_file_name):
     sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
