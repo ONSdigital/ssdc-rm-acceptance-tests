@@ -12,6 +12,9 @@ from config import Config
 
 @step('a print fulfilment has been requested')
 def request_print_fulfilment_step(context):
+    context.correlation_id = str(uuid.uuid4())
+    context.originating_user = get_unique_user_email()
+
     message = json.dumps(
         {
             "header": {
@@ -21,8 +24,8 @@ def request_print_fulfilment_step(context):
                 "channel": "RH",
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
-                "correlationId": str(uuid.uuid4()),
-                "originatingUser": get_unique_user_email()
+                "correlationId": context.correlation_id,
+                "originatingUser": context.originating_user
             },
             "payload": {
                 "printFulfilment": {
