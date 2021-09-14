@@ -5,15 +5,17 @@ from datetime import datetime
 
 from behave import step
 
-from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
+from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
-@step("a deactivate uac message is put on the queue")
-def put_deactivate_uac_on_topic(context):
+@step('a deactivate uac message is put on the queue with email_address "{email_address}"')
+def put_deactivate_uac_on_topic(context, email_address):
     context.correlation_id = str(uuid.uuid4())
-    context.originating_user = get_unique_user_email()
+    context.originating_user = f'{email_address}@{get_random_alpha_numerics(4)}'
+
+    _send_deactivate_uac_message(context.correlation_id, context.originating_user, context.emitted_uacs[0]['qid'])
 
     message = json.dumps(
         {
@@ -37,8 +39,14 @@ def put_deactivate_uac_on_topic(context):
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_DEACTIVATE_UAC_TOPIC)
 
 
-@step("a bad deactivate uac message is put on the topic")
-def a_bad_deactivate_uac_message_is_put_on_the_topic(context):
+@step('a bad deactivate uac message is put on the topic with email address "{email_address}"')
+def a_bad_deactivate_uac_message_is_put_on_the_topic(context, email_address):
+    message = _send_deactivate_uac_message(str(uuid.uuid4()), f'{email_address}@{get_random_alpha_numerics(4)}',
+                                           "123456789")
+    context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
+
+
+def _send_deactivate_uac_message(correlation_id, originating_user, qid):
     message = json.dumps(
         {
             "header": {
@@ -48,15 +56,16 @@ def a_bad_deactivate_uac_message_is_put_on_the_topic(context):
                 "channel": "CC",
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
-                "correlationId": str(uuid.uuid4()),
-                "originatingUser": "foo@bar.com"
+                "correlationId": correlation_id,
+                "originatingUser": originating_user
             },
             "payload": {
                 "deactivateUac": {
-                    "qid": "123456789",
+                    "qid": qid,
                 }
             }
         })
 
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_DEACTIVATE_UAC_TOPIC)
-    context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
+
+    return message

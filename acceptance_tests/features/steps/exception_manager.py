@@ -10,7 +10,6 @@ from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
-
 ALL_INCOMING_TOPICS = [Config.PUBSUB_RECEIPT_TOPIC, Config.PUBSUB_REFUSAL_TOPIC, Config.PUBSUB_INVALID_CASE_TOPIC,
                        Config.PUBSUB_DEACTIVATE_UAC_TOPIC, Config.PUBSUB_PRINT_FULFILMENT_TOPIC,
                        Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC, Config.PUBSUB_UAC_AUTHENTICATION_TOPIC]
@@ -64,9 +63,18 @@ def bad_message_appears_in_exception_manager(context, expected_exception_msg):
 @step("each bad msg can be successfully quarantined")
 def each_bad_msg_can_be_successfully_quarantined(context):
     quarantine_bad_messages(context.message_hashes)
+    _check_bad_messages_are_quarantined(context.message_hashes)
 
-    response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessages/summary')
+    requests.get(f'{Config.EXCEPTION_MANAGER_URL}/reset')
+
+
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+def _check_bad_messages_are_quarantined(expected_quarantined_message_hashes):
+    response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/quarantinedMessages')
     response.raise_for_status()
-    bad_messages = response.json()
+    all_quarantined_messages = response.json()
 
-    test_helper.assertEqual(len(bad_messages), 0, msg=f'Zero bad messages were expected. Received {len(bad_messages)}')
+    test_helper.assertTrue(set(expected_quarantined_message_hashes) <= set(all_quarantined_messages),
+                           msg=f'Did not find all expected quarantined messages. '
+                               f'Expected {expected_quarantined_message_hashes}, '
+                               f'all quarantined messages {all_quarantined_messages}')

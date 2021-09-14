@@ -14,5 +14,5 @@ Feature: deactivate UACs for a case
     And a print template has been created with template "["__uac__"]"
     And a print action rule has been created
     And UAC_UPDATE messages are emitted with active set to true
-    When a deactivate uac message is put on the queue
+    When a deactivate uac message is put on the queue with email_address "DeactivateUac"
     Then UAC_UPDATE messages are emitted with active set to false

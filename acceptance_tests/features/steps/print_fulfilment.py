@@ -5,13 +5,13 @@ from datetime import datetime
 import requests
 from behave import step
 
-from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
+from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
-@step('a print fulfilment has been requested')
-def request_print_fulfilment_step(context):
+@step('a print fulfilment has been requested with email address "{email_address}"')
+def request_print_fulfilment_step(context, email_address):
     message = json.dumps(
         {
             "header": {
@@ -22,7 +22,7 @@ def request_print_fulfilment_step(context):
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
                 "correlationId": str(uuid.uuid4()),
-                "originatingUser": get_unique_user_email()
+                "originatingUser": add_random_suffix_to_email(email_address)
             },
             "payload": {
                 "printFulfilment": {

@@ -1,4 +1,3 @@
-import time
 import requests
 
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
@@ -14,9 +13,6 @@ def quarantine_bad_messages(bad_message_hashes):
 
         response = requests.post(f"{Config.EXCEPTION_MANAGER_URL}/skipmessage", json=skip_request)
         response.raise_for_status()
-
-    time.sleep(3)
-    requests.get(f'{Config.EXCEPTION_MANAGER_URL}/reset')
 
 
 def get_bad_messages_and_clear():
