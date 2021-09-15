@@ -10,8 +10,8 @@ from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
-@step("a SURVEY_LAUNCH event is received")
-def send_survey_launched_msg(context):
+@step("an EQ_LAUNCH event is received")
+def send_eq_launched_msg(context):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = get_unique_user_email()
 
@@ -19,7 +19,7 @@ def send_survey_launched_msg(context):
         {
             "header": {
                 "version": Config.EVENT_SCHEMA_VERSION,
-                "topic": Config.PUBSUB_SURVEY_LAUNCH_TOPIC,
+                "topic": Config.PUBSUB_EQ_LAUNCH_TOPIC,
                 "source": "RH",
                 "channel": "RH",
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
@@ -28,23 +28,23 @@ def send_survey_launched_msg(context):
                 "originatingUser": context.originating_user
             },
             "payload": {
-                "surveyLaunch": {
+                "eqLaunch": {
                     "qid": context.emitted_uacs[0]['qid']
                 }
             }
         }
     )
 
-    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_SURVEY_LAUNCH_TOPIC)
+    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_EQ_LAUNCH_TOPIC)
 
 
-@step("a bad survey launched event is put on the topic")
+@step("a bad EQ launched event is put on the topic")
 def step_impl(context):
     message = json.dumps(
         {
             "header": {
                 "version": Config.EVENT_SCHEMA_VERSION,
-                "topic": Config.PUBSUB_SURVEY_LAUNCH_TOPIC,
+                "topic": Config.PUBSUB_EQ_LAUNCH_TOPIC,
                 "source": "RH",
                 "channel": "RH",
                 "dateTime": f'{datetime.utcnow().isoformat()}Z',
@@ -52,12 +52,12 @@ def step_impl(context):
                 "correlationId": str(uuid.uuid4())
             },
             "payload": {
-                "surveyLaunch": {
+                "eqLaunch": {
                     "qid": "555555"
                 }
             }
         }
     )
 
-    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_SURVEY_LAUNCH_TOPIC)
+    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_EQ_LAUNCH_TOPIC)
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
