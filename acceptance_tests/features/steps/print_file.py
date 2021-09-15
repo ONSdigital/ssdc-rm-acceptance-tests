@@ -13,20 +13,27 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def get_uac_hash_by_case_id(uac_update_events, case_id):
+def _get_uac_matching_case_id(uac_update_events, case_id):
     for uac_dto in uac_update_events:
         if uac_dto['caseId'] == case_id:
-            return uac_dto['uacHash']
+            return uac_dto
 
-    test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATE events")
+    test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATE events. "
+                     f"Full uac_update_events list: {uac_update_events}")
+
+
+def get_uac_hash_by_case_id(uac_update_events, case_id):
+    matching_uac_dto = _get_uac_matching_case_id(uac_update_events, case_id)
+
+    if matching_uac_dto:
+        return matching_uac_dto['uacHash']
 
 
 def get_qid_by_case_id(uac_update_events, case_id):
-    for uac_dto in uac_update_events:
-        if uac_dto['caseId'] == case_id:
-            return uac_dto['qid']
+    matching_uac_dto = _get_uac_matching_case_id(uac_update_events, case_id)
 
-    test_helper.fail(f"Couldn't find event with case ID: {case_id} in UAC_UPDATE events ")
+    if matching_uac_dto:
+        return matching_uac_dto['qid']
 
 
 @step("a print file is created with correct rows")

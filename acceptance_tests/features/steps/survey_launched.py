@@ -15,13 +15,16 @@ def send_survey_launched(context, email_address):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(email_address)
 
-    _send_survey_launched_message(context.correlation_id, context.originating_user, context.emitted_uacs[0]['qid'])
+    message = _send_survey_launched_message(context.correlation_id, context.originating_user,
+                                            context.emitted_uacs[0]['qid'])
+    context.sent_messages.append(message)
 
 
 @step('a bad survey launched event is put on the topic with email address "{email_address}"')
 def bad_survey_launched_message(context, email_address):
     message = _send_survey_launched_message(str(uuid.uuid4()), add_random_suffix_to_email(email_address),
                                             "555555")
+    context.sent_messages.append(message)
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
 
 
