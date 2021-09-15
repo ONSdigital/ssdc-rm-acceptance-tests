@@ -12,8 +12,8 @@ class Config:
     PUBSUB_INVALID_CASE_TOPIC = os.getenv('PUBSUB_INVALID_CASE_TOPIC',
                                           'event_invalid-case')
     PUBSUB_PRINT_FULFILMENT_TOPIC = os.getenv('PUBSUB_PRINT_FULFILMENT_TOPIC', 'event_print-fulfilment')
-    PUBSUB_SURVEY_LAUNCH_TOPIC = os.getenv('PUBSUB_SURVEY_LAUNCH_TOPIC',
-                                           'event_survey-launch')
+    PUBSUB_EQ_LAUNCH_TOPIC = os.getenv('PUBSUB_EQ_LAUNCH_TOPIC',
+                                       'event_eq-launch')
     PUBSUB_UAC_AUTHENTICATION_TOPIC = os.getenv('PUBSUB_UAC_AUTHENTICATION_TOPIC',
                                                 'event_uac-authentication')
     PUBSUB_DEACTIVATE_UAC_TOPIC = os.getenv('PUBSUB_DEACTIVATE_UAC_TOPIC', 'event_deactivate-uac')
