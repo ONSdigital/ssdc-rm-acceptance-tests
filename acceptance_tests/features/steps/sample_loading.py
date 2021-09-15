@@ -1,4 +1,5 @@
 import csv
+import time
 from pathlib import Path
 
 import requests
@@ -153,3 +154,27 @@ def upload_sample_file(collex_id, sample_file_path):
     create_job_url = f'{Config.SUPPORT_TOOL_API}/job'
     response = requests.post(create_job_url, params=form_data)
     response.raise_for_status()
+
+    job_id = response.json()
+
+    get_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}'
+
+    deadline = time.time() + 30
+    sample_validated = False
+
+    while time.time() < deadline:
+        response = requests.get(get_job_url)
+        response.raise_for_status()
+
+        if response.json().get("jobStatus") == "VALIDATED_OK":
+            sample_validated = True
+            break
+        else:
+            time.sleep(1)
+
+    if sample_validated:
+        process_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}/process'
+        response = requests.post(process_job_url)
+        response.raise_for_status()
+    else:
+        test_helper.fail("Sample did not pass validation before timeout")
