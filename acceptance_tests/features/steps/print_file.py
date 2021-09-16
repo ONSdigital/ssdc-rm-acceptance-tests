@@ -40,9 +40,10 @@ def get_qid_by_case_id(uac_update_events, case_id):
 def check_print_file_in_sftp(context):
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
     emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
+
     test_helper.assertFalse(('__uac__' in template or '__qid__' in template) and not emitted_uacs,
                             'Print file template expects UACs or QIDs but no corresponding emitted_uacs found in '
-                            'the scenario context')
+                            f'the scenario context, emitted_uacs {emitted_uacs}')
 
     actual_print_file_rows = get_print_file_rows_from_sftp(context.test_start_local_datetime, context.pack_code)
 

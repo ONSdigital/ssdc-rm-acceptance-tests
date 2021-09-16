@@ -9,8 +9,9 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 def uac_update_msg_emitted(context):
     emitted_uac = get_emitted_uac_update(context.correlation_id, context.originating_user)
     test_helper.assertEqual(emitted_uac['caseId'], context.emitted_cases[0]['caseId'],
-                            'The UAC_UPDATE message case ID must match the first case ID')
-    test_helper.assertFalse(emitted_uac['active'], 'The UAC_UPDATE message should active flag "false"')
+                            f'The UAC_UPDATE message case ID must match the first case ID, emitted_uac {emitted_uac}')
+    test_helper.assertFalse(emitted_uac['active'], 'The UAC_UPDATE message should active flag "false", '
+                                                   f'emitted_uac {emitted_uac}')
 
 
 @step('a CASE_UPDATE message is emitted where "{case_field}" is "{expected_field_value}"')
@@ -18,9 +19,10 @@ def case_update_msg_sent_with_values(context, case_field, expected_field_value):
     emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user)
 
     test_helper.assertEqual(emitted_case['caseId'], context.emitted_cases[0]['caseId'],
-                            'The updated case is expected to be the first stored emitted case')
+                            'The updated case is expected to be the first stored emitted case,'
+                            f'emitted case: {emitted_case}')
     test_helper.assertEqual(str(emitted_case[case_field]), expected_field_value,
-                            'The updated case field must match the expected value')
+                            f'The updated case field must match the expected value, emitted case: {emitted_case}')
 
 
 @step("UAC_UPDATE messages are emitted with active set to {active:boolean}")
@@ -55,4 +57,6 @@ def _check_uacs_updated_match_cases(uac_update_events, cases):
                                'The UAC updated events should be linked to the given set of case IDs')
 
     test_helper.assertEqual(len(uac_update_events), len(cases),
-                            'There should be one and only one UAC updated event for each given case ID')
+                            'There should be one and only one UAC updated event for each given case ID,'
+                            f'uac_update_events: {uac_update_events} '
+                            f'cases {cases}')

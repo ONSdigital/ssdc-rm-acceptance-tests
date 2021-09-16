@@ -36,6 +36,7 @@ def step_to_do_a_thing(context):
 #### Context Index
 
 Every context attribute used by the tests should be described here.
+Must also be added to the function: log_out_user_context_values in audit_trail_helper.py
 
 | Attribute                    | Description                                                                     |
 | -------------------------    | ------------------------------------------------------------------------------- |
@@ -53,6 +54,7 @@ Every context attribute used by the tests should be described here.
 | message_hashes               | Stores the hash of sent messages, for testing exception management              |
 | correlation_id               | Stores the ID which connects all related events together                        |
 | originating_user             | Stores the email of the ONS employee who originally initiated a business event  |
+| sent_messages                | Stores every scenario sent message for debugging errors                         |
 
 ### Sharing Code Between Steps
 

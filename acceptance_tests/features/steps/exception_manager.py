@@ -39,7 +39,8 @@ def look_for_each_bad_msg(context, expected_exception_msg):
     bad_messages = response.json()
 
     test_helper.assertEqual(len(bad_messages), len(context.message_hashes),
-                            msg='actual number of bad msgs does not match expected number of hashes')
+                            msg='actual number of bad msgs does not match expected number of hashes'
+                                f'bad_messages: {bad_messages}, context.message_hashes: {context.message_hashes}')
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
@@ -49,10 +50,12 @@ def _check_message_exception_as_expected(bad_message_hash, expected_exception):
     message_details = response.json()
 
     test_helper.assertIn(expected_exception, message_details[0]['exceptionReport']['exceptionMessage'],
-                         msg='Exception manager exception message differs from expected message')
+                         msg='Exception manager 1st exception message differs from expected message'
+                         f'All message_details from exception manager: {message_details}')
 
     test_helper.assertGreater(message_details[0]['stats']['seenCount'], 1,
-                              msg='Seen count is not greater than 1')
+                              msg='Seen count is not greater than 1'
+                              f'All message_details from exception manager: {message_details}')
 
 
 @step('a bad message appears in exception manager with exception message containing "{expected_exception_msg}"')

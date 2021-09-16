@@ -27,7 +27,8 @@ def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]
         if matched_row:
             sample_rows.remove(matched_row)
         else:
-            test_helper.fail(f"Could not find matching row in the sample data for case: {emitted_case}")
+            test_helper.fail(f"Could not find matching row in the sample data for case: {emitted_case} "
+                             f"all emitted cases: {emitted_cases}")
 
     return emitted_cases
 

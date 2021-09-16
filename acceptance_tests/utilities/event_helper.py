@@ -11,40 +11,40 @@ def get_emitted_cases(expected_msg_count=1):
     case_payloads = []
     for message_received in messages_received:
         test_helper.assertEqual(message_received['header']['originatingUser'], Config.SAMPLE_LOAD_ORIGINATING_USER,
-                                'Unexpected originating user')
+                                f'Unexpected originating user, all of messages_received: {messages_received}')
         case_payloads.append(message_received['payload']['caseUpdate'])
 
     return case_payloads
 
 
 def get_emitted_case_update(correlation_id, originating_user):
-    messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
-                                                            expected_msg_count=1)
+    message_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
+                                                           expected_msg_count=1)[0]
 
     if correlation_id:
-        test_helper.assertEqual(messages_received[0]['header']['correlationId'], correlation_id,
-                                'Unexpected correlation ID')
+        test_helper.assertEqual(message_received['header']['correlationId'], correlation_id,
+                                'Unexpected correlation ID, does not match message received')
 
     if originating_user:
-        test_helper.assertEqual(messages_received[0]['header']['originatingUser'], originating_user,
+        test_helper.assertEqual(message_received['header']['originatingUser'], originating_user,
                                 'Unexpected originating user')
 
-    return messages_received[0]['payload']['caseUpdate']
+    return message_received['payload']['caseUpdate']
 
 
 def get_emitted_uac_update(correlation_id, originating_user):
-    messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
-                                                            expected_msg_count=1)
+    message_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
+                                                           expected_msg_count=1)[0]
 
     if correlation_id:
-        test_helper.assertEqual(messages_received[0]['header']['correlationId'], correlation_id,
+        test_helper.assertEqual(message_received['header']['correlationId'], correlation_id,
                                 'Unexpected correlation ID')
 
     if originating_user:
-        test_helper.assertEqual(messages_received[0]['header']['originatingUser'], originating_user,
+        test_helper.assertEqual(message_received['header']['originatingUser'], originating_user,
                                 'Unexpected originating user')
 
-    return messages_received[0]['payload']['uacUpdate']
+    return message_received['payload']['uacUpdate']
 
 
 def get_uac_update_events(expected_number, correlation_id, originating_user):
@@ -56,11 +56,11 @@ def get_uac_update_events(expected_number, correlation_id, originating_user):
     for uac_event in messages_received:
         if correlation_id:
             test_helper.assertEqual(uac_event['header']['correlationId'], correlation_id,
-                                    'Unexpected correlation ID')
+                                    f'Unexpected correlation ID, full messages received {messages_received}')
 
         if originating_user:
             test_helper.assertEqual(uac_event['header']['originatingUser'], originating_user,
-                                    'Unexpected originating user')
+                                    f'Unexpected originating user,  full messages received {messages_received}')
 
         uac_payloads.append(uac_event['payload']['uacUpdate'])
 

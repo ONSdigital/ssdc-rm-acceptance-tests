@@ -1,6 +1,4 @@
-import json
 import logging
-import pprint
 import time
 from datetime import datetime
 from distutils.util import strtobool
@@ -9,6 +7,7 @@ import requests
 from behave import register_type
 from structlog import wrap_logger
 
+from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages, \
     quarantine_bad_messages_check_and_reset
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
@@ -53,7 +52,10 @@ def after_all(_context):
     purge_fulfilment_triggers()
 
 
-def after_scenario(_, _scenario):
+def after_scenario(context, scenario):
+    if getattr(scenario, 'status') == 'failed':
+        log_out_user_context_values(context)
+
     unexpected_bad_messages = get_bad_messages()
 
     if unexpected_bad_messages:
@@ -75,24 +77,13 @@ def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
         for bad_message_hash in list_of_bad_message_hashes:
             response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/badmessage/{bad_message_hash}')
             response.raise_for_status()
-
-            # bad_message_details.append(json.dumps(response.json(), indent=4, sort_keys=True))
             bad_message_details.append(response.json())
 
         _clear_queues_for_bad_messages_and_reset_exception_manager(list_of_bad_message_hashes)
-        # logger.error('Unexpected exception(s) which were not due to eventual consistency timing',
-        #              exception_manager_response=bad_message_details)
+        logger.error('Unexpected exception(s) which were not due to eventual consistency timing',
+                     exception_manager_response=bad_message_details)
 
-        x = python_thing_nice_output(bad_message_details)
-        test_helper.fail(f'Unexpected exception(s) thrown by RM. Details: {x}')
-
-
-def python_thing_nice_output(list_to_output):
-    a = json.loads(list_to_output)
-    b = json.dumps(a, indent=4, sort_keys=True)
-    pp = pprint.PrettyPrinter(width=41, compact=True)
-    x = pp.pformat(b)
-    return x
+        test_helper.fail(f'Unexpected exception(s) thrown by RM. Details: {bad_message_details}')
 
 
 def _clear_queues_for_bad_messages_and_reset_exception_manager(list_of_bad_message_hashes):
