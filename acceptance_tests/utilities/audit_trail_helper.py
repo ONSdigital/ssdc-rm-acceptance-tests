@@ -45,7 +45,7 @@ def log_out_user_context_values(context):
 
 def logout_context_value(context, key):
     if not hasattr(context, key):
-        logger.error(f"{key} not set.  This may or may not be intended for this scenario")
+        logger.error(f"{key} not set.")
         return
 
     logger.error(f'Key: {key}')
@@ -55,7 +55,7 @@ def logout_context_value(context, key):
 def logout_context_list_value(context, key):
 
     if not hasattr(context, key):
-        logger.error(f"{key} not set.  This may or may not be intended for this scenario")
+        logger.error(f"{key} not set.")
         return
 
     context_list_var = getattr(context, key)
@@ -63,5 +63,5 @@ def logout_context_list_value(context, key):
     logger.error(f'Key {key}, length {len(context_list_var)}')
 
     for i in range(len(context_list_var)):
-        logger.error(f' Key {[i]}: {key}')
-        logger.error(f'    Value:{context_list_var[i]}')
+        logger.error(f' {key}{[i]}:')
+        logger.error(f'    {context_list_var[i]}')
