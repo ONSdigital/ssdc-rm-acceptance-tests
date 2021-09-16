@@ -20,7 +20,7 @@ def send_respondent_authenticated(context, email_address):
 
 
 @step('a bad respondent authenticated event is put on the topic with email address "{email_address}"')
-def a_bad_respondent_authenticated_event_is_out_on_the_topic(context, email_address):
+def a_bad_respondent_authenticated_event_is_put_on_the_topic(context, email_address):
     message = _send_respondent_authenticated_message(str(uuid.uuid4()),
                                                      add_random_suffix_to_email(email_address),
                                                      "666")
