@@ -67,7 +67,7 @@ def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
                  exception_manager_response=unexpected_bad_messages)
 
     requests.get(f'{Config.EXCEPTION_MANAGER_URL}/reset')
-    time.sleep(5)  # 25 seconds should be long enough for error to happen again if it hasn't cleared itself
+    time.sleep(25)  # 25 seconds should be long enough for error to happen again if it hasn't cleared itself
 
     list_of_bad_message_hashes = get_bad_messages()
 
