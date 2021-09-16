@@ -11,7 +11,7 @@ Feature: Check exception manager is called for every topic and handles them as e
     And each bad msg can be successfully quarantined
 
   Scenario: Bad invalid case message turns up in exception manager
-    When a bad invalid case message is put on the topic with email address "BadDeactivate"
+    When a bad invalid case message is put on the topic with email address "BadInvalidCase"
     Then a bad message appears in exception manager with exception message containing "Case ID '7abb3c15-e850-4a9f-a0c2-6749687915a8' not present"
     And each bad msg can be successfully quarantined
 
