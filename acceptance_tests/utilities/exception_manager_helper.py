@@ -32,7 +32,7 @@ def quarantine_bad_messages_check_and_reset(message_hashes):
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def check_bad_messages_are_quarantined(expected_quarantined_message_hashes):
-    response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/quarantinedMessages')
+    response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/quarantinedMessageHashes')
     response.raise_for_status()
     all_quarantined_messages = response.json()
 
