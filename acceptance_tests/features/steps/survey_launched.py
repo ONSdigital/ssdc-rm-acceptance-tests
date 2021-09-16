@@ -14,7 +14,6 @@ from config import Config
 def send_survey_launched(context, email_address):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(email_address)
-
     message = _send_survey_launched_message(context.correlation_id, context.originating_user,
                                             context.emitted_uacs[0]['qid'])
     context.sent_messages.append(message)
@@ -26,6 +25,7 @@ def bad_survey_launched_message(context, email_address):
                                             "555555")
     context.sent_messages.append(message)
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
+    context.sent_messages.append(message)
 
 
 def _send_survey_launched_message(correlation_id, originating_user, qid):

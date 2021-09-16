@@ -14,9 +14,9 @@ from config import Config
 def send_respondent_authenticated(context, email_address):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(email_address)
-
-    _send_respondent_authenticated_message(context.correlation_id, context.originating_user,
-                                           context.emitted_uacs[0]['qid'])
+    message = _send_respondent_authenticated_message(context.correlation_id, context.originating_user,
+                                                     context.emitted_uacs[0]['qid'])
+    context.sent_messages.append(message)
 
 
 @step('a bad respondent authenticated event is put on the topic with email address "{email_address}"')
@@ -25,6 +25,7 @@ def a_bad_respondent_authenticated_event_is_out_on_the_topic(context, email_addr
                                                      add_random_suffix_to_email(email_address),
                                                      "666")
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
+    context.sent_messages.append(message)
 
 
 def _send_respondent_authenticated_message(correlation_id, originating_user, qid):

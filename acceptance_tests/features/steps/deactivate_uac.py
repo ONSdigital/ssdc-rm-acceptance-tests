@@ -15,28 +15,9 @@ def put_deactivate_uac_on_topic(context, email_address):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = f'{email_address}@{get_random_alpha_numerics(4)}'
 
-    _send_deactivate_uac_message(context.correlation_id, context.originating_user, context.emitted_uacs[0]['qid'])
-
-    message = json.dumps(
-        {
-            "header": {
-                "version": Config.EVENT_SCHEMA_VERSION,
-                "topic": Config.PUBSUB_DEACTIVATE_UAC_TOPIC,
-                "source": "CC",
-                "channel": "CC",
-                "dateTime": f'{datetime.utcnow().isoformat()}Z',
-                "messageId": str(uuid.uuid4()),
-                "correlationId": context.correlation_id,
-                "originatingUser": context.originating_user
-            },
-            "payload": {
-                "deactivateUac": {
-                    "qid": context.emitted_uacs[0]['qid'],
-                }
-            }
-        })
-
-    publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_DEACTIVATE_UAC_TOPIC)
+    message = _send_deactivate_uac_message(context.correlation_id, context.originating_user,
+                                           context.emitted_uacs[0]['qid'])
+    context.sent_messages.append(message)
 
 
 @step('a bad deactivate uac message is put on the topic with email address "{email_address}"')

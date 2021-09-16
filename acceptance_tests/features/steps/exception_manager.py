@@ -27,6 +27,7 @@ def put_a_bad_msg_on_every_topic_on(context):
                           topic)
 
         context.message_hashes.append(hashlib.sha256(message.encode('utf-8')).hexdigest())
+        context.sent_messages.append(message)
 
 
 @step('each bad msg is seen by exception manager with the message containing "{expected_exception_msg}"')

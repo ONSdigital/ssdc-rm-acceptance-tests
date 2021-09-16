@@ -15,8 +15,9 @@ from config import Config
 def send_invalid_case(context, email_address):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(email_address)
-
-    _send_invalid_case_message(context.correlation_id, context.originating_user, context.emitted_cases[0]['caseId'])
+    message = _send_invalid_case_message(context.correlation_id, context.originating_user,
+                                         context.emitted_cases[0]['caseId'])
+    context.sent_messages.append(message)
 
 
 @step('a bad invalid case message is put on the topic with email address "{email_address}"')
@@ -24,6 +25,7 @@ def a_bad_invalid_case_message_is_put_on_the_topic(context, email_address):
     message = _send_invalid_case_message(str(uuid.uuid4()), f'{email_address}@{get_random_alpha_numerics(4)}',
                                          "7abb3c15-e850-4a9f-a0c2-6749687915a8")
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
+    context.sent_messages.append(message)
 
 
 def _send_invalid_case_message(correlation_id, originating_user, case_id):

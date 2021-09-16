@@ -24,9 +24,9 @@ def sensitive_data_on_case_changed(context, sensitive_column, expected_value):
 def send_update_sample_sensitive(context, sensitive_column, new_value, email_address):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(email_address)
-
-    _send_update_sample_sensitive_msg(context.correlation_id, context.originating_user,
-                                      context.emitted_cases[0]['caseId'], {sensitive_column: new_value})
+    message = _send_update_sample_sensitive_msg(context.correlation_id, context.originating_user,
+                                                context.emitted_cases[0]['caseId'], {sensitive_column: new_value})
+    context.sent_messages.append(message)
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
@@ -44,6 +44,7 @@ def a_bad_sensitive_data_event_is_put_on_the_topic(context, email_address):
     message = _send_update_sample_sensitive_msg(str(uuid.uuid4()), add_random_suffix_to_email(email_address),
                                                 "386a50b8-6ba0-40f6-bd3c-34333d58be90", {'favouriteColor': 'Blue'})
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
+    context.sent_messages.append(message)
 
 
 def _send_update_sample_sensitive_msg(correlation_id, originating_user, case_id, update_json):

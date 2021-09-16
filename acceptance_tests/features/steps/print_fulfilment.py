@@ -35,6 +35,7 @@ def request_print_fulfilment_step(context, email_address):
             }
         })
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_PRINT_FULFILMENT_TOPIC)
+    context.sent_messages.append(message)
 
 
 @step('print fulfilments are triggered to be sent for printing')

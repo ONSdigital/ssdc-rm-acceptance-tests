@@ -14,14 +14,15 @@ from config import Config
 def send_receipt(context, email_address):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(email_address)
-
-    _send_receipt_message(context.correlation_id, context.originating_user, context.emitted_uacs[0]['qid'])
+    message = _send_receipt_message(context.correlation_id, context.originating_user, context.emitted_uacs[0]['qid'])
+    context.sent_messages.append(message)
 
 
 @step('a bad receipt message is put on the topic with email address "{email_address}"')
 def a_bad_receipt_message_is_put_on_the_topic(context, email_address):
     message = _send_receipt_message(str(uuid.uuid4()), add_random_suffix_to_email(email_address), "987654321")
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
+    context.sent_messages.append(message)
 
 
 def _send_receipt_message(correlation_id, originating_user, qid):
