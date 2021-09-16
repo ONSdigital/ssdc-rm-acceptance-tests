@@ -36,6 +36,6 @@ Feature: Check exception manager is called for every topic and handles them as e
     And each bad msg can be successfully quarantined
 
   Scenario: Bad EQ launched message turns up in exception manager
-    When a bad EQ launched event is put on the topic
+    When a bad EQ launched event is put on the topic with email address "BadEQLaunched"
     Then a bad message appears in exception manager with exception message containing "Questionnaire Id '555555' not found!"
     And each bad msg can be successfully quarantined
