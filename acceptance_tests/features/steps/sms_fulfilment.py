@@ -60,9 +60,11 @@ def _check_notify_api_called_with_correct_notify_template_id(phone_number, notif
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log')
     test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
     response_json = response.json()
-    test_helper.assertEqual(len(response_json), 1, "Incorrect number of responses")
-    test_helper.assertEqual(response_json[0]["phone_number"], phone_number, "Incorrect phone number")
-    test_helper.assertEqual(response_json[0]["template_id"], notify_template_id, "Incorrect Gov Notify template Id")
+    test_helper.assertEqual(len(response_json), 1, f"Incorrect number of responses, response json {response_json}")
+    test_helper.assertEqual(response_json[0]["phone_number"], phone_number, "Incorrect phone number, "
+                                                                            f'response json {response_json}')
+    test_helper.assertEqual(response_json[0]["template_id"], notify_template_id,
+                            f"Incorrect Gov Notify template Id, response json {response_json}")
 
 
 @step("notify api was called with SMS template")
@@ -72,8 +74,15 @@ def check_notify_api_call(context):
 
 @step("the UAC_UPDATE message matches the SMS fulfilment UAC")
 def check_uac_message_matches_sms_uac(context):
-    test_helper.assertEqual(context.emitted_uacs[0]['uacHash'], context.sms_fulfilment_response_json['uacHash'])
-    test_helper.assertEqual(context.emitted_uacs[0]['qid'], context.sms_fulfilment_response_json['qid'])
+    test_helper.assertEqual(context.emitted_uacs[0]['uacHash'], context.sms_fulfilment_response_json['uacHash'],
+                            f"Failed to 1st match uacHash, "
+                            f"context.emitted_uacs: {context.emitted_uacs} "
+                            f" context.sms_fulfilment_response_json {context.sms_fulfilment_response_json}")
+
+    test_helper.assertEqual(context.emitted_uacs[0]['qid'], context.sms_fulfilment_response_json['qid'],
+                            f"Failed to 1st match qid, "
+                            f"context.emitted_uacs: {context.emitted_uacs} "
+                            f"context.sms_fulfilment_response_json {context.sms_fulfilment_response_json}")
 
 
 @step('a sms template has been created with template "{template}"')
@@ -99,8 +108,10 @@ def _check_sms_fulfilment_response(sms_fulfilment_response, template):
         template_item in json.loads(template) for template_item in ['__qid__', '__uac__'])
 
     if expect_uac_hash_and_qid_in_response:
-        test_helper.assertTrue(sms_fulfilment_response['uacHash'])
-        test_helper.assertTrue(sms_fulfilment_response['qid'])
+        test_helper.assertTrue(sms_fulfilment_response['uacHash'],
+                               f"sms_fulfilment_response uacHash not found: {sms_fulfilment_response}")
+        test_helper.assertTrue(sms_fulfilment_response['qid'],
+                               f"sms_fulfilment_response qid not found: {sms_fulfilment_response}")
     else:
         test_helper.assertFalse(
             sms_fulfilment_response)  # Empty JSON is expected response for non-UAC/QID template

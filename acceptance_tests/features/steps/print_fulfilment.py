@@ -5,7 +5,7 @@ from datetime import datetime
 import requests
 from behave import step
 
-from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
+from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
@@ -13,7 +13,7 @@ from config import Config
 @step('a print fulfilment has been requested')
 def request_print_fulfilment_step(context):
     context.correlation_id = str(uuid.uuid4())
-    context.originating_user = get_unique_user_email()
+    context.originating_user = add_random_suffix_to_email(context.scenario_name)
 
     message = json.dumps(
         {
@@ -35,6 +35,7 @@ def request_print_fulfilment_step(context):
             }
         })
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_PRINT_FULFILMENT_TOPIC)
+    context.sent_messages.append(message)
 
 
 @step('print fulfilments are triggered to be sent for printing')
