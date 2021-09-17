@@ -55,6 +55,7 @@ Must also be added to the function: log_out_user_context_values in audit_trail_h
 | correlation_id               | Stores the ID which connects all related events together                        |
 | originating_user             | Stores the email of the ONS employee who originally initiated a business event  |
 | sent_messages                | Stores every scenario sent message for debugging errors                         |
+| scenario_name                | Stores the scenario name and uses it for unique originating users in messages   |
 
 ### Sharing Code Between Steps
 

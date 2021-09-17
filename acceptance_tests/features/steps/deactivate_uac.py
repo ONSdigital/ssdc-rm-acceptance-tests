@@ -27,6 +27,7 @@ def a_bad_deactivate_uac_message_is_put_on_the_topic(context):
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
     context.sent_messages.append(message)
 
+
 def _send_deactivate_uac_message(correlation_id, originating_user, qid):
     message = json.dumps(
         {
