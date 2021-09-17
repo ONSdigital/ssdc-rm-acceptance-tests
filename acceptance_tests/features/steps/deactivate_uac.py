@@ -15,9 +15,8 @@ def put_deactivate_uac_on_topic(context):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
 
-    message = _send_deactivate_uac_message(context.correlation_id, context.originating_user,
-                                           context.emitted_uacs[0]['qid'])
-    context.sent_messages.append(message)
+    _send_deactivate_uac_message(context.correlation_id, context.originating_user,
+                                 context.emitted_uacs[0]['qid'])
 
 
 @step('a bad deactivate uac message is put on the topic')
@@ -25,7 +24,7 @@ def a_bad_deactivate_uac_message_is_put_on_the_topic(context):
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_deactivate_uac_message(str(uuid.uuid4()), context.originating_user, "123456789")
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
-    context.sent_messages.append(message)
+
 
 def _send_deactivate_uac_message(correlation_id, originating_user, qid):
     message = json.dumps(

@@ -10,6 +10,7 @@ from structlog import wrap_logger
 from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages, \
     quarantine_bad_messages_check_and_reset
+from acceptance_tests.utilities.hack_pubsub_audit import reset_global_audit_trail, get_global_audit_trail_sent_messages
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -47,6 +48,8 @@ def before_scenario(context, scenario):
     context.sent_messages = []
     context.scenario_name = scenario
 
+    reset_global_audit_trail()
+
 
 def after_all(_context):
     purge_outbound_topics()
@@ -61,6 +64,8 @@ def after_scenario(context, scenario):
 
     if unexpected_bad_messages:
         _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages)
+
+    logger.error('FROM GLOBAL STASH, sent_messages: ' + get_global_audit_trail_sent_messages())
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
