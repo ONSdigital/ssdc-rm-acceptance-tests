@@ -35,11 +35,7 @@ def check_bad_messages_are_quarantined(expected_quarantined_message_hashes):
     response = requests.get(f'{Config.EXCEPTION_MANAGER_URL}/skippedmessages')
     response.raise_for_status()
     all_quarantined_messages = response.json()
-
-    all_quarantined_messages_hashes = []
-
-    for x in all_quarantined_messages:
-        all_quarantined_messages_hashes.append(x)
+    all_quarantined_messages_hashes = [quarantined_message for quarantined_message in all_quarantined_messages]
 
     test_helper.assertTrue(set(expected_quarantined_message_hashes) <= set(all_quarantined_messages_hashes),
                            msg=f'Did not find all expected quarantined messages. '
