@@ -37,7 +37,7 @@ def before_all(_context):
     logging.getLogger("pika").setLevel(logging.WARNING)
 
 
-def before_scenario(context, _):
+def before_scenario(context, scenario):
     purge_outbound_topics()
     purge_fulfilment_triggers()
 
@@ -45,6 +45,7 @@ def before_scenario(context, _):
     context.correlation_id = None
     context.originating_user = None
     context.sent_messages = []
+    context.scenario_name = scenario
 
 
 def after_all(_context):

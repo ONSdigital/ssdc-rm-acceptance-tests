@@ -14,16 +14,19 @@ def get_unique_user_email():
     return f'{name_part}@{domain_part}.{tld_part}'
 
 
-def get_random_alpha_numerics(length=4):
-    return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
-
-
 def add_random_suffix_to_email(email_address):
     return f'{email_address}@{get_random_alpha_numerics(4)}'
 
 
+def get_random_alpha_numerics(length=4):
+    return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+
 def log_out_user_context_values(context):
-    # Perhaps combine this with the documentation?
+    # TODO Could this be combined this with the CODE Style documentation?
+    # Set up a list of context vars Name, Type (string/json/list, description)?
+    # This would document and allow consistent outputting of these values in one?
+
     logger.error("Outputting user context vars")
 
     logout_context_value(context, 'test_start_local_datetime')

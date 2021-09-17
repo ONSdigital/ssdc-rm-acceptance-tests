@@ -19,11 +19,10 @@ def sensitive_data_on_case_changed(context, sensitive_column, expected_value):
 
 
 @step(
-    'an UPDATE_SAMPLE_SENSITIVE event is received updating the {sensitive_column} to {new_value} with email '
-    '"{email_address}"')
-def send_update_sample_sensitive(context, sensitive_column, new_value, email_address):
+    'an UPDATE_SAMPLE_SENSITIVE event is received updating the {sensitive_column} to {new_value}')
+def send_update_sample_sensitive(context, sensitive_column, new_value):
     context.correlation_id = str(uuid.uuid4())
-    context.originating_user = add_random_suffix_to_email(email_address)
+    context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_update_sample_sensitive_msg(context.correlation_id, context.originating_user,
                                                 context.emitted_cases[0]['caseId'], {sensitive_column: new_value})
     context.sent_messages.append(message)
@@ -39,9 +38,10 @@ def retry_check_sensitive_data_change(context, sensitive_column, expected_value)
                                 f"The {sensitive_column} should have been updated, but it hasn't been")
 
 
-@step('a bad sensitive data event is put on the topic with email address "{email_address}"')
-def a_bad_sensitive_data_event_is_put_on_the_topic(context, email_address):
-    message = _send_update_sample_sensitive_msg(str(uuid.uuid4()), add_random_suffix_to_email(email_address),
+@step('a bad sensitive data event is put on the topic')
+def a_bad_sensitive_data_event_is_put_on_the_topic(context):
+    context.originating_user = add_random_suffix_to_email(context.scenario_name)
+    message = _send_update_sample_sensitive_msg(str(uuid.uuid4()), context.originating_user,
                                                 "386a50b8-6ba0-40f6-bd3c-34333d58be90", {'favouriteColor': 'Blue'})
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
     context.sent_messages.append(message)

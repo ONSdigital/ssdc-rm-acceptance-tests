@@ -10,19 +10,19 @@ from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
-@step("a REFUSAL event is received with email address {email_address}")
-def send_refusal(context, email_address):
+@step("a REFUSAL event is received")
+def send_refusal(context):
     context.correlation_id = str(uuid.uuid4())
-    context.originating_user = add_random_suffix_to_email(email_address)
-
+    context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_refusal_message(context.correlation_id, context.originating_user,
                                     context.emitted_cases[0]['caseId'])
     context.sent_messages.append(message)
 
 
-@step('a bad REFUSAL event is put on the topic with email address "{email_address}"')
-def send_bad_refusal_message(context, email_address):
-    message = _send_refusal_message(str(uuid.uuid4()), add_random_suffix_to_email(email_address),
+@step('a bad REFUSAL event is put on the topic')
+def send_bad_refusal_message(context):
+    context.originating_user = add_random_suffix_to_email(context.scenario_name)
+    message = _send_refusal_message(str(uuid.uuid4()), context.originating_user,
                                     "1c1e495d-8f49-4d4c-8318-6174454eb605")
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
     context.sent_messages.append(message)

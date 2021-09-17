@@ -10,10 +10,10 @@ from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
-@step('a print fulfilment has been requested with email address "{email_address}"')
-def request_print_fulfilment_step(context, email_address):
+@step('a print fulfilment has been requested')
+def request_print_fulfilment_step(context):
     context.correlation_id = str(uuid.uuid4())
-    context.originating_user = add_random_suffix_to_email(email_address)
+    context.originating_user = add_random_suffix_to_email(context.scenario_name)
 
     message = json.dumps(
         {
