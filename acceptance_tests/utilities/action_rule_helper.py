@@ -11,7 +11,7 @@ def create_print_action_rule(collex_id, classifiers, pack_code):
     body = {
         'id': str(uuid.uuid4()),
         'type': 'PRINT',
-        'printTemplate': 'printTemplates/' + pack_code,
+        'packCode': pack_code,
         'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
         'hasTriggered': False,
         'classifiers': classifiers,
