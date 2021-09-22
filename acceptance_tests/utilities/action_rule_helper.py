@@ -41,7 +41,8 @@ def setup_sms_action_rule(collex_id, packcode):
         'packCode': packcode,
         'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
         'classifiers': '',
-        'collectionExerciseId': collex_id
+        'collectionExerciseId': collex_id,
+        'phoneNumberColumn': 'PHONE_NUMBER'
     }
 
     response = requests.post(url, json=body)
