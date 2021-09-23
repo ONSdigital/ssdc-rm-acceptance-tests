@@ -6,4 +6,4 @@ Feature: Check action rule for SMS feature is able to send SMS via notify
     When a SMS action rule has been created
     Then the events logged against the case are [NEW_CASE,ACTION_RULE_SMS_REQUEST]
     And notify api was called with SMS template with phone number "07453656573000"
-#    And stored events sensitive PHONE_NUMBER column is redacted
+    
