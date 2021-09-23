@@ -72,6 +72,10 @@ def check_notify_api_call(context):
     _check_notify_api_called_with_correct_notify_template_id(context.phone_number, context.notify_template_id)
 
 
+@step('notify api was called with SMS template with phone number "{expected_phone_number}"')
+def check_notify_api_call(context, expected_phone_number):
+    _check_notify_api_called_with_correct_notify_template_id(expected_phone_number, context.notify_template_id)
+
 @step("the UAC_UPDATE message matches the SMS fulfilment UAC")
 def check_uac_message_matches_sms_uac(context):
     test_helper.assertEqual(context.emitted_uacs[0]['uacHash'], context.sms_fulfilment_response_json['uacHash'],
@@ -89,7 +93,7 @@ def check_uac_message_matches_sms_uac(context):
 def create_sms_template(context, template):
     # By using a unique random pack_code we have better filter options
     # We can change/remove this if we get UACS differently or a better solution is found
-    context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+    context.pack_code = 'pack_code_SMS_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
     context.notify_template_id = str(uuid.uuid4())
     context.template = template
     url = f'{Config.SUPPORT_TOOL_API}/smsTemplates'

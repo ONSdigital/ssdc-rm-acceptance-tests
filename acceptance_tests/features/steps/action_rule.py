@@ -21,4 +21,4 @@ def create_deactivate_uac_action_rule(context):
 
 @step("a SMS action rule has been created")
 def create_sms_action_rule(context):
-    setup_sms_action_rule(context.collex_id, context.packcode)
+    setup_sms_action_rule(context.collex_id, context.pack_code)

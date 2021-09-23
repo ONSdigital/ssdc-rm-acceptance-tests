@@ -122,19 +122,6 @@ def load_business_sample_file_step(context):
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
 
-@step('sample file "{sample_file_name}" with sensitive column {sensitive_column} is loaded successfully')
-def load_sample_file_step_for_sensitive_data(context, sample_file_name, sensitive_column):
-    sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
-    sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path, sensitive_column)
-
-    context.survey_id = add_survey(sample_validation_rules)
-    context.collex_id = add_collex(context.survey_id)
-
-    upload_sample_file(context.collex_id, sample_file_path)
-
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, {sensitive_column})
-
-
 def upload_sample_file(collex_id, sample_file_path):
     multipart_data = MultipartEncoder(fields={
         'file': ('sample_file', open(sample_file_path, 'rb'), 'text/plain')
@@ -179,3 +166,17 @@ def upload_sample_file(collex_id, sample_file_path):
         response.raise_for_status()
     else:
         test_helper.fail("Sample did not pass validation before timeout")
+
+
+@step(
+    'sample file "{sample_file_name}" with sensitive columns {sensitive_columns} is loaded successfully')
+def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns):
+        sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
+        sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path, sensitive_columns)
+
+        context.survey_id = add_survey(sample_validation_rules)
+        context.collex_id = add_collex(context.survey_id)
+
+        upload_sample_file(context.collex_id, sample_file_path)
+
+        context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)

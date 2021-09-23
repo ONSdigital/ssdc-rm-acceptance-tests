@@ -34,11 +34,12 @@ def setup_deactivate_uac_action_rule(collex_id):
     response.raise_for_status()
 
 
-def setup_sms_action_rule(collex_id, packcode):
+def setup_sms_action_rule(collex_id, pack_code):
     url = f'{Config.SUPPORT_TOOL_API}/actionRules'
+
     body = {
         'type': 'SMS',
-        'packCode': packcode,
+        'packCode': pack_code,
         'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
         'classifiers': '',
         'collectionExerciseId': collex_id,
