@@ -1,4 +1,4 @@
-from behave import *
+from behave import step
 from acceptance_tests.utilities.notify_helper import check_notify_api_called_with_correct_notify_template_id
 from acceptance_tests.utilities.test_case_helper import test_helper
 

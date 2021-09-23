@@ -171,12 +171,12 @@ def upload_sample_file(collex_id, sample_file_path):
 @step(
     'sample file "{sample_file_name}" with sensitive columns {sensitive_columns} is loaded successfully')
 def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns):
-        sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
-        sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path, sensitive_columns)
+    sample_file_path = Config.RESOURCE_FILE_PATH.joinpath('sample_files', sample_file_name)
+    sample_rows, sample_validation_rules = get_sample_rows_and_validation_rules(sample_file_path, sensitive_columns)
 
-        context.survey_id = add_survey(sample_validation_rules)
-        context.collex_id = add_collex(context.survey_id)
+    context.survey_id = add_survey(sample_validation_rules)
+    context.collex_id = add_collex(context.survey_id)
 
-        upload_sample_file(context.collex_id, sample_file_path)
+    upload_sample_file(context.collex_id, sample_file_path)
 
-        context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
