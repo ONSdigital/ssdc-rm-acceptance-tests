@@ -1,6 +1,7 @@
 import json
 
 import requests
+from tenacity import retry, stop_after_delay, wait_fixed
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -20,6 +21,7 @@ def check_sms_fulfilment_response(sms_fulfilment_response, template):
             sms_fulfilment_response)  # Empty JSON is expected response for non-UAC/QID template
 
 
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def check_notify_api_called_with_correct_notify_template_id(phone_number, notify_template_id):
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log')
     test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
