@@ -10,6 +10,7 @@ from structlog import wrap_logger
 from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages, \
     quarantine_bad_messages_check_and_reset
+from acceptance_tests.utilities.notify_helper import reset_notify_stub
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -46,6 +47,9 @@ def before_scenario(context, scenario):
     context.originating_user = None
     context.sent_messages = []
     context.scenario_name = scenario
+
+    if "reset_notify_stub" in scenario.tags:
+        reset_notify_stub()
 
 
 def after_all(_context):

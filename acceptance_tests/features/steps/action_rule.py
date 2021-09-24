@@ -23,5 +23,4 @@ def create_deactivate_uac_action_rule(context):
 
 @step("a SMS action rule has been created")
 def create_sms_action_rule(context):
-    requests.get(f'{Config.NOTIFY_STUB_SERVICE}/reset')  # TODO put this in a fixture or hook?
     setup_sms_action_rule(context.collex_id, context.pack_code)

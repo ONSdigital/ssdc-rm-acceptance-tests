@@ -1,5 +1,6 @@
 Feature: Check action rule for SMS feature is able to send SMS via notify
 
+  @reset_notify_stub
   Scenario: A SMS message is sent via action rule
     Given sample file "sis_survey_link.csv" with sensitive columns [PHONE_NUMBER,CHILD_NAME] is loaded successfully
     And a sms template has been created with template "["__sensitive__.CHILD_NAME","__uac__"]"

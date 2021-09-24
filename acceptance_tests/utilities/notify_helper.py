@@ -33,3 +33,7 @@ def check_notify_api_called_with_correct_notify_template_id(phone_number, notify
                             f"Incorrect Gov Notify template Id, response json {response_json}")
 
     return response_json[0]
+
+
+def reset_notify_stub():
+    requests.get(f'{Config.NOTIFY_STUB_SERVICE}/reset')

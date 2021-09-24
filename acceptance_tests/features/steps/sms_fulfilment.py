@@ -28,7 +28,6 @@ def authorise_sms_pack_code(context):
 
 @step('a request has been made for a replacement UAC by SMS from phone number "{phone_number}"')
 def request_replacement_uac_by_sms(context, phone_number):
-    requests.get(f'{Config.NOTIFY_STUB_SERVICE}/reset')
     context.phone_number = phone_number
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = get_unique_user_email()
