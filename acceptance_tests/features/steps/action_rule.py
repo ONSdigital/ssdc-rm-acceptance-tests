@@ -1,9 +1,7 @@
-import requests
 from behave import step
 
 from acceptance_tests.utilities.action_rule_helper import create_print_action_rule, \
     setup_deactivate_uac_action_rule, setup_sms_action_rule
-from config import Config
 
 
 @step('a print action rule has been created with classifiers "{classifiers}"')
