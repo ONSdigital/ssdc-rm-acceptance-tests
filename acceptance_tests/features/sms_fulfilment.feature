@@ -1,5 +1,6 @@
 Feature: Sms fulfilment
 
+  @reset_notify_stub
   Scenario: A SMS fulfilment is requested for a case
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And a sms template has been created with template "["__uac__", "__qid__"]"
@@ -10,7 +11,7 @@ Feature: Sms fulfilment
     And the events logged against the case are [NEW_CASE,SMS_FULFILMENT]
     And notify api was called with SMS template
 
-
+  @reset_notify_stub
   Scenario: A SMS fulfilment is requested for a case with no uac/qid
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And a sms template has been created with template "[]"
