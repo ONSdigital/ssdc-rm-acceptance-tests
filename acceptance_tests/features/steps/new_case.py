@@ -3,9 +3,7 @@ import uuid
 
 from behave import step
 
-from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
-from acceptance_tests.utilities.survey_helper import add_sis2_survey
 from config import Config
 
 
