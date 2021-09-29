@@ -4,6 +4,7 @@ Feature: Handle EQ launch events
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And a print template has been created with template "["__uac__"]"
     And a print action rule has been created
-    Then UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
+    Then UAC_UPDATE message is emitted with active set to true and "eqLaunched" is false
     When an EQ_LAUNCH event is received
+    Then UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
     And the events logged against the case are [NEW_CASE,PRINT_FILE,EQ_LAUNCH]

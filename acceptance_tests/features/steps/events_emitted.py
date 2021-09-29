@@ -35,12 +35,12 @@ def check_uac_update_msgs_emitted_with_qid_active(context, active):
 
 
 @step(
-    'UAC_UPDATE message is emitted with active set to {active:boolean} and "{field_to_test}" is {expected_value:boolean}')
+    'UAC_UPDATE message is emitted with active set to {active:boolean} and "{field_to_test}" is'
+    ' {expected_value:boolean}')
 def check_uac_update_msgs_emitted_with_qid_active(context, active, field_to_test, expected_value):
     context.emitted_uacs = get_uac_update_events(len(context.emitted_cases), context.correlation_id,
                                                  context.originating_user)
     _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
-
     _check_new_uacs_are_as_expected(context.emitted_uacs, active, field_to_test, expected_value)
 
 
