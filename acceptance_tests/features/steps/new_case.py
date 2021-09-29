@@ -10,6 +10,9 @@ from config import Config
 @step("a newCase event is built and submitted")
 def build_new_case_and_submit(context):
     context.case_id = str(uuid.uuid4())
+    context.message_id = str(uuid.uuid4())
+    context.correlation_id = str(uuid.uuid4())
+    context.originating_user = "foo.bar@ons.gov.uk"
     message = json.dumps(
         {
             "header": {
@@ -18,9 +21,9 @@ def build_new_case_and_submit(context):
                 "source": "cupidatat",
                 "channel": "EQ",
                 "dateTime": "1970-01-01T00:00:00.000Z",
-                "messageId": context.case_id,
-                "correlationId": context.case_id,
-                "originatingUser": "foo.bar@ons.gov.uk"
+                "messageId": context.message_id,
+                "correlationId": context.correlation_id,
+                "originatingUser": context.originating_user
             },
             "payload": {
                 "newCase": {

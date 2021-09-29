@@ -56,6 +56,7 @@ Must also be added to the function: log_out_user_context_values in audit_trail_h
 | originating_user             | Stores the email of the ONS employee who originally initiated a business event  |
 | sent_messages                | Stores every scenario sent message for debugging errors                         |
 | scenario_name                | Stores the scenario name and uses it for unique originating users in messages   |
+| case_id                      | Stores the case_id of a case used in the scenario                               |
 
 ### Sharing Code Between Steps
 
