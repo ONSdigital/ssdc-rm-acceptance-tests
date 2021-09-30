@@ -45,7 +45,7 @@ def setup_sms_action_rule(collex_id, pack_code):
         'classifiers': '',
         'collectionExerciseId': collex_id,
         'phoneNumberColumn': 'PHONE_NUMBER',
-        'uacMetadata': {"WaveOfContact": "1"}
+        'uacMetadata': {"waveOfContact": "1"}
     }
 
     response = requests.post(url, json=body)
