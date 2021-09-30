@@ -44,6 +44,7 @@ def log_out_user_context_values(context):
     logout_context_value(context, 'correlation_id')
     logout_context_value(context, 'originating_user')
     logout_context_list_value(context, 'sent_messages')
+    logout_context_list_value(context, 'case_id')
 
 
 def logout_context_value(context, key):
