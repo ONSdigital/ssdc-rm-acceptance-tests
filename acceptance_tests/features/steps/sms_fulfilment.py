@@ -45,6 +45,7 @@ def request_replacement_uac_by_sms(context, phone_number):
                 "caseId": context.emitted_cases[0]['caseId'],
                 "phoneNumber": context.phone_number,
                 "packCode": context.pack_code,
+                'uacMetadata': {"waveOfContact": "1"}
             }
         }
     }
