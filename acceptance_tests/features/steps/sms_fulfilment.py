@@ -17,9 +17,8 @@ from config import Config
 def authorise_sms_pack_code(context):
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveySmsTemplates'
     body = {
-        'id': str(uuid.uuid4()),
-        'survey': 'surveys/' + context.survey_id,
-        'smsTemplate': 'smsTemplates/' + context.pack_code
+        'surveyId': context.survey_id,
+        'packCode': context.pack_code
     }
 
     response = requests.post(url, json=body)
