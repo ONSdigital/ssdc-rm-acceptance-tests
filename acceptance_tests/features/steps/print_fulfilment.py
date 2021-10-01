@@ -40,13 +40,10 @@ def request_print_fulfilment_step(context):
 
 @step('print fulfilments are triggered to be sent for printing')
 def print_fulfilments_trigger_step(context):
-    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers'
-    body = {
-        'id': str(uuid.uuid4()),
-        'triggerDateTime': f"{datetime.utcnow().replace(microsecond=0).isoformat()}Z"
-    }
+    url = (f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/'
+           f'?triggerDateTime={datetime.utcnow().replace(microsecond=0).isoformat()}Z')
 
-    response = requests.post(url, json=body)
+    response = requests.post(url)
     response.raise_for_status()
 
 

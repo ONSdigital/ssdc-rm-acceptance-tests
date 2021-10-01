@@ -20,18 +20,12 @@ logger = wrap_logger(logging.getLogger(__name__))
 register_type(boolean=lambda text: strtobool(text))
 
 
-def purge_fulfilment_triggers():
-    response = requests.get(f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers')
+def move_fulfilment_triggers_harmlessly_massively_into_the_future():
+    # The year 3000 ought to be far enough in the future for this fulfilment to never trigger again, no?
+    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/?triggerDateTime=3000-01-01T00:00:00.000Z'
+
+    response = requests.post(url)
     response.raise_for_status()
-
-    trigger_items = response.json()['_embedded']['fulfilmentNextTriggers']
-
-    for trigger_item in trigger_items:
-        trigger_id = trigger_item['_links']['self']['href'].split("/")[-1]
-        url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/{trigger_id}'
-
-        delete_response = requests.delete(url)
-        delete_response.raise_for_status()
 
 
 def before_all(_context):
@@ -40,7 +34,7 @@ def before_all(_context):
 
 def before_scenario(context, scenario):
     purge_outbound_topics()
-    purge_fulfilment_triggers()
+    move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
     context.test_start_local_datetime = datetime.now()
     context.correlation_id = None
@@ -54,7 +48,7 @@ def before_scenario(context, scenario):
 
 def after_all(_context):
     purge_outbound_topics()
-    purge_fulfilment_triggers()
+    move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
 
 def after_scenario(context, scenario):
