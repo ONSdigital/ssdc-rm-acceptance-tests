@@ -57,6 +57,13 @@ def check_expected_number_of_uac_update_msgs_emitted(context, expected_count, ac
     context.emitted_cases = [case for case in context.emitted_cases if case['caseId'] in included_case_ids]
 
 
+@step("a CASE_UPDATED message is emitted for the new case")
+def check_case_updated_emitted_for_new_case(context):
+    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user)
+    test_helper.assertEqual(emitted_case['caseId'], context.case_id,
+                            f'The emitted case, {emitted_case} does not match the new case {context.case_id}')
+
+
 def _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test=None, expected_value=None):
     for uac in emitted_uacs:
         test_helper.assertEqual(uac['active'], active, f"UAC {uac} active status doesn't equal expected {active}")
