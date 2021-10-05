@@ -34,6 +34,17 @@ def check_uac_update_msgs_emitted_with_qid_active(context, active):
     _check_new_uacs_are_as_expected(context.emitted_uacs, active)
 
 
+@step(
+    'UAC_UPDATE message is emitted with active set to {active:boolean} and "{field_to_test}" is'
+    ' {expected_value:boolean}')
+def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context, active,
+                                                                         field_to_test, expected_value):
+    context.emitted_uacs = get_uac_update_events(len(context.emitted_cases), context.correlation_id,
+                                                 context.originating_user)
+    _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
+    _check_new_uacs_are_as_expected(context.emitted_uacs, active, field_to_test, expected_value)
+
+
 @step("{expected_count:d} UAC_UPDATE messages are emitted with active set to {active:boolean}")
 def check_expected_number_of_uac_update_msgs_emitted(context, expected_count, active):
     context.emitted_uacs = get_uac_update_events(expected_count, context.correlation_id, context.originating_user)
@@ -53,9 +64,13 @@ def check_case_updated_emitted_for_new_case(context):
                             f'The emitted case, {emitted_case} does not match the new case {context.case_id}')
 
 
-def _check_new_uacs_are_as_expected(emitted_uacs, active):
+def _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test=None, expected_value=None):
     for uac in emitted_uacs:
-        test_helper.assertEqual(uac['active'], active)
+        test_helper.assertEqual(uac['active'], active, f"UAC {uac} active status doesn't equal expected {active}")
+
+        if field_to_test:
+            test_helper.assertEqual(uac[field_to_test], expected_value,
+                                    f"UAC {uac} field {field_to_test} doesn't equal expected {expected_value}")
 
 
 def _check_uacs_updated_match_cases(uac_update_events, cases):
