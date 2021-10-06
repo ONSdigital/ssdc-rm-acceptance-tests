@@ -8,7 +8,7 @@ from config import Config
 @step('there is a request for telephone capture of a case')
 def request_telephone_capture(context):
     body = {
-        'uacMetadata': {"foo": "bar"},
+        "foo": "bar"
     }
 
     response = requests.post(f"{Config.CASE_API_CASE_URL}{context.emitted_cases[0]['caseId']}/telephone-capture",
