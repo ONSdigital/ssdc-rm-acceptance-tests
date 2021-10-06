@@ -25,4 +25,4 @@ def check_telephone_capture_generated(context, qid_type):
     test_helper.assertEqual(context.telephone_capture_request['qid'][:2], qid_type,
                             'The telephone capture response must include a QID of the expected type '
                             f'context.telephone_capture_request: {context.telephone_capture_request}')
-    test_helper.assertEqual(context.telephone_capture_request.get('uacMetadata'), {'uacMetadata': {'foo': 'bar'}})
+    test_helper.assertEqual(context.telephone_capture_request.get('uacMetadata'), {'foo': 'bar'})
