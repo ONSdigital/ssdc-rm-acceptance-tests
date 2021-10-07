@@ -30,7 +30,8 @@ def request_print_fulfilment_step(context):
             "payload": {
                 "printFulfilment": {
                     "caseId": context.emitted_cases[0]['caseId'],
-                    "packCode": context.pack_code
+                    "packCode": context.pack_code,
+                    'uacMetadata': {"foo": "bar"}
                 }
             }
         })
@@ -52,7 +53,8 @@ def authorise_pack_code(context):
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyPrintTemplates'
     body = {
         'surveyId': context.survey_id,
-        'packCode': context.pack_code
+        'packCode': context.pack_code,
+        'uacMetadata': {"foo": "bar"}
     }
 
     response = requests.post(url, json=body)

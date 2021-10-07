@@ -43,7 +43,8 @@ def setup_sms_action_rule(collex_id, pack_code):
         'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
         'classifiers': '',
         'collectionExerciseId': collex_id,
-        'phoneNumberColumn': 'PHONE_NUMBER'
+        'phoneNumberColumn': 'PHONE_NUMBER',
+        'uacMetadata': {"waveOfContact": "1"}
     }
 
     response = requests.post(url, json=body)
