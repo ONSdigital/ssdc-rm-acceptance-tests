@@ -44,6 +44,7 @@ def check_print_file_in_sftp(context):
     print("Will use PORT 122")
     print("KEY_FILENAME: ", str(Path(__file__).parents[2].resolve().joinpath(Config.SFTP_KEY_FILENAME)))
     print('PASSPHRASE: ', Config.SFTP_PASSPHRASE)
+    print(('SFTP_KEY_FILENAME: ', Config.SFTP_KEY_FILENAME
 
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
     emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
