@@ -40,10 +40,10 @@ def get_qid_by_case_id(uac_update_events, case_id):
 @step("a print file is created with correct rows")
 def check_print_file_in_sftp(context):
     print("HOST: ", Config.SFTP_HOST)
-    print("PORT: ", Config.SFTP_PORT)
+    print("Config: PORT: ", Config.SFTP_PORT)
+    print("Will use PORT 122")
     print("KEY_FILENAME: ", str(Path(__file__).parents[2].resolve().joinpath(Config.SFTP_KEY_FILENAME)))
     print('PASSPHRASE: ', Config.SFTP_PASSPHRASE)
-    print('Config.ENVIRONMENT: ', Config.ENVIRONMENT)
 
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
     emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
