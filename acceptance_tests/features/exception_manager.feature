@@ -39,3 +39,9 @@ Feature: Check exception manager is called for every topic and handles them as e
     When a bad EQ launched event is put on the topic
     Then a bad message appears in exception manager with exception message containing "Questionnaire Id '555555' not found!"
     And each bad msg can be successfully quarantined
+
+  Scenario: Bad new case message turns up in exception manager
+    Given the sample file "SIS2_random_20.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
+    When an invalid newCase event is put on the topic
+    Then a bad message appears in exception manager with exception message containing "Column 'schoolId' value 'schoolidistoolong' validation error: Exceeded max length of 11"
+    And each bad msg can be successfully quarantined
