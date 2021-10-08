@@ -13,7 +13,8 @@ def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_
     body = {"name": survey_name,
             "sampleValidationRules": sample_validation_rules,
             "sampleWithHeaderRow": sample_has_header_row,
-            "sampleSeparator": sample_file_separator}
+            "sampleSeparator": sample_file_separator,
+            "sampleDefinitionUrl": "http://foo.bar"}
 
     response = requests.post(url, json=body)
     response.raise_for_status()
