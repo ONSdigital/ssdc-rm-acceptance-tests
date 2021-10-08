@@ -6,7 +6,7 @@ import pgpy
 from config import Config
 
 
-class _SftpUtility:
+class SftpUtility:
     def __init__(self):
         self.ssh_client = paramiko.SSHClient()
         self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
