@@ -12,7 +12,7 @@ class SftpUtility:
         self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         self.ssh_client.connect(hostname=Config.SFTP_HOST,
-                                port=int(Config.SFTP_PORT),
+                                port=122,
                                 username=Config.SFTP_USERNAME,
                                 key_filename=Config.SFTP_KEY_FILENAME,
                                 passphrase=Config.SFTP_PASSPHRASE,
