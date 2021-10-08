@@ -46,7 +46,7 @@ class Config:
     NOTIFY_STUB_PORT = os.getenv('NOTIFY_STUB_PORT', '8917')
     NOTIFY_STUB_SERVICE = f'http://{NOTIFY_STUB_HOST}:{NOTIFY_STUB_PORT}'
 
-    SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
+    SFTP_HOST = os.getenv('SFTP_HOST', '0.0.0.0')
     SFTP_PORT = os.getenv('SFTP_PORT', '122')
     SFTP_USERNAME = os.getenv('SFTP_USERNAME', 'centos')
     SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_rsa')
