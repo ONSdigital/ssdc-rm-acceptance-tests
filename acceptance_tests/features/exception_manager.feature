@@ -41,7 +41,13 @@ Feature: Check exception manager is called for every topic and handles them as e
     And each bad msg can be successfully quarantined
 
   Scenario: Bad new case message turns up in exception manager
-    Given the sample file "SIS2_random_20.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
+    Given the sample file "sis_survey_link.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
     When an invalid newCase event is put on the topic
     Then a bad message appears in exception manager with exception message containing "Column 'schoolId' value 'schoolidistoolong' validation error: Exceeded max length of 11"
+    And each bad msg can be successfully quarantined
+
+  Scenario: Bad new case message turns up in exception manager
+    Given the sample file "sis_survey_link.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
+    When an invalid newCase event with extra sensitive data is put on the topic
+    Then a bad message appears in exception manager with exception message containing "Attempt to send sensitive data to RM which was not part of defined sample"
     And each bad msg can be successfully quarantined
