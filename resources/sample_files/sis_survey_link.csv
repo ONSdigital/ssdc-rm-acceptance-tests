@@ -1,2 +1,2 @@
-ADDRESS_LINE1,ADDRESS_LINE2,TOWN_NAME,POSTCODE,PHONE_NUMBER,CHILD_NAME
-House 7,Bob Street,Newport,NW16 FNK,07123456789,Huckleberry Finn
+schoolId,schoolName,firstName,lastName,childFirstName,childMiddleNames,childLastName,childDob,mobileNumber,emailAddress,consentGivenTest,consentGivenSurvey
+123,The Schooliest School,Arnett,Wibnorth,Dababy,Boya,McChildy,2005-03-04,07123456666,nope@nope.nope,true,true
