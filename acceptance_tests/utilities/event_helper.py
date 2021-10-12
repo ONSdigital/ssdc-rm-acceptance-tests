@@ -65,3 +65,10 @@ def get_uac_update_events(expected_number, correlation_id, originating_user):
         uac_payloads.append(uac_event['payload']['uacUpdate'])
 
     return uac_payloads
+
+
+def get_emitted_survey_update():
+    message_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
+                                                           expected_msg_count=1)[0]
+
+    return message_received['payload']['surveyUpdate']
