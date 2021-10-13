@@ -26,6 +26,7 @@ def publish_to_pubsub(message, project, topic, **kwargs):
 def purge_outbound_topics():
     _purge_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION)
     _purge_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION)
+    _purge_subscription(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION)
 
 
 def _purge_subscription(subscription):
