@@ -10,13 +10,14 @@ from config import Config
 def add_collex(survey_id):
     collex_name = 'test collex ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     start_date = datetime.utcnow()
+    end_date = start_date + timedelta(days=2)
 
     url = f'{Config.SUPPORT_TOOL_API}/collectionExercises'
     body = {'name': collex_name,
             'surveyId': survey_id,
             'reference': "MVP012021",
             'startDate': f'{start_date.isoformat()}Z',
-            'endDate': f'{(start_date + timedelta(days=2)).isoformat()}Z',
+            'endDate': f'{end_date.isoformat()}Z',
             'metadata': {'test': 'passed'}
             }
     response = requests.post(url, json=body)
@@ -31,11 +32,13 @@ def add_collex(survey_id):
                             'Unexpected survey ID')
     test_helper.assertEqual(collection_exercise_update_event['reference'], "MVP012021",
                             'Unexpected reference')
-    test_helper.assertEqual(collection_exercise_update_event['startDate'], f'{start_date.isoformat()}Z',
-                            'Invalid or missing start date')
-    test_helper.assertEqual(collection_exercise_update_event['endDate'],
-                            f'{(start_date + timedelta(days=2)).isoformat()}Z',
-                            'Invalid or missing end date')
+
+    parsed_start_date = datetime.strptime(collection_exercise_update_event['startDate'], "%Y-%m-%dT%H:%M:%S.%fZ")
+    parsed_end_date = datetime.strptime(collection_exercise_update_event['endDate'], "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    test_helper.assertEqual(parsed_start_date, start_date, 'Invalid or missing start date')
+    test_helper.assertEqual(parsed_end_date, end_date, 'Invalid or missing end date')
+
     test_helper.assertEqual(collection_exercise_update_event['metadata'], {'test': 'passed'},
                             'Unexpected metadata')
 
