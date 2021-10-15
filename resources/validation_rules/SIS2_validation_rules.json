@@ -86,6 +86,9 @@
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.ISODateRule"
       }
     ],
     "sensitive": true
