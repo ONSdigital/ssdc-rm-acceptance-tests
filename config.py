@@ -17,6 +17,7 @@ class Config:
     PUBSUB_UAC_AUTHENTICATION_TOPIC = os.getenv('PUBSUB_UAC_AUTHENTICATION_TOPIC',
                                                 'event_uac-authentication')
     PUBSUB_DEACTIVATE_UAC_TOPIC = os.getenv('PUBSUB_DEACTIVATE_UAC_TOPIC', 'event_deactivate-uac')
+    PUBSUB_UPDATE_SAMPLE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_TOPIC', 'event_update-sample')
     PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC',
                                                      'event_update-sample-sensitive')
     PUBSUB_OUTBOUND_UAC_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_UAC_SUBSCRIPTION', 'event_uac-update_rh')
