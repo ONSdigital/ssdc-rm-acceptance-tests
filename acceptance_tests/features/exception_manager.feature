@@ -21,7 +21,7 @@ Feature: Check exception manager is called for every topic and handles them as e
     And each bad msg can be successfully quarantined
 
   Scenario: Bad refusal message turns up in exception manager
-    When a bad refusal eventis put on the topic
+    When a bad refusal event is put on the topic
     Then a bad message appears in exception manager with exception message containing "Case ID '1c1e495d-8f49-4d4c-8318-6174454eb605' not present"
     And each bad msg can be successfully quarantined
 
