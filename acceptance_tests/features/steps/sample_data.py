@@ -23,8 +23,9 @@ def data_on_case_changed(context, column, expected_value):
 def send_update_sample(context, column, new_value):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
+    context.case_id = context.emitted_cases[0]['caseId']
     message = _send_update_sample_msg(context.correlation_id, context.originating_user,
-                                      context.emitted_cases[0]['caseId'], {column: new_value})
+                                      context.case_id, {column: new_value})
     context.sent_messages.append(message)
 
 
