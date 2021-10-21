@@ -12,18 +12,6 @@
     ]
   },
   {
-    "columnName": "sampleUnitRef",
-    "rules": [
-      {
-        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
-      },
-      {
-        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
-        "maxLength": 5
-      }
-    ]
-  },
-  {
     "columnName": "cohort",
     "rules": [
       {
@@ -78,11 +66,19 @@
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 9
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^[a-zA-Z0-9 ]*$"
       }
     ]
   },
   {
-    "columnName": "country",
+    "columnName": "region",
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
@@ -126,6 +122,10 @@
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
         "maxLength": 12
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^[0-9]*$"
       }
     ]
   },
@@ -134,6 +134,10 @@
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$"
       }
     ]
   },
@@ -142,16 +146,20 @@
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$"
       }
     ]
   },
   {
-    "columnName": "telNumber",
+    "columnName": "phoneNumber",
     "sensitive": true,
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
-        "expression": "^07[0-9]{9}$"
+        "expression": "^[0-9]+$|^$"
       }
     ]
   }
