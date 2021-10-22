@@ -10,7 +10,7 @@ from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from config import Config
 
 
-@step("a REFUSAL event is received")
+@step("a refusal event is received")
 def send_refusal(context):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
@@ -19,7 +19,7 @@ def send_refusal(context):
     context.sent_messages.append(message)
 
 
-@step('a bad REFUSAL event is put on the topic')
+@step('a bad refusal event is put on the topic')
 def send_bad_refusal_message(context):
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_refusal_message(str(uuid.uuid4()), context.originating_user,

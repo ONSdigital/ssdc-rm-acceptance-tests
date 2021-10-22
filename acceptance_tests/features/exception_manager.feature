@@ -21,7 +21,7 @@ Feature: Check exception manager is called for every topic and handles them as e
     And each bad msg can be successfully quarantined
 
   Scenario: Bad refusal message turns up in exception manager
-    When a bad REFUSAL event is put on the topic
+    When a bad refusal event is put on the topic
     Then a bad message appears in exception manager with exception message containing "Case ID '1c1e495d-8f49-4d4c-8318-6174454eb605' not present"
     And each bad msg can be successfully quarantined
 
@@ -48,7 +48,7 @@ Feature: Check exception manager is called for every topic and handles them as e
   Scenario: Bad new case message turns up in exception manager
     Given the sample file "sis_survey_link.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
     When an invalid newCase event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Column 'schoolId' value 'schoolidistoolong' validation error: Exceeded max length of 11"
+    Then a bad message appears in exception manager with exception message containing "New case event failed validation on column "schoolId""
     And each bad msg can be successfully quarantined
 
   Scenario: Bad new case message turns up in exception manager
