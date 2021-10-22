@@ -30,6 +30,11 @@ Feature: Check exception manager is called for every topic and handles them as e
     Then a bad message appears in exception manager with exception message containing "Questionnaire Id '666' not found!"
     And each bad msg can be successfully quarantined
 
+  Scenario: Bad sample data message turns up in exception manager
+    When a bad sample data event is put on the topic
+    Then a bad message appears in exception manager with exception message containing "Case ID '386a50b8-6ba0-40f6-bd3c-34333d58be90' not present"
+    And each bad msg can be successfully quarantined
+
   Scenario: Bad sensitive data message turns up in exception manager
     When a bad sensitive data event is put on the topic
     Then a bad message appears in exception manager with exception message containing "Case ID '386a50b8-6ba0-40f6-bd3c-34333d58be90' not present"
