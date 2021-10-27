@@ -38,7 +38,7 @@ def retry_check_sensitive_data_change(context, sensitive_column, expected_value)
                                 f"The {sensitive_column} should have been updated, but it hasn't been")
 
 
-@step('a bad sensitive data event is put on the topic')
+@step("a bad update sample sensitive event is put on the topic")
 def a_bad_sensitive_data_event_is_put_on_the_topic(context):
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_update_sample_sensitive_msg(str(uuid.uuid4()), context.originating_user,
