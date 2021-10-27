@@ -1,12 +1,18 @@
+import csv
 import hashlib
 import json
+import time
 import uuid
 from datetime import datetime
 
+import requests
 from behave import step
+from requests_toolbelt import MultipartEncoder
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
+from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
+from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
@@ -52,3 +58,24 @@ def _send_refusal_message(correlation_id, originating_user, case_id):
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_REFUSAL_TOPIC)
 
     return message
+
+
+@step('a bulk refusal file of type "EXTRAORDINARY_REFUSAL" is created for every case created and uploaded')
+def create_and_upload_bulk_refusal_file(context):
+    # Build a bulk refusal file with a row for each the stored case created event
+    bulk_refusals_file = Config.RESOURCE_FILE_PATH.joinpath('bulk_processing_files', 'refusal_bulk_test.csv')
+    bulk_refusals = {}
+
+    for emitted_case in context.emitted_cases:
+        caseId = emitted_case['caseId']
+        bulk_refusals[caseId] = 'EXTRAORDINARY_REFUSAL'
+
+    test_helper.assertGreater(len(bulk_refusals), 0, 'Must have at least one refusal for this test to be valid')
+
+    with open(bulk_refusals_file, 'w') as bulk_refusal_file_write:
+        writer = csv.DictWriter(bulk_refusal_file_write, fieldnames=['caseId', 'refusalType'])
+        writer.writeheader()
+        for case_id, refusal_type in bulk_refusals.items():
+            writer.writerow({'caseId': case_id, 'refusalType': refusal_type})
+
+    upload_file_via_api(context.collex_id, bulk_refusals_file, 'BULK_REFUSAL')
