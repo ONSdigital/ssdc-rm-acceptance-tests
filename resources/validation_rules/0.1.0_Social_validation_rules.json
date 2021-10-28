@@ -1,0 +1,178 @@
+[
+  {
+    "columnName": "questionnaire",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 3
+      }
+    ]
+  },
+  {
+    "columnName": "sampleUnitRef",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 5
+      }
+    ]
+  },
+  {
+    "columnName": "cohort",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 3
+      }
+    ]
+  },
+  {
+    "columnName": "addressLine1",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 60
+      }
+    ]
+  },
+  {
+    "columnName": "addressLine2",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 60
+      }
+    ]
+  },
+  {
+    "columnName": "addressLine3",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 60
+      }
+    ]
+  },
+  {
+    "columnName": "townName",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      }
+    ]
+  },
+  {
+    "columnName": "postcode",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 9
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^[a-zA-Z0-9 ]*$"
+      }
+    ]
+  },
+  {
+    "columnName": "region",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
+        "set": ["E", "W", "N"]
+      }
+    ]
+  },
+  {
+    "columnName": "gor9d",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 9
+      }
+    ]
+  },
+  {
+    "columnName": "laCode",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 9
+      }
+    ]
+  },
+  {
+    "columnName": "uprn",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 12
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^[0-9]*$"
+      }
+    ]
+  },
+  {
+    "columnName": "uprnLatitude",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^(\\+|-)?(?:90(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\\.[0-9]{1,6})?))$"
+      }
+    ]
+  },
+  {
+    "columnName": "uprnLongitude",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^(\\+|-)?(?:180(?:(?:\\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\\.[0-9]{1,6})?))$"
+      }
+    ]
+  },
+  {
+    "columnName": "phoneNumber",
+    "sensitive": true,
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.RegexRule",
+        "expression": "^[0-9]+$|^$"
+      }
+    ]
+  }
+]
