@@ -23,7 +23,7 @@ def upload_file_via_api(collex_id, file_path, job_type):
 
     form_data = {
         'fileId': file_id,
-        'fileName': file_name ,
+        'fileName': file_name,
         'collectionExerciseId': collex_id,
         'jobType': job_type
     }

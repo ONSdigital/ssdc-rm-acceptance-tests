@@ -1,14 +1,9 @@
 import csv
 import hashlib
 import json
-import time
 import uuid
 from datetime import datetime
-
-import requests
 from behave import step
-from requests_toolbelt import MultipartEncoder
-
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub

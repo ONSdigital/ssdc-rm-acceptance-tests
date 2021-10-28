@@ -1,11 +1,6 @@
 import csv
-import time
 from pathlib import Path
-
-import requests
 from behave import step
-from requests_toolbelt import MultipartEncoder
-
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
@@ -144,7 +139,6 @@ def load_business_sample_file_step(context):
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
-
 
 
 @step(
