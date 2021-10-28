@@ -21,7 +21,7 @@ def upload_file_via_api(collex_id, file_path, job_type):
 
     file_id = response.json()
 
-    form_data = {
+    request_params = {
         'fileId': file_id,
         'fileName': file_name,
         'collectionExerciseId': collex_id,
