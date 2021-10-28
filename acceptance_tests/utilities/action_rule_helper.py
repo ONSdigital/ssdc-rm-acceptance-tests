@@ -5,10 +5,10 @@ import requests
 from config import Config
 
 
-def create_print_action_rule(collex_id, classifiers, pack_code):
+def create_export_file_action_rule(collex_id, classifiers, pack_code):
     url = f'{Config.SUPPORT_TOOL_API}/actionRules'
     body = {
-        'type': 'PRINT',
+        'type': 'EXPORT_FILE',
         'packCode': pack_code,
         'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
         'classifiers': classifiers,

@@ -22,23 +22,24 @@ def sensitive_data_on_case_changed(context, sensitive_column, expected_value):
     'an UPDATE_SAMPLE_SENSITIVE event is received updating the {sensitive_column} to {new_value}')
 def send_update_sample_sensitive(context, sensitive_column, new_value):
     context.correlation_id = str(uuid.uuid4())
+    context.case_id = context.emitted_cases[0]['caseId']
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_update_sample_sensitive_msg(context.correlation_id, context.originating_user,
-                                                context.emitted_cases[0]['caseId'], {sensitive_column: new_value})
+                                                context.case_id, {sensitive_column: new_value})
     context.sent_messages.append(message)
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def retry_check_sensitive_data_change(context, sensitive_column, expected_value):
     with open_cursor() as cur:
-        cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (context.emitted_cases[0]['caseId'],))
+        cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (context.case_id,))
         result = cur.fetchone()
 
         test_helper.assertEqual(result[0][sensitive_column], expected_value,
                                 f"The {sensitive_column} should have been updated, but it hasn't been")
 
 
-@step('a bad sensitive data event is put on the topic')
+@step("a bad update sample sensitive event is put on the topic")
 def a_bad_sensitive_data_event_is_put_on_the_topic(context):
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_update_sample_sensitive_msg(str(uuid.uuid4()), context.originating_user,
