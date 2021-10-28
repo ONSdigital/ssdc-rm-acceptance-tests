@@ -8,7 +8,7 @@ from config import Config
 
 
 def upload_file_via_api(collex_id, file_path, job_type):
-    file_name = job_type + '_file'
+    file_name = job_type + '_FILE'
 
     multipart_data = MultipartEncoder(fields={
         'file': (file_name, open(file_path, 'rb'), 'text/plain')
