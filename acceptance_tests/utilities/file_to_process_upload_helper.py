@@ -29,7 +29,7 @@ def upload_file_via_api(collex_id, file_path, job_type):
     }
 
     create_job_url = f'{Config.SUPPORT_TOOL_API}/job'
-    response = requests.post(create_job_url, params=form_data)
+    response = requests.post(create_job_url, params=request_params)
     response.raise_for_status()
 
     job_id = response.json()
