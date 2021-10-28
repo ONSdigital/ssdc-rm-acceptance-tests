@@ -1,4 +1,4 @@
-Feature: Sample data in the case is updated
+Feature: Sample data in the case can be updated
 
   Scenario: A case is loaded and data can be changed
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully

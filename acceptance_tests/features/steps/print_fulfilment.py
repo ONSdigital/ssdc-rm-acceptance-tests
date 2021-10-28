@@ -39,7 +39,7 @@ def request_print_fulfilment_step(context):
     context.sent_messages.append(message)
 
 
-@step('print fulfilments are triggered to be sent for printing')
+@step("export file fulfilments are triggered to be exported")
 def print_fulfilments_trigger_step(context):
     url = (f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/'
            f'?triggerDateTime={datetime.utcnow().replace(microsecond=0).isoformat()}Z')
@@ -48,9 +48,9 @@ def print_fulfilments_trigger_step(context):
     response.raise_for_status()
 
 
-@step("fulfilments are authorised on print template")
+@step("fulfilments are authorised on the export file template")
 def authorise_pack_code(context):
-    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyPrintTemplates'
+    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyExportFileTemplates'
     body = {
         'surveyId': context.survey_id,
         'packCode': context.pack_code,

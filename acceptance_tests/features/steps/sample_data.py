@@ -39,7 +39,7 @@ def retry_check_data_change(context, column, expected_value):
                                 f"The {column} should have been updated, but it hasn't been")
 
 
-@step('a bad sample data event is put on the topic')
+@step("a bad update sample event is put on the topic")
 def a_bad_sample_data_event_is_put_on_the_topic(context):
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_update_sample_msg(str(uuid.uuid4()), context.originating_user,

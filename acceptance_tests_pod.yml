@@ -78,7 +78,7 @@ spec:
           name: project-config
           key: project-name
     - name: SUPPLIER_CONFIG_JSON_PATH
-      value: "/home/acceptancetests/dummy_supplier_config.json"
+      value: "/home/acceptancetests/dummy_export_file_destination_config.json"
     - name: SFTP_HOST
       valueFrom:
         secretKeyRef:
@@ -112,10 +112,10 @@ spec:
       value: "notify-stub"
     - name: NOTIFY_STUB_PORT
       value: "80"
-    - name: SENT_PRINT_FILE_BUCKET
+    - name: SENT_EXPORT_FILE_BUCKET
       valueFrom:
         configMapKeyRef:
-          key: sent-print-file-bucket
+          key: sent-export-file-bucket
           name: project-config
     - name: CASEAPI_SERVICE_HOST
       value: "case-api"

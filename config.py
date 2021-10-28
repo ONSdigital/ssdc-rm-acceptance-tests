@@ -56,11 +56,12 @@ class Config:
     SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_rsa')
     SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'dummy_secret')
 
-    SUPPLIER_CONFIG_JSON_PATH = Path(
-        os.getenv('SUPPLIER_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath('dummy_supplier_config.json'))
-    SUPPLIERS_CONFIG = json.loads(
-        SUPPLIER_CONFIG_JSON_PATH.read_text()) \
-        if SUPPLIER_CONFIG_JSON_PATH and SUPPLIER_CONFIG_JSON_PATH.exists() else None
+    EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH = Path(
+        os.getenv('EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath(
+            'dummy_export_file_destination_config.json'))
+    EXPORT_FILE_DESTINATIONS_CONFIG = json.loads(
+        EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH.read_text()) \
+        if EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH and EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH.exists() else None
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 
