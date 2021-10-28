@@ -85,9 +85,18 @@ def _check_uacs_updated_match_cases(uac_update_events, cases):
                             f'cases {cases}')
 
 
-@step('a CASE_UPDATE message is emitted for each case where "{field_to_check}" is "{expected_value}"')
+@step("a CASE_UPDATE message is emitted for each bulk updated case with expected refusal type")
 def case_emitted_with_field_set_to_value(context, field_to_check, expected_value):
     emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
 
     for emitted_case in emitted_updated_cases:
-        test_helper.assertEqual(emitted_case[field_to_check], expected_value)
+        test_helper.assertIn(emitted_case['caseId'], context.bulk_refusals.keys(),
+                             f'Got case updated event {emitted_case}, '
+                             f'not in expected bulk refusal caseIds {context.bulk_refusals.keys()}')
+
+        expected_refusal_type = context.bulk_refusals[emitted_case['caseId']]
+        test_helper.assertEqual(
+            emitted_case['refusalReceived'],
+            expected_refusal_type,
+            'Refusal type on the case updated events should match the expected type from the bulk file,'
+            f'received {emitted_case} expected type: {expected_refusal_type}')

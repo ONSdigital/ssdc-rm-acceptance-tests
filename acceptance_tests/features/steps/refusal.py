@@ -1,6 +1,7 @@
 import csv
 import hashlib
 import json
+import random
 import uuid
 from datetime import datetime
 from behave import step
@@ -58,18 +59,22 @@ def _send_refusal_message(correlation_id, originating_user, case_id):
 @step('a bulk refusal file of type "EXTRAORDINARY_REFUSAL" is created for every case created and uploaded')
 def create_and_upload_bulk_refusal_file(context):
     bulk_refusals_file = f'/tmp/bulk_refusal_{str(uuid.uuid4())}.csv'
-    bulk_refusals = {}
+    context.bulk_refusals = {}
 
     for emitted_case in context.emitted_cases:
         caseId = emitted_case['caseId']
-        bulk_refusals[caseId] = 'EXTRAORDINARY_REFUSAL'
 
-    test_helper.assertGreater(len(bulk_refusals), 0, 'Must have at least one refusal for this test to be valid')
+        context.bulk_refusals[caseId] = random.choice(
+            ('HARD_REFUSAL',
+             'EXTRAORDINARY_REFUSAL')
+        )
+
+    test_helper.assertGreater(len(context.bulk_refusals), 0, 'Must have at least one refusal for this test to be valid')
 
     with open(bulk_refusals_file, 'w') as bulk_refusal_file_write:
         writer = csv.DictWriter(bulk_refusal_file_write, fieldnames=['caseId', 'refusalType'])
         writer.writeheader()
-        for case_id, refusal_type in bulk_refusals.items():
+        for case_id, refusal_type in context.bulk_refusals.items():
             writer.writerow({'caseId': case_id, 'refusalType': refusal_type})
 
     upload_file_via_api(context.collex_id, bulk_refusals_file, 'BULK_REFUSAL')
