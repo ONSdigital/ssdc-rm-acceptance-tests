@@ -86,7 +86,7 @@ def _check_uacs_updated_match_cases(uac_update_events, cases):
 
 
 @step("a CASE_UPDATE message is emitted for each bulk updated case with expected refusal type")
-def case_emitted_with_field_set_to_value(context, field_to_check, expected_value):
+def case_emitted_with_field_set_to_value(context):
     emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
 
     for emitted_case in emitted_updated_cases:
