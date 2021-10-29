@@ -12,8 +12,6 @@ else
         --project $GCP_PROJECT
 fi
 
-BEHAVE_TAGS='--tags=~@local-docker'
-
 if [ "$NAMESPACE" ]; then
     kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
     echo "NAMESPACE = [$NAMESPACE] Set kubectl namespace for subsequent commands [$NAMESPACE]."
@@ -26,6 +24,6 @@ kubectl apply -f acceptance_tests_pod.yml
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
-kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features $BEHAVE_TAGS"
+kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features"
 
 kubectl delete pod acceptance-tests || true
