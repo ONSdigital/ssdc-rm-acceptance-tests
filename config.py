@@ -73,5 +73,3 @@ class Config:
     RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
 
     SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
-
-    LOG_LEVEL = os.getenv('LOG_LEVEL', 'WARN')

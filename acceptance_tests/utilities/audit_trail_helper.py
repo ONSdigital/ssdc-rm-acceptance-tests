@@ -70,5 +70,3 @@ def get_context_list_value(context, key):
         list_values += f'   context.{key}{[i]}:   {context_list_var[i]} \n'
 
     return list_values
-
-
