@@ -4,7 +4,7 @@ from typing import Mapping
 
 import requests
 
-from acceptance_tests.utilities.pubsub_helper import get_matching_pubsub_messages_acking_others
+from acceptance_tests.utilities.pubsub_helper import get_matching_pubsub_message_acking_others
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -41,8 +41,8 @@ def get_emitted_survey_update(expected_survey_name):
     # Build the matcher with the current expected survey name
     survey_name_matcher = partial(_survey_name_message_matcher, expected_survey_name=expected_survey_name)
 
-    message_received = get_matching_pubsub_messages_acking_others(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
-                                                                  survey_name_matcher)
+    message_received = get_matching_pubsub_message_acking_others(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
+                                                                 survey_name_matcher)
 
     return message_received['payload']['surveyUpdate']
 

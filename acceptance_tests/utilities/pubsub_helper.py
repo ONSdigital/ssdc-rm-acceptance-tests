@@ -105,8 +105,8 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
     return parsed_message_bodies
 
 
-def get_matching_pubsub_messages_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
-                                               timeout=30):
+def get_matching_pubsub_message_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
+                                              timeout=30):
     """
     Pull and ack all pubsub messages on the given subscription within the timeout, until a match is found
     message_matcher is a function which takes the parsed message body json and returns a bool for whether it matches
