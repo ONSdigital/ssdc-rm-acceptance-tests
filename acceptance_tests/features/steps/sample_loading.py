@@ -93,9 +93,6 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
 
-    #     REMOVE, forced failure
-    test_helper.assertFalse(True)
-
 
 def get_business_sample_columns_and_validation_rules(sample_file_path: Path):
     sample_columns = ["ruref",
