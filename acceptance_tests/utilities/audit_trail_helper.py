@@ -1,12 +1,8 @@
-import logging
 import random
 import string
 
-from structlog import wrap_logger
 
 from acceptance_tests.utilities.test_case_helper import test_helper
-
-logger = wrap_logger(logging.getLogger(__name__))
 
 
 def get_unique_user_email():
