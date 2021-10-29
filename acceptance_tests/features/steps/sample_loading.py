@@ -1,13 +1,9 @@
 import csv
-import time
 from pathlib import Path
-
-import requests
 from behave import step
-from requests_toolbelt import MultipartEncoder
-
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
+from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
 from acceptance_tests.utilities.survey_helper import add_survey
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_header_and_rows, \
@@ -57,7 +53,7 @@ def load_bom_sample_file_step(context, sample_file_name):
     context.survey_id = add_survey(sample_validation_rules)
     context.collex_id = add_collex(context.survey_id)
 
-    upload_sample_file(context.collex_id, sample_file_path)
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
@@ -70,7 +66,7 @@ def load_sample_file_step(context, sample_file_name):
     context.survey_id = add_survey(sample_validation_rules)
     context.collex_id = add_collex(context.survey_id)
 
-    upload_sample_file(context.collex_id, sample_file_path)
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
@@ -89,7 +85,7 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
     context.survey_id = add_survey(sample_validation_rules)
     context.collex_id = add_collex(context.survey_id)
 
-    upload_sample_file(context.collex_id, sample_file_path)
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
 
@@ -140,55 +136,9 @@ def load_business_sample_file_step(context):
     context.survey_id = add_survey(validation_rules, False, ':')
     context.collex_id = add_collex(context.survey_id)
 
-    upload_sample_file(context.collex_id, sample_file_path)
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
-
-
-def upload_sample_file(collex_id, sample_file_path):
-    multipart_data = MultipartEncoder(fields={
-        'file': ('sample_file', open(sample_file_path, 'rb'), 'text/plain')
-    })
-    url = f'{Config.SUPPORT_TOOL_API}/upload'
-
-    response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
-    response.raise_for_status()
-
-    file_id = response.json()
-
-    form_data = {
-        'fileId': file_id,
-        'fileName': 'sample_file',
-        'collectionExerciseId': collex_id
-    }
-
-    create_job_url = f'{Config.SUPPORT_TOOL_API}/job'
-    response = requests.post(create_job_url, params=form_data)
-    response.raise_for_status()
-
-    job_id = response.json()
-
-    get_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}'
-
-    deadline = time.time() + 30
-    sample_validated = False
-
-    while time.time() < deadline:
-        response = requests.get(get_job_url)
-        response.raise_for_status()
-
-        if response.json().get("jobStatus") == "VALIDATED_OK":
-            sample_validated = True
-            break
-        else:
-            time.sleep(1)
-
-    if sample_validated:
-        process_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}/process'
-        response = requests.post(process_job_url)
-        response.raise_for_status()
-    else:
-        test_helper.fail("Sample did not pass validation before timeout")
 
 
 @step(
@@ -201,6 +151,6 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
     context.survey_id = add_survey(sample_validation_rules)
     context.collex_id = add_collex(context.survey_id)
 
-    upload_sample_file(context.collex_id, sample_file_path)
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)

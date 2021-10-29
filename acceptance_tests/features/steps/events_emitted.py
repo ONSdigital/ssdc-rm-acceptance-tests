@@ -1,7 +1,7 @@
 from behave import step
 
 from acceptance_tests.utilities.event_helper import get_emitted_case_update, get_emitted_uac_update, \
-    get_uac_update_events
+    get_uac_update_events, get_emitted_cases
 from acceptance_tests.utilities.test_case_helper import test_helper
 
 
@@ -83,3 +83,20 @@ def _check_uacs_updated_match_cases(uac_update_events, cases):
                             'There should be one and only one UAC updated event for each given case ID,'
                             f'uac_update_events: {uac_update_events} '
                             f'cases {cases}')
+
+
+@step("a CASE_UPDATE message is emitted for each bulk updated case with expected refusal type")
+def case_emitted_with_field_set_to_value(context):
+    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+
+    for emitted_case in emitted_updated_cases:
+        test_helper.assertIn(emitted_case['caseId'], context.bulk_refusals.keys(),
+                             f'Got case updated event {emitted_case}, '
+                             f'not in expected bulk refusal caseIds {context.bulk_refusals.keys()}')
+
+        expected_refusal_type = context.bulk_refusals[emitted_case['caseId']]
+        test_helper.assertEqual(
+            emitted_case['refusalReceived'],
+            expected_refusal_type,
+            'Refusal type on the case updated events should match the expected type from the bulk file,'
+            f'received {emitted_case} expected type: {expected_refusal_type}')

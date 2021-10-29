@@ -46,7 +46,7 @@ def log_out_user_context_values(context):
     context_output += get_context_value(context, 'originating_user')
     context_output += get_context_list_value(context, 'sent_messages')
     context_output += get_context_value(context, 'case_id')
-
+    context_output += get_context_value(context, 'bulk_refusals')
     logger.error(context_output)
 
 
@@ -72,18 +72,3 @@ def get_context_list_value(context, key):
     return list_values
 
 
-
-
-def logout_context_list_value(context, key):
-
-    if not hasattr(context, key):
-        logger.error(f"context.{key} not set.")
-        return
-
-    context_list_var = getattr(context, key)
-
-    logger.error(f'context.{key}, length {len(context_list_var)}')
-
-    for i in range(len(context_list_var)):
-        logger.error(f'context.{key}{[i]}:')
-        logger.error(f'    {context_list_var[i]}')
