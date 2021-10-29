@@ -29,6 +29,7 @@ def move_fulfilment_triggers_harmlessly_massively_into_the_future():
 
 
 def before_all(_context):
+    logging.basicConfig(level='WARN')
     logging.getLogger("pika").setLevel(logging.WARNING)
 
 
