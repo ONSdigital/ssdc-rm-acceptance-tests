@@ -1,15 +1,11 @@
 import json
-import logging
 import time
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
-from structlog import wrap_logger
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
-
-logger = wrap_logger(logging.getLogger(__name__))
 
 
 def publish_to_pubsub(message, project, topic, **kwargs):
@@ -20,7 +16,6 @@ def publish_to_pubsub(message, project, topic, **kwargs):
     future = publisher.publish(topic_path, data=message.encode('utf-8'), **kwargs)
 
     future.result(timeout=30)
-    logger.info("Sent PubSub message", topic=topic, project=project)
 
 
 def purge_outbound_topics():
