@@ -24,6 +24,6 @@ kubectl apply -f acceptance_tests_pod.yml
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
-kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features"
+kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features --no-logcapture --logging-level WARN"
 
 kubectl delete pod acceptance-tests || true
