@@ -30,8 +30,7 @@ def log_out_user_context_values(context):
     # This would document and allow consistent outputting of these values in one?
 
     # The solution here is because Concourse suppresses standard logging.
-    # This solution also formats it nicely, that is without the
-    # :ERROR:acceptance_tests.utilities.audit_trail_helper:2021-10-29 07:36.56 [error    ]
+    # This solution also formats it nicely, without 50 chars of ERROR, date time, function etc.
 
     context_output = "\nOutputting user context vars \n"
     context_output += get_context_value(context, 'test_start_local_datetime')
@@ -58,7 +57,7 @@ def get_context_value(context, key):
     if not hasattr(context, key):
         return f"context.{key} not set. \n"
 
-    return f'context.{key} \n     {getattr(context, key)} \n'
+    return f'context.{key}:   {getattr(context, key)} \n'
 
 
 def get_context_list_value(context, key):
@@ -71,7 +70,6 @@ def get_context_list_value(context, key):
     list_values = f'context.{key}, length {len(context_list_var)} \n'
 
     for i in range(len(context_list_var)):
-        list_values += f'context.{key}{[i]}: \n'
-        list_values += f'    {context_list_var[i]} \n'
+        list_values += f'   context.{key}{[i]}:   {context_list_var[i]} \n'
 
     return list_values
