@@ -107,6 +107,11 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
 
 def get_matching_pubsub_messages_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
                                                timeout=30):
+    """
+    Pull and ack all pubsub messages on the given subscription within the timeout, until a match is found
+    message_matcher is a function which takes the parsed message body json and returns a bool for whether it matches
+    expected an a string for helpful failure logging
+    """
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
     deadline = time.time() + timeout
@@ -128,11 +133,11 @@ def get_matching_pubsub_messages_acking_others(subscription, message_matcher: Ca
                 matched_message = parsed_message
             else:
                 logger.warn(f'Acking non matching message on subscription {subscription_path}, '
-                            f'failed match: {failure_description}')
+                            f'failed match description: {failure_description}')
             subscriber.acknowledge(subscription_path, [received_message.ack_id])
 
     if matched_message:
         return matched_message
 
-    test_helper.fail(f'Expected to pull a matching message using matcher: {message_matcher.__doc__}, on '
-                     f'subscription {subscription_path} but found no matches within the {timeout} second timeout')
+    test_helper.fail(f'Expected to pull a matching message on subscription {subscription_path} '
+                     f'but found no matches within the {timeout} second timeout')

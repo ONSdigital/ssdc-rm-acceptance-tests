@@ -38,15 +38,16 @@ def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_
 
 
 def get_emitted_survey_update(expected_survey_name):
+    # Build the matcher with the current expected survey name
+    survey_name_matcher = partial(_survey_name_message_matcher, expected_survey_name=expected_survey_name)
+
     message_received = get_matching_pubsub_messages_acking_others(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
-                                                                  partial(match_message_survey_name,
-                                                                          expected_survey_name=expected_survey_name))
+                                                                  survey_name_matcher)
 
     return message_received['payload']['surveyUpdate']
 
 
-def match_message_survey_name(message: Mapping, expected_survey_name=None) -> (bool, str):
-    """Survey update event survey name matches expected"""
+def _survey_name_message_matcher(message: Mapping, expected_survey_name=None) -> (bool, str):
     if message['payload']['surveyUpdate']['name'] == expected_survey_name:
         return True, ''
     return False, f'Actual survey name "{message["payload"]["surveyUpdate"]["name"]}" ' \
