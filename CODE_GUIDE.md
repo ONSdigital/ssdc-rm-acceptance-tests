@@ -57,6 +57,7 @@ Must also be added to the function: log_out_user_context_values in audit_trail_h
 | sent_messages                | Stores every scenario sent message for debugging errors                         |
 | scenario_name                | Stores the scenario name and uses it for unique originating users in messages   |
 | case_id                      | Stores the case_id of a case used in the scenario                               |
+| bulk_refusals                | Stores created bulk refusal cases we expect to see messages for                 |
 
 ### Sharing Code Between Steps
 
