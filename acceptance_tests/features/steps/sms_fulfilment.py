@@ -7,6 +7,7 @@ import requests
 from behave import step
 
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
+from acceptance_tests.utilities.event_helper import get_exactly_one_emitted_survey_update
 from acceptance_tests.utilities.notify_helper import check_sms_fulfilment_response, \
     check_notify_api_called_with_correct_notify_template_id
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -23,6 +24,14 @@ def authorise_sms_pack_code(context):
 
     response = requests.post(url, json=body)
     response.raise_for_status()
+
+    survey_update_event = get_exactly_one_emitted_survey_update()
+
+    allowed_sms_fulfilments = survey_update_event['allowedSmsFulfilments']
+    test_helper.assertEqual(len(allowed_sms_fulfilments), 1,
+                            'Unexpected number of allowedSmsFulfilments')
+    test_helper.assertEqual(allowed_sms_fulfilments[0]['packCode'], context.pack_code,
+                            'Unexpected allowedSmsFulfilments packCode')
 
 
 @step('a request has been made for a replacement UAC by SMS from phone number "{phone_number}"')
@@ -86,7 +95,9 @@ def create_sms_template(context, template):
     body = {
         'notifyTemplateId': context.notify_template_id,
         'template': json.loads(context.template),
-        'packCode': context.pack_code
+        'packCode': context.pack_code,
+        'description': "Test description",
+        'metadata': {"foo": "bar"}
     }
 
     response = requests.post(url, json=body)
