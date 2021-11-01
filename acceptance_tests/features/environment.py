@@ -28,10 +28,6 @@ def move_fulfilment_triggers_harmlessly_massively_into_the_future():
     response.raise_for_status()
 
 
-def before_all(_context):
-    logging.getLogger("pika").setLevel(logging.WARNING)
-
-
 def before_scenario(context, scenario):
     purge_outbound_topics()
     move_fulfilment_triggers_harmlessly_massively_into_the_future()
