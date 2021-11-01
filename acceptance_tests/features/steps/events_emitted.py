@@ -1,7 +1,9 @@
 from behave import step
 
+from acceptance_tests.utilities.case_api_helper import get_logged_events_for_case_by_id
 from acceptance_tests.utilities.event_helper import get_emitted_case_update, get_emitted_uac_update, \
-    get_uac_update_events, get_emitted_cases
+    get_uac_update_events, get_emitted_cases, get_emitted_case_events_by_type, \
+    check_invalid_case_reason_matches_on_event
 from acceptance_tests.utilities.test_case_helper import test_helper
 
 
@@ -95,8 +97,26 @@ def case_emitted_with_field_set_to_value(context):
                              f'not in expected bulk refusal caseIds {context.bulk_refusals.keys()}')
 
         expected_refusal_type = context.bulk_refusals[emitted_case['caseId']]
+
         test_helper.assertEqual(
             emitted_case['refusalReceived'],
             expected_refusal_type,
             'Refusal type on the case updated events should match the expected type from the bulk file,'
             f'received {emitted_case} expected type: {expected_refusal_type}')
+
+
+@step("a CASE_UPDATE message is emitted for each bulk updated invalid case with correct reason")
+def cases_emitted_for_bulk_invalid_with_correct_reason(context):
+    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+
+    for emitted_case in emitted_updated_cases:
+        test_helper.assertIn(emitted_case['caseId'], context.bulk_invalids.keys(),
+                             f'Got case updated event {emitted_case}, '
+                             f'not in expected bulk invalid caseIds {context.bulk_invalids.keys()}')
+
+        expected_reason = context.bulk_invalids[emitted_case['caseId']]
+        logged_invalid_events = get_emitted_case_events_by_type(emitted_case['caseId'], 'INVALID_CASE')
+        test_helper.assertEqual(len(logged_invalid_events), 1,
+                                msg=f'Expected 1 Invalid Case event, received {len(logged_invalid_events)}')
+
+        check_invalid_case_reason_matches_on_event(logged_invalid_events[0]['id'], expected_reason)
