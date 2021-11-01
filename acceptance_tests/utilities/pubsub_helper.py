@@ -1,5 +1,6 @@
 import json
 import time
+from typing import Callable, Mapping
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
@@ -97,3 +98,41 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
 
     subscriber.close()
     return parsed_message_bodies
+
+
+def get_matching_pubsub_message_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
+                                              timeout=30):
+    """
+    Pull and ack all pubsub messages on the given subscription within the timeout, until a match is found
+    message_matcher is a function which takes the parsed message body json and returns a bool for whether it matches
+    expected an a string for helpful failure logging
+    """
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
+    deadline = time.time() + timeout
+    matched_message = None
+
+    # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
+    # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
+    # the full time for all the expected messages to be published and pulled
+    while not matched_message and not time.time() > deadline:
+        try:
+            response = subscriber.pull(subscription_path, max_messages=1, timeout=1)
+        except DeadlineExceeded:
+            continue
+        if response.received_messages:
+            received_message = response.received_messages[0]
+            parsed_message = json.loads(received_message.message.data)
+            message_match, failure_description = message_matcher(parsed_message)
+            if message_match:
+                matched_message = parsed_message
+            else:
+                logger.warn(f'Acking non matching message on subscription {subscription_path}, '
+                            f'failed match description: {failure_description}')
+            subscriber.acknowledge(subscription_path, [received_message.ack_id])
+
+    if matched_message:
+        return matched_message
+
+    test_helper.fail(f'Expected to pull a matching message on subscription {subscription_path} '
+                     f'but found no matches within the {timeout} second timeout')
