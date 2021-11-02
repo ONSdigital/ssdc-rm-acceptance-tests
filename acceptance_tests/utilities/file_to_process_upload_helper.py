@@ -7,7 +7,7 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def upload_file_via_api(collex_id, file_path, job_type):
+def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=False):
     file_name = job_type + '_FILE'
 
     multipart_data = MultipartEncoder(fields={
@@ -53,5 +53,9 @@ def upload_file_via_api(collex_id, file_path, job_type):
         process_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}/process'
         response = requests.post(process_job_url)
         response.raise_for_status()
+
+        # TODO: Fix why has this stopped working?
+        # if delete_after_upload:
+        #     file_path.unlink()
     else:
         test_helper.fail("File did not pass validation before timeout")

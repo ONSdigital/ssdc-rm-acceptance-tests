@@ -120,3 +120,36 @@ def cases_emitted_for_bulk_invalid_with_correct_reason(context):
                                 msg=f'Expected 1 Invalid Case event, received {len(logged_invalid_events)}')
 
         check_invalid_case_reason_matches_on_event(logged_invalid_events[0]['id'], expected_reason)
+
+
+@step("a CASE_UPDATE message is emitted for each bulk updated sample row")
+def case_updated_messages_for_bulk_update_sample(context):
+    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+
+    for emitted_case in emitted_updated_cases:
+        matching_expected_row = get_bulk_data_row_from_case_id_or_fail(context.bulk_sample_update,
+                                                                       emitted_case['caseId'])
+        expected_field_to_update = matching_expected_row["fieldToUpdate"]
+        expected_value = matching_expected_row["newValue"]
+        actual_value = emitted_case["sample"][expected_field_to_update]
+
+        # Maybe overkill but check we're not merrily comparing 2 Nones
+        test_helper.assertIsNotNone(actual_value,
+                                    f"Missing actual new value in emitted_case['sample'] key {expected_field_to_update}")
+        test_helper.assertEqual(actual_value, expected_value, "Case Updated Sample doesn't match expected")
+
+
+def get_bulk_data_row_from_case_id_or_fail(bulk_data, case_id):
+    for data_row in bulk_data:
+        if case_id == data_row["caseId"]:
+            return data_row
+
+    test_helper.fail(f"Case id {case_id} not found in {bulk_data}")
+
+
+@step("a CASE_UPDATE message is emitted for each case")
+def case_update_message_emiited_for_every_case(context):
+    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+
+    for emitted_case in emitted_updated_cases:
+        get_bulk_data_row_from_case_id_or_fail(context.bulk_sensitive_update, emitted_case['caseId'])

@@ -1,5 +1,8 @@
+import csv
 import hashlib
 import json
+import random
+import string
 import uuid
 from datetime import datetime
 
@@ -8,6 +11,7 @@ from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.database_helper import open_cursor
+from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -71,3 +75,34 @@ def _send_update_sample_msg(correlation_id, originating_user, case_id, update_js
 
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_UPDATE_SAMPLE_TOPIC)
     return message
+
+
+@step("a bulk sample update file is created for every case created and uploaded")
+def create_and_upload_sample_update_file(context):
+    bulk_sample_update_filename = f'/tmp/bulk_sample_update_{str(uuid.uuid4())}.csv'
+    context.bulk_sample_update = []
+
+    for emitted_case in context.emitted_cases:
+        field_to_update = random.choice(
+            ('schoolId',
+             'schoolName')
+        )
+
+        context.bulk_sample_update.append({
+            'caseId': emitted_case['caseId'],
+            'fieldToUpdate': field_to_update,
+            'newValue': ''.join(random.sample(string.ascii_lowercase, 10))
+        })
+
+    test_helper.assertGreater(len(context.bulk_sample_update), 0,
+                              'Must have at least one sample update case for this test to be valid')
+
+    with open(bulk_sample_update_filename, 'w') as bulk_file_name_write:
+        writer = csv.DictWriter(bulk_file_name_write, fieldnames=['caseId', 'fieldToUpdate', 'newValue'])
+        writer.writeheader()
+        for case_row in context.bulk_sample_update:
+            writer.writerow({'caseId': case_row['caseId'], 'fieldToUpdate': case_row['fieldToUpdate'],
+                             'newValue': case_row['newValue']})
+
+    upload_file_via_api(context.collex_id, bulk_sample_update_filename, job_type='BULK_UPDATE_SAMPLE',
+                        delete_after_upload=True)
