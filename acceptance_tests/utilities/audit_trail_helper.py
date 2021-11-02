@@ -27,46 +27,46 @@ def log_out_user_context_values(context):
     # Set up a list of context vars Name, Type (string/json/list, description)?
     # This would document and allow consistent outputting of these values in one?
 
-    logger.error("Outputting user context vars")
+    logger.error('Outputting user context vars')
 
-    logout_context_value(context, 'test_start_local_datetime')
-    logout_context_value(context, 'survey_id')
-    logout_context_value(context, 'collex_id')
-    logout_context_list_value(context, 'emitted_cases')
-    logout_context_list_value(context, 'emitted_uacs')
-    logout_context_value(context, 'pack_code')
-    logout_context_value(context, 'template')
-    logout_context_value(context, 'telephone_capture_request')
-    logout_context_value(context, 'notify_template_id')
-    logout_context_value(context, 'sms_fulfilment_response_json')
-    logout_context_value(context, 'phone_number')
-    logout_context_list_value(context, 'message_hashes')
-    logout_context_value(context, 'correlation_id')
-    logout_context_value(context, 'originating_user')
-    logout_context_list_value(context, 'sent_messages')
-    logout_context_value(context, 'case_id')
-    logout_context_value(context, 'bulk_refusals')
+    context_output = "\n"
+    context_output += get_context_value(context, 'test_start_local_datetime')
+    context_output += get_context_value(context, 'survey_id')
+    context_output += get_context_value(context, 'collex_id')
+    context_output += get_context_list_value(context, 'emitted_cases')
+    context_output += get_context_list_value(context, 'emitted_uacs')
+    context_output += get_context_value(context, 'pack_code')
+    context_output += get_context_value(context, 'template')
+    context_output += get_context_value(context, 'telephone_capture_request')
+    context_output += get_context_value(context, 'notify_template_id')
+    context_output += get_context_value(context, 'sms_fulfilment_response_json')
+    context_output += get_context_value(context, 'phone_number')
+    context_output += get_context_list_value(context, 'message_hashes')
+    context_output += get_context_value(context, 'correlation_id')
+    context_output += get_context_value(context, 'originating_user')
+    context_output += get_context_list_value(context, 'sent_messages')
+    context_output += get_context_value(context, 'case_id')
+    context_output += get_context_value(context, 'bulk_refusals')
+    logger.error(context_output)
 
 
-def logout_context_value(context, key):
+def get_context_value(context, key):
     if not hasattr(context, key):
-        logger.error(f"context.{key} not set.")
-        return
+        return f"context.{key} not set. \n"
 
-    logger.error(f'context.{key}')
-    logger.error(f'    {getattr(context, key)}')
+    return f'context.{key}:   {getattr(context, key)} \n'
 
 
-def logout_context_list_value(context, key):
+def get_context_list_value(context, key):
 
     if not hasattr(context, key):
-        logger.error(f"context.{key} not set.")
-        return
+        return f"context.{key} not set. \n"
 
     context_list_var = getattr(context, key)
 
-    logger.error(f'context.{key}, length {len(context_list_var)}')
+    list_values = f'context.{key}, length {len(context_list_var)} \n'
 
     for i in range(len(context_list_var)):
-        logger.error(f'context.{key}{[i]}:')
-        logger.error(f'    {context_list_var[i]}')
+        list_values += f'   context.{key}{[i]}:   {context_list_var[i]} \n'
+
+    return list_values

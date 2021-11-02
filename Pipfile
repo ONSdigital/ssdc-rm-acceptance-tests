@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 behave = "*"
-pika = "*"
 structlog = "*"
 requests = "*"
 psycopg2-binary = "*"
