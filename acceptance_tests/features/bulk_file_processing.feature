@@ -1,4 +1,4 @@
-Feature: bulk refusal file processed
+Feature: bulk file processed
 
   Scenario: After a sample is loaded the cases can be refused on bulk
     Given sample file "social_sample_3_lines_fields.csv" is loaded successfully
