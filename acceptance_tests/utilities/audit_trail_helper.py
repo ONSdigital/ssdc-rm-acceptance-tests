@@ -46,7 +46,11 @@ def log_out_user_context_values(context):
     context_output += get_context_value(context, 'originating_user')
     context_output += get_context_list_value(context, 'sent_messages')
     context_output += get_context_value(context, 'case_id')
-    context_output += get_context_value(context, 'bulk_refusals')
+    context_output += get_context_list_value(context, 'bulk_refusals')
+    context_output += get_context_list_value(context, 'bulk_invalids')
+    context_output += get_context_list_value(context, 'bulk_sample_update')
+    context_output += get_context_list_value(context, 'bulk_sensitive_update')
+
     logger.error(context_output)
 
 

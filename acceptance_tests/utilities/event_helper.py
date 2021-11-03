@@ -1,3 +1,7 @@
+from tenacity import retry, wait_fixed, stop_after_delay
+
+from acceptance_tests.utilities.case_api_helper import get_logged_events_for_case_by_id
+from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.pubsub_helper import get_exact_number_of_pubsub_messages
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -79,3 +83,25 @@ def get_emitted_collection_exercise_update():
                                                            expected_msg_count=1)[0]
 
     return message_received['payload']['collectionExerciseUpdate']
+
+
+def get_emitted_case_events_by_type(case_id, type_filter):
+    events = get_logged_events_for_case_by_id(case_id)
+
+    logged_event_of_type = []
+
+    for event in events:
+        if event['eventType'] == type_filter:
+            logged_event_of_type.append(event)
+
+    return logged_event_of_type
+
+
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+def check_invalid_case_reason_matches_on_event(event_id, expected_reason):
+    with open_cursor() as cur:
+        cur.execute("SELECT payload FROM casev3.event WHERE id = %s", (event_id,))
+        result = cur.fetchone()
+
+        test_helper.assertEqual(result[0]['invalidCase']['reason'], expected_reason,
+                                "The invalid case reason doesn't matched expected")

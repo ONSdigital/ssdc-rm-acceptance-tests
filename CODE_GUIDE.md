@@ -58,6 +58,9 @@ Must also be added to the function: log_out_user_context_values in audit_trail_h
 | scenario_name                | Stores the scenario name and uses it for unique originating users in messages   |
 | case_id                      | Stores the case_id of a case used in the scenario                               |
 | bulk_refusals                | Stores created bulk refusal cases we expect to see messages for                 |
+| bulk_invalids                | Stores the create bulk invalid cases we expect to see messages for              |
+| bulk_sample_update           | Stores the create bulk sample update cases we expect to see messages for        |
+| bulk_sensitive_update        | Stores the bulk sensitive update cases we expect to see messages for            |
 
 ### Sharing Code Between Steps
 

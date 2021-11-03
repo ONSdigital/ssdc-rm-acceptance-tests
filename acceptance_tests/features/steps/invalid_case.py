@@ -1,12 +1,17 @@
+import csv
 import hashlib
 import json
+import random
+import string
 import uuid
 from datetime import datetime
 
 from behave import step
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
+from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
+from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
@@ -52,3 +57,24 @@ def _send_invalid_case_message(correlation_id, originating_user, case_id):
     publish_to_pubsub(message, project=Config.PUBSUB_PROJECT, topic=Config.PUBSUB_INVALID_CASE_TOPIC)
 
     return message
+
+
+@step("a bulk invalid file is created for every case created and uploaded")
+def bulk_invalid_file_created_and_uploaded(context):
+    bulk_invalid_filename = f'/tmp/bulk_invalid_{str(uuid.uuid4())}.csv'
+    context.bulk_invalids = {}
+
+    for emitted_case in context.emitted_cases:
+        caseId = emitted_case['caseId']
+        context.bulk_invalids[caseId] = ''.join(random.sample(string.ascii_lowercase, 20))
+
+    test_helper.assertGreater(len(context.bulk_invalids), 0,
+                              'Must have at least one invalid case for this test to be valid')
+
+    with open(bulk_invalid_filename, 'w') as bulk_file_name_write:
+        writer = csv.DictWriter(bulk_file_name_write, fieldnames=['caseId', 'reason'])
+        writer.writeheader()
+        for case_id, reason in context.bulk_invalids.items():
+            writer.writerow({'caseId': case_id, 'reason': reason})
+
+    upload_file_via_api(context.collex_id, bulk_invalid_filename, job_type='BULK_INVALID', delete_after_upload=True)

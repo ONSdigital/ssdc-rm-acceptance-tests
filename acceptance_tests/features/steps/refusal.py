@@ -56,7 +56,7 @@ def _send_refusal_message(correlation_id, originating_user, case_id):
     return message
 
 
-@step('a bulk refusal file of type "EXTRAORDINARY_REFUSAL" is created for every case created and uploaded')
+@step('a bulk refusal file is created for every case created and uploaded')
 def create_and_upload_bulk_refusal_file(context):
     bulk_refusals_file = f'/tmp/bulk_refusal_{str(uuid.uuid4())}.csv'
     context.bulk_refusals = {}
