@@ -1,14 +1,14 @@
+import os
 import time
-
+import uuid
 import requests
 from requests_toolbelt import MultipartEncoder
-
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
 def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=False):
-    file_name = job_type + '_FILE'
+    file_name = f'{job_type}_{str(uuid.uuid4())}.csv'
 
     multipart_data = MultipartEncoder(fields={
         'file': (file_name, open(file_path, 'rb'), 'text/plain')
@@ -54,8 +54,7 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
         response = requests.post(process_job_url)
         response.raise_for_status()
 
-        # TODO: Fix why has this stopped working?
-        # if delete_after_upload:
-        #     file_path.unlink()
+        if delete_after_upload:
+            os.unlink(file_path)
     else:
         test_helper.fail("File did not pass validation before timeout")
