@@ -1,6 +1,5 @@
 from behave import step
 
-from acceptance_tests.utilities.case_api_helper import get_logged_events_for_case_by_id
 from acceptance_tests.utilities.event_helper import get_emitted_case_update, get_emitted_uac_update, \
     get_uac_update_events, get_emitted_cases, get_emitted_case_events_by_type, \
     check_invalid_case_reason_matches_on_event
@@ -135,7 +134,8 @@ def case_updated_messages_for_bulk_update_sample(context):
 
         # Maybe overkill but check we're not merrily comparing 2 Nones
         test_helper.assertIsNotNone(actual_value,
-                                    f"Missing actual new value in emitted_case['sample'] key {expected_field_to_update}")
+                                    f"Missing actual new value in emitted_case['sample'] key"
+                                    f" {expected_field_to_update}")
         test_helper.assertEqual(actual_value, expected_value, "Case Updated Sample doesn't match expected")
 
 

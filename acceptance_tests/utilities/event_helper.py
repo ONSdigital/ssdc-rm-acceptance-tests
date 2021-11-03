@@ -104,4 +104,4 @@ def check_invalid_case_reason_matches_on_event(event_id, expected_reason):
         result = cur.fetchone()
 
         test_helper.assertEqual(result[0]['invalidCase']['reason'], expected_reason,
-                                f"The invalid case reason doesn't matched expected")
+                                "The invalid case reason doesn't matched expected")
