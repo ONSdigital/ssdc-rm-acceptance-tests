@@ -66,7 +66,6 @@ def bulk_invalid_file_created_and_uploaded(context):
 
     for emitted_case in context.emitted_cases:
         caseId = emitted_case['caseId']
-        # Make reason a random string 20 chars in length.
         context.bulk_invalids[caseId] = ''.join(random.sample(string.ascii_lowercase, 20))
 
     test_helper.assertGreater(len(context.bulk_invalids), 0,
