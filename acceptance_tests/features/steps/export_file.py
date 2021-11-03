@@ -129,7 +129,9 @@ def create_export_file_template(context, template):
     body = {
         'packCode': context.pack_code,
         'exportFileDestination': 'SUPPLIER_A',
-        'template': json.loads(template)
+        'template': json.loads(template),
+        'description': "Test description",
+        'metadata': {"foo": "bar"}
     }
 
     response = requests.post(url, json=body)

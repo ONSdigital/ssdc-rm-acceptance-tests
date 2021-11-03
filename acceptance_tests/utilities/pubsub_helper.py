@@ -1,5 +1,6 @@
 import json
 import time
+import logging
 from typing import Callable, Mapping
 
 from google.api_core.exceptions import DeadlineExceeded
@@ -7,6 +8,9 @@ from google.cloud import pubsub_v1
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
+
+from structlog import wrap_logger
+logger = wrap_logger(logging.getLogger(__name__))
 
 
 def publish_to_pubsub(message, project, topic, **kwargs):
