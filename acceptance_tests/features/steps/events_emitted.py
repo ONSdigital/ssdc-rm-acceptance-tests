@@ -149,7 +149,7 @@ def get_bulk_data_row_from_case_id_or_fail(bulk_data, case_id):
 
 @step("a CASE_UPDATE message is emitted for each case with sensitive data redacted")
 def case_update_message_emited_for_every_case_with_sensitive_data_redacted(context):
-    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+    emitted_updated_cases = get_emitted_cases(len(context.bulk_sensitive_update))
 
     for emitted_case in emitted_updated_cases:
         bulk_update_for_case = get_bulk_data_row_from_case_id_or_fail(context.bulk_sensitive_update,
