@@ -88,7 +88,7 @@ def _check_uacs_updated_match_cases(uac_update_events, cases):
 
 @step("a CASE_UPDATE message is emitted for each bulk updated case with expected refusal type")
 def case_emitted_with_field_set_to_value(context):
-    emitted_updated_cases = get_emitted_cases(len(context.bulk_refusal))
+    emitted_updated_cases = get_emitted_cases(len(context.bulk_refusals))
 
     for emitted_case in emitted_updated_cases:
         test_helper.assertIn(emitted_case['caseId'], context.bulk_refusals.keys(),

@@ -1,6 +1,7 @@
 import csv
 from pathlib import Path
 from behave import step
+
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
@@ -20,10 +21,12 @@ def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]
     for emitted_case in emitted_cases:
         matched_row = None
         for sample_row in sample_rows:
+            if get_none_sensitive_row_data(sample_row, sensitive_columns) == emitted_case['sample']:
 
-            if equal_dicts(sample_row, emitted_case['sample'], sensitive_columns):
-                matched_row = sample_row
-                break
+                if get_expected_emitted_sensitive_data(sample_row, sensitive_columns) \
+                        == emitted_case['sampleSensitive']:
+                    matched_row = sample_row
+                    break
 
         if matched_row:
             sample_rows.remove(matched_row)
@@ -34,10 +37,21 @@ def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]
     return emitted_cases
 
 
-def equal_dicts(d1, d2, ignore_keys):
-    d1_filtered = {k: v for k, v in d1.items() if k not in ignore_keys}
-    d2_filtered = {k: v for k, v in d2.items() if k not in ignore_keys}
-    return d1_filtered == d2_filtered
+def get_none_sensitive_row_data(sample_row, sensitive_columns):
+    return {k: v for k, v in sample_row.items() if k not in sensitive_columns}
+
+
+def get_expected_emitted_sensitive_data(sample_row, sensitive_columns):
+    sensitive_only = {k: v for k, v in sample_row.items()
+                      if k in sensitive_columns}
+
+    for key, value in sensitive_only.items():
+        if value:
+            sensitive_only[key] = 'REDACTED'
+        else:
+            sensitive_only[key] = ''
+
+    return sensitive_only
 
 
 @step('BOM sample file "{sample_file_name}" is loaded successfully')
