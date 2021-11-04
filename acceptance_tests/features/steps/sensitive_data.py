@@ -115,7 +115,7 @@ def create_and_upload_sensitive_update_file(context):
 
 
 @step("in the database the sensitive data has been updated as expected and is emitted redacted")
-def sensitive_data_updated_in_database_as_expected(context):
+def sensitive_data_updated_in_database_as_expected_and_is_emitted(context):
     emitted_updated_cases = get_emitted_cases(len(context.bulk_sensitive_update))
 
     for expected_update in context.bulk_sensitive_update:
