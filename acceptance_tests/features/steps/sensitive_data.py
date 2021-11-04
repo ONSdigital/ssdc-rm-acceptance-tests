@@ -11,6 +11,7 @@ from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.database_helper import open_cursor
+from acceptance_tests.utilities.event_helper import get_emitted_cases
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -41,6 +42,8 @@ def retry_check_sensitive_data_change(case_id, sensitive_column, expected_value)
 
         test_helper.assertEqual(result[0][sensitive_column], expected_value,
                                 f"The {sensitive_column} should have been updated, but it hasn't been")
+
+        return result[0]
 
 
 @step("a bad update sample sensitive event is put on the topic")
@@ -111,8 +114,39 @@ def create_and_upload_sensitive_update_file(context):
                         delete_after_upload=True)
 
 
-@step("in the database the sensitive data has been updated as expected")
+@step("in the database the sensitive data has been updated as expected and is emitted redacted")
 def sensitive_data_updated_in_database_as_expected(context):
+    emitted_updated_cases = get_emitted_cases(len(context.bulk_sensitive_update))
+
     for expected_update in context.bulk_sensitive_update:
-        retry_check_sensitive_data_change(expected_update['caseId'], expected_update['fieldToUpdate'],
-                                          expected_update['newValue'])
+        db_sample_sensitive_dict = retry_check_sensitive_data_change(expected_update['caseId'],
+                                                                     expected_update['fieldToUpdate'],
+                                                                     expected_update['newValue'])
+        emitted_sample_sensitive = get_emitted_case_by_id(expected_update['caseId'], emitted_updated_cases)[
+            'sampleSensitive']
+
+        test_helper.assertEqual(len(db_sample_sensitive_dict), len(emitted_sample_sensitive),
+                                'Expected emitted and DB sensitive columns to be the same length')
+
+        for column_name, db_value in db_sample_sensitive_dict.items():
+            test_helper.assertIn(column_name, emitted_sample_sensitive.keys(),
+                                 f'Failed to find expected column {column_name}'
+                                 f' in emitted case sample sensitive {emitted_sample_sensitive}')
+
+            if db_value:
+                expected_value = 'REDACTED'
+            else:
+                expected_value = ''
+
+            test_helper.assertEqual(emitted_sample_sensitive[column_name], expected_value,
+                                    f'Emitted case update value of {emitted_sample_sensitive[column_name]} '
+                                    f'did not match expected value [{expected_value}]')
+
+
+def get_emitted_case_by_id(case_id_to_match, all_emitted_update_cases):
+    for updated_case in all_emitted_update_cases:
+        if updated_case['caseId'] == case_id_to_match:
+            return updated_case
+
+    test_helper.fail(f"Couldn't find case update emitted with case ID: {case_id_to_match}"
+                     f"Full emitted_case_update_events list: {all_emitted_update_cases}")

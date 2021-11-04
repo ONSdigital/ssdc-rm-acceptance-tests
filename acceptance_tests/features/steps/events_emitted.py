@@ -88,7 +88,7 @@ def _check_uacs_updated_match_cases(uac_update_events, cases):
 
 @step("a CASE_UPDATE message is emitted for each bulk updated case with expected refusal type")
 def case_emitted_with_field_set_to_value(context):
-    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+    emitted_updated_cases = get_emitted_cases(len(context.bulk_refusal))
 
     for emitted_case in emitted_updated_cases:
         test_helper.assertIn(emitted_case['caseId'], context.bulk_refusals.keys(),
@@ -106,7 +106,7 @@ def case_emitted_with_field_set_to_value(context):
 
 @step("a CASE_UPDATE message is emitted for each bulk updated invalid case with correct reason")
 def cases_emitted_for_bulk_invalid_with_correct_reason(context):
-    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+    emitted_updated_cases = get_emitted_cases(len(context.bulk_invalids))
 
     for emitted_case in emitted_updated_cases:
         test_helper.assertIn(emitted_case['caseId'], context.bulk_invalids.keys(),
@@ -123,7 +123,7 @@ def cases_emitted_for_bulk_invalid_with_correct_reason(context):
 
 @step("a CASE_UPDATE message is emitted for each bulk updated sample row")
 def case_updated_messages_for_bulk_update_sample(context):
-    emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
+    emitted_updated_cases = get_emitted_cases(len(context.bulk_sample_update))
 
     for emitted_case in emitted_updated_cases:
         matching_expected_row = get_bulk_data_row_from_case_id_or_fail(context.bulk_sample_update,
@@ -147,9 +147,22 @@ def get_bulk_data_row_from_case_id_or_fail(bulk_data, case_id):
     test_helper.fail(f"Case id {case_id} not found in {bulk_data}")
 
 
-@step("a CASE_UPDATE message is emitted for each case")
+@step("a CASE_UPDATE message is emitted for each case with sensitive data redacted")
 def case_update_message_emiited_for_every_case(context):
     emitted_updated_cases = get_emitted_cases(len(context.emitted_cases))
 
     for emitted_case in emitted_updated_cases:
-        get_bulk_data_row_from_case_id_or_fail(context.bulk_sensitive_update, emitted_case['caseId'])
+        bulk_update_for_case = get_bulk_data_row_from_case_id_or_fail(context.bulk_sensitive_update,
+                                                                      emitted_case['caseId'])
+        test_helper.assertEqual(emitted_case["sampleSensitive"][bulk_update_for_case['fieldToUpdate']], "REDACTED",
+                                f"Expected emitted_case['sampleSensitive'][{bulk_update_for_case['fieldToUpdate']}] "
+                                "to equal 'REDACTED'")
+
+
+@step("a CASE_UPDATED message is emitted for the case with correct sensitive data")
+def case_updated_emitted_with_correct_sensitve_data(context):
+    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user)
+    test_helper.assertEqual(emitted_case['caseId'], context.case_id,
+                            f'The emitted case, {emitted_case} does not match the case {context.case_id}')
+    test_helper.assertEqual(emitted_case["sampleSensitive"]['PHONE_NUMBER'], "REDACTED",
+                            "Expected emitted_case['sampleSensitive']['PHONE_NUMBER'] to equal 'REDACTED'")
