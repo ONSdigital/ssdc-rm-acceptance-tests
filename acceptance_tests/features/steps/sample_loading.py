@@ -21,7 +21,7 @@ def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]
     for emitted_case in emitted_cases:
         matched_row = None
         for sample_row in sample_rows:
-            if get_none_sensitive_row_data(sample_row, sensitive_columns) == emitted_case['sample']:
+            if get_sample_only_data(sample_row, sensitive_columns) == emitted_case['sample']:
 
                 if get_expected_emitted_sensitive_data(sample_row, sensitive_columns) \
                         == emitted_case['sampleSensitive']:
@@ -37,7 +37,7 @@ def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]
     return emitted_cases
 
 
-def get_none_sensitive_row_data(sample_row, sensitive_columns):
+def get_sample_only_data(sample_row, sensitive_columns):
     return {k: v for k, v in sample_row.items() if k not in sensitive_columns}
 
 
