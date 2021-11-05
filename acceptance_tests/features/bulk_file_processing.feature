@@ -18,5 +18,4 @@ Feature: bulk file processed
   Scenario: After a sample is loaded the sensitive data can be updated
     Given the sample file "SIS2_random_20.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
     When a bulk sensitive update file is created for every case created and uploaded
-    Then a CASE_UPDATE message is emitted for each case
-    And in the database the sensitive data has been updated as expected
+    Then in the database the sensitive data has been updated as expected and is emitted redacted
