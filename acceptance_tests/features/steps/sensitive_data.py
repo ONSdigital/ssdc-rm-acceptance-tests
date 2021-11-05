@@ -149,4 +149,4 @@ def get_emitted_case_by_id(case_id_to_match, all_emitted_update_cases):
             return updated_case
 
     test_helper.fail(f"Couldn't find case update emitted with case ID: {case_id_to_match}"
-                     f"Full emitted_case_update_events list: {all_emitted_update_cases}")
+                     f" Full emitted_case_update_events list: {all_emitted_update_cases}")
