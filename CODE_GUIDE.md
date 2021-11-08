@@ -51,6 +51,7 @@ Must also be added to the function: log_out_user_context_values in audit_trail_h
 | notify_template_id           | Stores the ID of the sms template used for the notify service                   |
 | sms_fulfilment_response_json | Stores the response JSON from a `POST` to the Notify API                        |
 | phone_number                 | Stores the phone number needed to check the notify api                          |
+| email                        | Stores the email address needed to check the notify api                         |
 | message_hashes               | Stores the hash of sent messages, for testing exception management              |
 | correlation_id               | Stores the ID which connects all related events together                        |
 | originating_user             | Stores the email of the ONS employee who originally initiated a business event  |
