@@ -50,12 +50,6 @@ class Config:
     NOTIFY_STUB_PORT = os.getenv('NOTIFY_STUB_PORT', '8917')
     NOTIFY_STUB_SERVICE = f'http://{NOTIFY_STUB_HOST}:{NOTIFY_STUB_PORT}'
 
-    SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
-    SFTP_PORT = os.getenv('SFTP_PORT', '122')
-    SFTP_USERNAME = os.getenv('SFTP_USERNAME', 'centos')
-    SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_rsa')
-    SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'dummy_secret')
-
     EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH = Path(
         os.getenv('EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath(
             'dummy_export_file_destination_config.json'))
@@ -73,3 +67,8 @@ class Config:
     RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
 
     SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
+
+    SENT_EXPORT_FILE_BUCKET = os.getenv('SENT_EXPORT_FILE_BUCKET',
+                                        '/tmp')
+
+    PLATFORM = os.getenv('PLATFORM', 'LOCAL')

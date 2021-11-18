@@ -8,7 +8,7 @@ import requests
 from behave import step
 from tenacity import retry, retry_if_exception_type, stop_after_delay, wait_fixed
 
-from acceptance_tests.utilities.sftp_helper import SftpUtility
+from acceptance_tests.utilities.export_file_helper import get_all_files_after_time, get_files_content_as_list
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -37,7 +37,7 @@ def get_qid_by_case_id(uac_update_events, case_id):
 
 
 @step("an export file is created with correct rows")
-def check_export_file_in_sftp(context):
+def check_export_file(context):
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
     emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
 
@@ -45,7 +45,7 @@ def check_export_file_in_sftp(context):
                             'Export file template expects UACs or QIDs but no corresponding emitted_uacs found in '
                             f'the scenario context, emitted_uacs {emitted_uacs}')
 
-    actual_export_file_rows = get_export_file_rows_from_sftp(context.test_start_local_datetime, context.pack_code)
+    actual_export_file_rows = get_export_file_rows(context.test_start_local_datetime, context.pack_code)
 
     unhashed_uacs_from_actual_export_file = _get_unhashed_uacs_from_actual_export_file(actual_export_file_rows,
                                                                                        template)
@@ -107,14 +107,13 @@ def check_export_file_matches_expected(actual_export_file, expected_export_file)
 
 
 @retry(retry=retry_if_exception_type(FileNotFoundError), wait=wait_fixed(1), stop=stop_after_delay(120))
-def get_export_file_rows_from_sftp(after_datetime, pack_code):
-    with SftpUtility() as sftp_utility:
-        export_file_destination = Config.EXPORT_FILE_DESTINATIONS_CONFIG['SUPPLIER_A'].get('sftpDirectory')
-        files = sftp_utility.get_all_files_after_time(after_datetime, pack_code, export_file_destination, 'csv.gpg')
-        export_file_rows = sftp_utility.get_files_content_as_list(files, pack_code, export_file_destination)
-        if not export_file_rows:
-            raise FileNotFoundError
-        return export_file_rows
+def get_export_file_rows(after_datetime, pack_code):
+    export_file_destination = Config.EXPORT_FILE_DESTINATIONS_CONFIG['SUPPLIER_A'].get('exportDirectory')
+    files = get_all_files_after_time(after_datetime, pack_code, export_file_destination, 'csv.gpg')
+    export_file_rows = get_files_content_as_list(files, pack_code, export_file_destination)
+    if not export_file_rows:
+        raise FileNotFoundError
+    return export_file_rows
 
 
 @step('an export file template has been created with template "{template}"')
