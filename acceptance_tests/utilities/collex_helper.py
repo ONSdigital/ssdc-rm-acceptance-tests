@@ -18,7 +18,14 @@ def add_collex(survey_id):
             'reference': "MVP012021",
             'startDate': f'{start_date.isoformat()}Z',
             'endDate': f'{end_date.isoformat()}Z',
-            'metadata': {'test': 'passed'}
+            'metadata': {'test': 'passed'},
+            'collectionInstrumentSelectionRules': [
+                {
+                    "priority": 0,
+                    "spelExpression": None,
+                    "collectionInstrumentUrl": "http://test-eq.com/test-schema"
+                }
+            ]
             }
     response = requests.post(url, json=body)
     response.raise_for_status()
