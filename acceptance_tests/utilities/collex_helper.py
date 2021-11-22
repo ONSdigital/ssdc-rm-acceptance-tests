@@ -7,7 +7,7 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def add_collex(survey_id):
+def add_collex(survey_id, collection_instrument_selection_rules):
     collex_name = 'test collex ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     start_date = datetime.utcnow()
     end_date = start_date + timedelta(days=2)
@@ -19,13 +19,7 @@ def add_collex(survey_id):
             'startDate': f'{start_date.isoformat()}Z',
             'endDate': f'{end_date.isoformat()}Z',
             'metadata': {'test': 'passed'},
-            'collectionInstrumentSelectionRules': [
-                {
-                    "priority": 0,
-                    "spelExpression": None,
-                    "collectionInstrumentUrl": "http://test-eq.com/test-schema"
-                }
-            ]
+            'collectionInstrumentSelectionRules': collection_instrument_selection_rules
             }
     response = requests.post(url, json=body)
     response.raise_for_status()

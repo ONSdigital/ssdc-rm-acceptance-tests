@@ -32,7 +32,9 @@ def check_uac_update_msgs_emitted_with_qid_active(context, active):
                                                  context.originating_user)
     _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
 
-    _check_new_uacs_are_as_expected(context.emitted_uacs, active)
+    _check_new_uacs_are_as_expected(emitted_uacs=context.emitted_uacs, active=active,
+                                    field_to_test='collectionInstrumentUrl',
+                                    expected_value=context.expected_collection_instrument_url)
 
 
 @step(

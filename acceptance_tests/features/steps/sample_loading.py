@@ -65,7 +65,15 @@ def load_bom_sample_file_step(context, sample_file_name):
         sample_rows[index]['TLA'] = sample_rows[index].pop('\ufeffTLA')
 
     context.survey_id = add_survey(sample_validation_rules)
-    context.collex_id = add_collex(context.survey_id)
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -78,7 +86,75 @@ def load_sample_file_step(context, sample_file_name):
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
     context.survey_id = add_survey(sample_validation_rules)
-    context.collex_id = add_collex(context.survey_id)
+
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+
+
+@step('sample file "{sample_file_name}" is loaded successfully with complex case CI selection rules')
+def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
+    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
+
+    context.survey_id = add_survey(sample_validation_rules)
+
+    context.expected_collection_instrument_url = "http://test-eq.com/complex-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 100,
+            "spelExpression": "caze.sample['POSTCODE'] == 'NW16 FNK'",
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        },
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": "this URL should not be chosen. If it is, the test is a failure"
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+
+
+@step('sample file "{sample_file_name}" is loaded successfully with complex UAC CI selection rules')
+def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
+    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
+
+    context.survey_id = add_survey(sample_validation_rules)
+
+    context.expected_collection_instrument_url = "http://test-eq.com/super-complex-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 200,
+            "spelExpression": "caze.sample['POSTCODE'] == 'NW16 FNK' and uacMetadata['waveOfContact'] == '1'",
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        },
+        {
+            "priority": 100,
+            "spelExpression": "caze.sample['POSTCODE'] == 'NW16 FNK'",
+            "collectionInstrumentUrl": "this is a lower priority less specific rule that we don't want"
+        },
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": "this URL should not be chosen. If it is, the test is a failure"
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -97,7 +173,15 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
     sensitive_columns = get_sample_sensitive_columns(sample_validation_rules)
 
     context.survey_id = add_survey(sample_validation_rules)
-    context.collex_id = add_collex(context.survey_id)
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -148,7 +232,15 @@ def load_business_sample_file_step(context):
     sample_rows, validation_rules = get_business_sample_columns_and_validation_rules(sample_file_path)
 
     context.survey_id = add_survey(validation_rules, False, ':')
-    context.collex_id = add_collex(context.survey_id)
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -163,7 +255,15 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
                                                                                               sensitive_columns)
 
     context.survey_id = add_survey(sample_validation_rules)
-    context.collex_id = add_collex(context.survey_id)
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
