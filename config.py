@@ -56,6 +56,10 @@ class Config:
     EXPORT_FILE_DESTINATIONS_CONFIG = json.loads(
         EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH.read_text()) \
         if EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH and EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH.exists() else None
+    FILE_UPLOAD_DESTINATION = os.getenv('FILE_UPLOAD_DESTINATION', str(Path.home().joinpath('Documents/export_files')))
+    FILE_UPLOAD_MODE = os.getenv('FILE_UPLOAD_MODE', 'LOCAL')
+    OUR_EXPORT_FILE_DECRYPTION_KEY = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY', 'dummy-key-ssdc-rm-private.asc')
+    OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE', 'test')
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 
@@ -67,8 +71,3 @@ class Config:
     RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
 
     SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
-
-    SENT_EXPORT_FILE_BUCKET = os.getenv('SENT_EXPORT_FILE_BUCKET',
-                                        '/tmp')
-
-    PLATFORM = os.getenv('PLATFORM', 'LOCAL')

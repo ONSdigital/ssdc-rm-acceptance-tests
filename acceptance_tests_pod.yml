@@ -89,11 +89,6 @@ spec:
       value: "notify-stub"
     - name: NOTIFY_STUB_PORT
       value: "80"
-    - name: SENT_EXPORT_FILE_BUCKET
-      valueFrom:
-        configMapKeyRef:
-          key: sent-export-file-bucket
-          name: project-config
     - name: CASEAPI_SERVICE_HOST
       value: "case-api"
     - name: CASEAPI_SERVICE_PORT
@@ -102,7 +97,12 @@ spec:
       value: "notify-service"
     - name: NOTIFY_SERVICE_PORT
       value: "80"
-    - name: PLATFORM
+    - name: FILE_UPLOAD_DESTINATION
+      valueFrom:
+        configMapKeyRef:
+          key: sent-export-file-bucket
+          name: project-config
+    - name: FILE_UPLOAD_MODE
       value: "REMOTE"
   volumes:
   - name: case-cloud-sql-certs

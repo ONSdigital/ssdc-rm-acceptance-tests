@@ -2,13 +2,16 @@ import hashlib
 import json
 import random
 import string
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Iterable
 
+import pgpy
 import requests
 from behave import step
+from google.cloud import storage
 from tenacity import retry, retry_if_exception_type, stop_after_delay, wait_fixed
 
-from acceptance_tests.utilities.export_file_helper import get_all_files_after_time, get_files_content_as_list
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -106,14 +109,79 @@ def check_export_file_matches_expected(actual_export_file, expected_export_file)
     test_helper.assertEquals(actual_export_file, expected_export_file, 'Export file contents did not match expected')
 
 
+def get_datetime_from_export_file_name(export_file_name: str, prefix: str, suffix: str):
+    # Export files are named in the format {pack_code}_{datetime}.{suffix}
+    raw_datetime = export_file_name.lstrip(prefix).rstrip(suffix)
+    return datetime.strptime(raw_datetime, '%Y-%m-%dT%H-%M-%S').astimezone(timezone.utc)
+
+
+def get_export_file_after_time_local(after_datetime: datetime, pack_code, export_file_destination, suffix):
+    destination_path = Path(Config.FILE_UPLOAD_DESTINATION).joinpath(export_file_destination)
+    prefix = f'{pack_code}_'
+    export_files = destination_path.glob(f'{prefix}*{suffix}')
+
+    # Export files are named in the format {pack_code}_{datetime}.{suffix}
+    export_files_after_datetime = tuple(
+        export_file for export_file in export_files
+        if get_datetime_from_export_file_name(export_file.name, prefix, suffix) >= after_datetime
+    )
+
+    if len(export_files_after_datetime) == 0:
+        return
+
+    assert len(export_files_after_datetime) <= 1, f'Found more than one export file' \
+                                                  f' with expected pack code {pack_code},' \
+                                                  f' found files: {export_files_after_datetime}'
+
+    return export_files_after_datetime[0].read_text()
+
+
+def get_export_file_after_time_bucket(after_datetime: datetime, pack_code, export_file_destination, suffix):
+    storage_client = storage.Client()
+    storage_bucket = storage_client.get_bucket(Config.FILE_UPLOAD_DESTINATION)
+
+    # Export files are named in the format {export_file_destination}/{pack_code}_{datetime}.{suffix}
+    destination_and_pack_code_prefix = f'{export_file_destination}/{pack_code}_'
+    export_files_after_datetime = tuple(
+        blob for blob in storage_bucket.list_blobs(prefix=destination_and_pack_code_prefix)
+        if blob.name.endswith(suffix)
+        and datetime.fromisoformat(blob.name.lstrip(destination_and_pack_code_prefix).rstrip(suffix)) >= after_datetime
+    )
+
+    if len(export_files_after_datetime) == 0:
+        return
+
+    assert len(export_files_after_datetime) <= 1, f'Found more than one export file' \
+                                                  f' with expected pack code {pack_code},' \
+                                                  f' found files: {export_files_after_datetime}'
+
+    matching_export_file_blob = export_files_after_datetime[0]
+    export_file_bytes = matching_export_file_blob.download_as_bytes()
+    return export_file_bytes.decode()
+
+
+def get_encrypted_export_file_after_time(after_datetime: datetime, pack_code, export_file_destination, suffix=''):
+    if Config.FILE_UPLOAD_MODE == 'LOCAL':
+        return get_export_file_after_time_local(after_datetime, pack_code, export_file_destination, suffix)
+    return get_export_file_after_time_bucket(after_datetime, pack_code, export_file_destination, suffix)
+
+
+def decrypt_export_file_rows(export_file_contents):
+    decrypted_contents = decrypt_message(export_file_contents)
+    return decrypted_contents.rstrip().split('\n')
+
+
 @retry(retry=retry_if_exception_type(FileNotFoundError), wait=wait_fixed(1), stop=stop_after_delay(120))
-def get_export_file_rows(after_datetime, pack_code):
-    export_file_destination = Config.EXPORT_FILE_DESTINATIONS_CONFIG['SUPPLIER_A'].get('exportDirectory')
-    files = get_all_files_after_time(after_datetime, pack_code, export_file_destination, 'csv.gpg')
-    export_file_rows = get_files_content_as_list(files, pack_code, export_file_destination)
-    if not export_file_rows:
+def get_export_file_rows(after_datetime, pack_code, supplier='SUPPLIER_A'):
+    export_file_destination = Config.EXPORT_FILE_DESTINATIONS_CONFIG[supplier].get('exportDirectory')
+    encrypted_export_file_contents = get_encrypted_export_file_after_time(after_datetime, pack_code,
+                                                                          export_file_destination, '.csv.gpg')
+    if not encrypted_export_file_contents:
         raise FileNotFoundError
-    return export_file_rows
+
+    decrypted_export_file_rows = decrypt_export_file_rows(encrypted_export_file_contents)
+
+    return decrypted_export_file_rows
 
 
 @step('an export file template has been created with template "{template}"')
@@ -135,3 +203,12 @@ def create_export_file_template(context, template):
 
     response = requests.post(url, json=body)
     response.raise_for_status()
+
+
+def decrypt_message(message):
+    our_key, _ = pgpy.PGPKey.from_file(Config.OUR_EXPORT_FILE_DECRYPTION_KEY)
+    with our_key.unlock(Config.OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE):
+        encrypted_text_message = pgpy.PGPMessage.from_blob(message)
+        message_text = our_key.decrypt(encrypted_text_message)
+
+        return message_text.message
