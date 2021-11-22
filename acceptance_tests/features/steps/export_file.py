@@ -3,7 +3,7 @@ import hashlib
 import json
 import random
 import string
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Iterable, List, Optional
 
@@ -26,7 +26,7 @@ def check_export_file(context):
                             'Export file template expects UACs or QIDs but no corresponding emitted_uacs found in '
                             f'the scenario context, emitted_uacs {emitted_uacs}')
 
-    actual_export_file_rows = get_export_file_rows(context.test_start_local_datetime, context.pack_code)
+    actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, context.pack_code)
 
     uacs_from_actual_export_file = _get_unhashed_uacs_from_actual_export_file(
         actual_export_file_rows, template
@@ -124,7 +124,7 @@ def check_export_file_matches_expected(actual_export_file, expected_export_file)
 
 def get_datetime_from_export_file_name(export_file_name: str, prefix: str, suffix: str) -> datetime:
     raw_datetime = export_file_name[len(prefix):-len(suffix)]  # Strip off the prefix and suffix
-    return datetime.strptime(raw_datetime, '%Y-%m-%dT%H-%M-%S').astimezone(timezone.utc)
+    return datetime.strptime(raw_datetime, '%Y-%m-%dT%H-%M-%S')
 
 
 def get_export_file_contents_local(after_datetime: datetime, pack_code: str, export_file_destination: str,

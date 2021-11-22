@@ -39,8 +39,8 @@ Every context attribute used by the tests should be described here.
 Must also be added to the function: log_out_user_context_values in audit_trail_helper.py
 
 | Attribute                    | Description                                                                     |
-| -------------------------    | ------------------------------------------------------------------------------- |
-| test_start_local_datetime    | Stores the local time at the beginning of each scenario in an environment hook  |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| test_start_utc_datetime      | Stores the UTC time at the beginning of each scenario in an environment hook    |
 | survey_id                    | Stores the ID of the survey generated and or used by the scenario               |
 | collex_id                    | Stores the ID of the collection exercise generated and or used by the scenario  |
 | emitted_cases                | Stores the caseUpdate DTO objects emitted on `CASE_UPDATE` events               |
