@@ -22,7 +22,7 @@ spec:
               cp /home/acceptancetests/postgresql/* /home/acceptancetests/.postgresql
               chmod 0600 /home/acceptancetests/.postgresql/postgresql.key
               # the above is a workaround to get round the permissions as currently we cant mount it without doing this
-    image: eu.gcr.io/ssdc-rm-braceh1/rm/ssdc-rm-acceptance-tests:latest
+    image: eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests:latest
     tty: true
     stdin: true
     imagePullPolicy: Always
@@ -103,7 +103,7 @@ spec:
           key: sent-export-file-bucket
           name: project-config
     - name: FILE_UPLOAD_MODE
-      value: "REMOTE"
+      value: "BUCKET"
   volumes:
   - name: case-cloud-sql-certs
     secret:
