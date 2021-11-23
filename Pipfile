@@ -13,6 +13,7 @@ pgpy = "*"
 google-cloud-pubsub = "==1.7.0"
 requests-toolbelt = "*"
 tenacity = "*"
+google-cloud-storage = "*"
 
 [dev-packages]
 "flake8" = "*"

@@ -30,7 +30,7 @@ def log_out_user_context_values(context):
     logger.error('Outputting user context vars')
 
     context_output = "\n"
-    context_output += get_context_value(context, 'test_start_local_datetime')
+    context_output += get_context_value(context, 'test_start_utc_datetime')
     context_output += get_context_value(context, 'survey_id')
     context_output += get_context_value(context, 'collex_id')
     context_output += get_context_list_value(context, 'emitted_cases')

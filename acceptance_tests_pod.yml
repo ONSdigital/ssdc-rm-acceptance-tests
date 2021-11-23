@@ -37,8 +37,6 @@ spec:
     - name: case-cloud-sql-certs
       mountPath: "/home/acceptancetests/postgresql"
       readOnly: true
-    - name: sftp-keys
-      mountPath: "/home/acceptancetests/.sftp-ssh"
     env:
     - name: DB_USERNAME
       valueFrom:
@@ -79,27 +77,6 @@ spec:
           key: project-name
     - name: SUPPLIER_CONFIG_JSON_PATH
       value: "/home/acceptancetests/dummy_export_file_destination_config.json"
-    - name: SFTP_HOST
-      valueFrom:
-        secretKeyRef:
-          name: sftp-ssh-credentials
-          key: host
-    - name: SFTP_PORT
-      value: "22"
-    - name: SFTP_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: sftp-ssh-credentials
-          key: username
-    - name: SFTP_PASSPHRASE
-      valueFrom:
-        secretKeyRef:
-          name: sftp-ssh-credentials
-          key: passphrase
-    - name: SFTP_KEY
-      value: "/home/acceptancetests/dummy_keys/dummy_rsa"
-    - name: SFTP_KEY_FILENAME
-      value: "/home/acceptancetests/.sftp-ssh/id_rsa"
     - name: SUPPORT_TOOL_HOST
       value: "support-tool"
     - name: SUPPORT_TOOL_PORT
@@ -112,11 +89,6 @@ spec:
       value: "notify-stub"
     - name: NOTIFY_STUB_PORT
       value: "80"
-    - name: SENT_EXPORT_FILE_BUCKET
-      valueFrom:
-        configMapKeyRef:
-          key: sent-export-file-bucket
-          name: project-config
     - name: CASEAPI_SERVICE_HOST
       value: "case-api"
     - name: CASEAPI_SERVICE_PORT
@@ -125,6 +97,13 @@ spec:
       value: "notify-service"
     - name: NOTIFY_SERVICE_PORT
       value: "80"
+    - name: FILE_UPLOAD_DESTINATION
+      valueFrom:
+        configMapKeyRef:
+          key: sent-export-file-bucket
+          name: project-config
+    - name: FILE_UPLOAD_MODE
+      value: "BUCKET"
   volumes:
   - name: case-cloud-sql-certs
     secret:
@@ -137,10 +116,3 @@ spec:
           path: "postgresql.crt"
         - key: "postgresql.key"
           path: "postgresql.key"
-  - name: sftp-keys
-    secret:
-      secretName: sftp-ssh-credentials
-      defaultMode: 0400
-      items:
-        - key: private-key
-          path: "id_rsa"

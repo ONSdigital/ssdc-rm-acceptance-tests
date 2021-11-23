@@ -50,18 +50,16 @@ class Config:
     NOTIFY_STUB_PORT = os.getenv('NOTIFY_STUB_PORT', '8917')
     NOTIFY_STUB_SERVICE = f'http://{NOTIFY_STUB_HOST}:{NOTIFY_STUB_PORT}'
 
-    SFTP_HOST = os.getenv('SFTP_HOST', 'localhost')
-    SFTP_PORT = os.getenv('SFTP_PORT', '122')
-    SFTP_USERNAME = os.getenv('SFTP_USERNAME', 'centos')
-    SFTP_KEY_FILENAME = os.getenv('SFTP_KEY_FILENAME', 'dummy_rsa')
-    SFTP_PASSPHRASE = os.getenv('SFTP_PASSPHRASE', 'dummy_secret')
-
     EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH = Path(
         os.getenv('EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH') or Path(__file__).parent.joinpath(
             'dummy_export_file_destination_config.json'))
     EXPORT_FILE_DESTINATIONS_CONFIG = json.loads(
         EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH.read_text()) \
         if EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH and EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH.exists() else None
+    FILE_UPLOAD_DESTINATION = os.getenv('FILE_UPLOAD_DESTINATION', str(Path.home().joinpath('Documents/export_files')))
+    FILE_UPLOAD_MODE = os.getenv('FILE_UPLOAD_MODE', 'LOCAL')
+    OUR_EXPORT_FILE_DECRYPTION_KEY = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY', 'dummy-key-ssdc-rm-private.asc')
+    OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE', 'test')
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 

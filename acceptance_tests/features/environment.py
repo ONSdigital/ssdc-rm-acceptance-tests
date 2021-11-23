@@ -32,7 +32,7 @@ def before_scenario(context, scenario):
     purge_outbound_topics()
     move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
-    context.test_start_local_datetime = datetime.now()
+    context.test_start_utc_datetime = datetime.utcnow()
     context.correlation_id = None
     context.originating_user = None
     context.sent_messages = []
