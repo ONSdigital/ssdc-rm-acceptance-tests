@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 class Config:
-    EVENT_SCHEMA_VERSION = "v0.3_RELEASE"
+    EVENT_SCHEMA_VERSION = "0.5.0"
 
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'shared-project')
     PUBSUB_RECEIPT_TOPIC = os.getenv('PUBSUB_RECEIPT_TOPIC', 'event_receipt')

@@ -38,30 +38,31 @@ def step_to_do_a_thing(context):
 Every context attribute used by the tests should be described here.
 Must also be added to the function: log_out_user_context_values in audit_trail_helper.py
 
-| Attribute                    | Description                                                                     |
-| ---------------------------- | ------------------------------------------------------------------------------- |
-| test_start_utc_datetime      | Stores the UTC time at the beginning of each scenario in an environment hook    |
-| survey_id                    | Stores the ID of the survey generated and or used by the scenario               |
-| collex_id                    | Stores the ID of the collection exercise generated and or used by the scenario  |
-| emitted_cases                | Stores the caseUpdate DTO objects emitted on `CASE_UPDATE` events               |
-| emitted_uacs                 | Stores the UAC DTO objects from the emitted `UAC_UPDATE` events                 |
-| pack_code                    | Stores the pack code used for fulfilments or action rules                       |
-| template                     | Stores the column template used for fulfilments or action rules                 |
-| telephone_capture_request    | Stores the UAC and QID returned by a telephone capture API call                 |
-| notify_template_id           | Stores the ID of the sms template used for the notify service                   |
-| sms_fulfilment_response_json | Stores the response JSON from a `POST` to the Notify API                        |
-| phone_number                 | Stores the phone number needed to check the notify api                          |
-| email                        | Stores the email address needed to check the notify api                         |
-| message_hashes               | Stores the hash of sent messages, for testing exception management              |
-| correlation_id               | Stores the ID which connects all related events together                        |
-| originating_user             | Stores the email of the ONS employee who originally initiated a business event  |
-| sent_messages                | Stores every scenario sent message for debugging errors                         |
-| scenario_name                | Stores the scenario name and uses it for unique originating users in messages   |
-| case_id                      | Stores the case_id of a case used in the scenario                               |
-| bulk_refusals                | Stores created bulk refusal cases we expect to see messages for                 |
-| bulk_invalids                | Stores the create bulk invalid cases we expect to see messages for              |
-| bulk_sample_update           | Stores the create bulk sample update cases we expect to see messages for        |
-| bulk_sensitive_update        | Stores the bulk sensitive update cases we expect to see messages for            |
+| Attribute                          | Description                                                                     |
+| ---------------------------------- | ------------------------------------------------------------------------------- |
+| test_start_utc_datetime            | Stores the UTC time at the beginning of each scenario in an environment hook    |
+| survey_id                          | Stores the ID of the survey generated and or used by the scenario               |
+| collex_id                          | Stores the ID of the collection exercise generated and or used by the scenario  |
+| emitted_cases                      | Stores the caseUpdate DTO objects emitted on `CASE_UPDATE` events               |
+| emitted_uacs                       | Stores the UAC DTO objects from the emitted `UAC_UPDATE` events                 |
+| pack_code                          | Stores the pack code used for fulfilments or action rules                       |
+| template                           | Stores the column template used for fulfilments or action rules                 |
+| telephone_capture_request          | Stores the UAC and QID returned by a telephone capture API call                 |
+| notify_template_id                 | Stores the ID of the sms template used for the notify service                   |
+| sms_fulfilment_response_json       | Stores the response JSON from a `POST` to the Notify API                        |
+| phone_number                       | Stores the phone number needed to check the notify api                          |
+| email                              | Stores the email address needed to check the notify api                         |
+| message_hashes                     | Stores the hash of sent messages, for testing exception management              |
+| correlation_id                     | Stores the ID which connects all related events together                        |
+| originating_user                   | Stores the email of the ONS employee who originally initiated a business event  |
+| sent_messages                      | Stores every scenario sent message for debugging errors                         |
+| scenario_name                      | Stores the scenario name and uses it for unique originating users in messages   |
+| case_id                            | Stores the case_id of a case used in the scenario                               |
+| bulk_refusals                      | Stores created bulk refusal cases we expect to see messages for                 |
+| bulk_invalids                      | Stores the create bulk invalid cases we expect to see messages for              |
+| bulk_sample_update                 | Stores the create bulk sample update cases we expect to see messages for        |
+| bulk_sensitive_update              | Stores the bulk sensitive update cases we expect to see messages for            |
+| expected_collection_instrument_url | Stores the collection instrument URL expected on emitted `UAC_UPDATE` events    |
 
 ### Sharing Code Between Steps
 
