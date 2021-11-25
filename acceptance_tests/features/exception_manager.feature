@@ -12,7 +12,7 @@ Feature: Check exception manager is called for every topic and handles them as e
 
   Scenario: Bad invalid case message turns up in exception manager
     When a bad invalid case message is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Case ID '7abb3c15-e850-4a9f-a0c2-6749687915a8' not present"
+    Then a bad message appears in exception manager with exception message containing "Case with ID '7abb3c15-e850-4a9f-a0c2-6749687915a8' not found"
     And each bad msg can be successfully quarantined
 
   Scenario: Bad receipt message turns up in exception manager
@@ -22,7 +22,7 @@ Feature: Check exception manager is called for every topic and handles them as e
 
   Scenario: Bad refusal message turns up in exception manager
     When a bad refusal event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Case ID '1c1e495d-8f49-4d4c-8318-6174454eb605' not present"
+    Then a bad message appears in exception manager with exception message containing "Case with ID '1c1e495d-8f49-4d4c-8318-6174454eb605' not found"
     And each bad msg can be successfully quarantined
 
   Scenario: Bad respondent authenticated message turns up in exception manager
@@ -32,12 +32,12 @@ Feature: Check exception manager is called for every topic and handles them as e
 
   Scenario: Bad update sample message turns up in exception manager
     When a bad update sample event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Case ID '386a50b8-6ba0-40f6-bd3c-34333d58be90' not present"
+    Then a bad message appears in exception manager with exception message containing "Case with ID '386a50b8-6ba0-40f6-bd3c-34333d58be90' not found"
     And each bad msg can be successfully quarantined
 
   Scenario: Bad update sample sensitive message turns up in exception manager
     When a bad update sample sensitive event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Case ID '386a50b8-6ba0-40f6-bd3c-34333d58be90' not present"
+    Then a bad message appears in exception manager with exception message containing "Case with ID '386a50b8-6ba0-40f6-bd3c-34333d58be90' not found"
     And each bad msg can be successfully quarantined
 
   Scenario: Bad EQ launched message turns up in exception manager
