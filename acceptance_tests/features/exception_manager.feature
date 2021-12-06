@@ -48,7 +48,7 @@ Feature: Check exception manager is called for every topic and handles them as e
   Scenario: Bad new case message turns up in exception manager
     Given the sample file "sis_survey_link.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
     When an invalid newCase event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "New case event failed validation on column "schoolId""
+    Then a bad message appears in exception manager with exception message containing "NEW_CASE event: Column 'schoolId' Failed validation for Rule 'LengthRule' validation error: Exceeded max length of 11"
     And each bad msg can be successfully quarantined
 
   Scenario: Bad new case message turns up in exception manager
