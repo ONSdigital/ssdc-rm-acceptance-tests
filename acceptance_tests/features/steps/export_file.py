@@ -5,7 +5,7 @@ import random
 import string
 from datetime import datetime
 from pathlib import Path
-from typing import Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional
 
 import pgpy
 import requests
@@ -21,6 +21,8 @@ from config import Config
 def check_export_file(context):
     template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
     emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
+    fulfilment_personalisation = context.fulfilment_personalisation if hasattr(context,
+                                                                               'fulfilment_personalisation') else None
 
     test_helper.assertFalse(('__uac__' in template or '__qid__' in template) and not emitted_uacs,
                             'Export file template expects UACs or QIDs but no corresponding emitted_uacs found in '
@@ -34,7 +36,8 @@ def check_export_file(context):
 
     expected_export_file_rows = generate_expected_export_file_rows(template,
                                                                    context.emitted_cases,
-                                                                   emitted_uacs, uacs_from_actual_export_file)
+                                                                   emitted_uacs, uacs_from_actual_export_file,
+                                                                   fulfilment_personalisation)
 
     check_export_file_matches_expected(actual_export_file_rows, expected_export_file_rows)
 
@@ -88,7 +91,8 @@ def _get_unhashed_uacs_from_actual_export_file(actual_export_file_rows, template
     return tuple(export_file_row["__uac__"] for export_file_row in export_file_reader)
 
 
-def generate_expected_export_file_rows(template: List, cases: List, uac_update_events: List, expected_uacs: List):
+def generate_expected_export_file_rows(template: List, cases: List, uac_update_events: List, expected_uacs: List,
+                                       fulfilment_personalisation: Dict):
     hashed_uac_to_uac = {
         hashlib.sha256(uac.encode('utf-8')).hexdigest(): uac
         for uac in expected_uacs
@@ -104,6 +108,8 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
             elif field == '__qid__':
                 qid = get_qid_by_case_id(uac_update_events, case['caseId'])
                 export_row_components.append(qid)
+            elif field.startswith('__request__.'):
+                export_row_components.append(fulfilment_personalisation[field.split('.')[1]])
             else:
                 export_row_components.append(case["sample"][field])
         export_file_rows.append(format_expected_export_file_row(export_row_components))
@@ -111,7 +117,7 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
 
 
 def format_expected_export_file_row(export_row_components: Iterable[str]):
-    # The export file format is tab separated and always double quote wrapped CSV
+    # The export file format is pipe separated and always double quote wrapped CSV
     return '|'.join(f'"{component}"' for component in export_row_components)
 
 
