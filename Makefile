@@ -20,4 +20,4 @@ at_tests:
 	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python run.py --log_level WARN
 
 build:
-	docker build -t eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests .
+	docker build -t europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests .

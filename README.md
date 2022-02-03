@@ -21,8 +21,8 @@ To run a locally-modified version of the acceptance tests in a pod you will have
 ```shell script
 IMAGE_TAG=<YOUR_TAG>
 make build
-docker tag eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests:latest eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests:$IMAGE_TAG
-docker push eu.gcr.io/ssdc-rm-ci/rm/ssdc-rm-acceptance-tests:$IMAGE_TAG
+docker tag europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests:latest europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests:$IMAGE_TAG
+docker push europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests:$IMAGE_TAG
 ```
 
 Then run the tests with the run GKE script
