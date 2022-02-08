@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 from behave import step
 
@@ -13,7 +14,7 @@ from config import Config
 
 SAMPLE_FILES_PATH = Config.RESOURCE_FILE_PATH.joinpath('sample_files')
 VALIDATION_RULES_PATH = Config.RESOURCE_FILE_PATH.joinpath('validation_rules')
-
+SCHEDULE_TEMPLATE_PATH = Config.RESOURCE_FILE_PATH.joinpath('schedule_templates')
 
 def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]):
     emitted_cases = get_emitted_cases(len(sample_rows))
@@ -268,3 +269,40 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
+
+
+@step('create survey with template "{schedule_template_file}" and load sample file "{sample_file_name}"')
+def load_sample_file_with_schedule_template(context, schedule_template_file, sample_file_name):
+    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
+
+    schedule_template = get_schedule_template(schedule_template_file)
+
+    context.survey_id = add_survey(sample_validation_rules, scheduleTemplate=schedule_template)
+
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+
+
+def get_schedule_template(schedule_template_file):
+    schedule_template_path = SCHEDULE_TEMPLATE_PATH.joinpath(schedule_template_file)
+
+    with open(schedule_template_path, 'r') as file:
+        return file.read().replace('\n', '')
+
+    # with open(schedule_template_path) as file:
+    #     schedule_template_json = json.load(file)
+    #     file.close()
+    #
+    # return schedule_template_json

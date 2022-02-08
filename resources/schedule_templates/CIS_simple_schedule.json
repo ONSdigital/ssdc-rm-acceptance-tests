@@ -1,0 +1,39 @@
+{
+  "name": "CIS",
+  "responsePeriods": [
+    {
+      "name": "CIS WEEK 1",
+      "dateUnit": "WEEKS",
+      "offSetFromStart": 1,
+      "tasks": [
+        {
+          "name": "Start Of Period Letter",
+          "scheduledTaskType": "ACTION_WITH_PACKCODE",
+          "packCode": "CIS_REMINDER",
+          "receiptRequired": false,
+          "dateOffSet": {
+            "dateUnit": "DAYS",
+            "multiplier": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "CIS WEEK 2",
+      "dateUnit": "WEEKS",
+      "offSetFromStart": 2,
+      "tasks": [
+        {
+          "name": "Start Of Period Letter",
+          "scheduledTaskType": "ACTION_WITH_PACKCODE",
+          "packCode": "CIS_REMINDER",
+          "receiptRequired": false,
+          "dateOffSet": {
+            "dateUnit": "DAYS",
+            "multiplier": 0
+          }
+        }
+      ]
+    }
+  ]
+}
