@@ -276,9 +276,9 @@ def load_sample_file_with_schedule_template(context, schedule_template_file, sam
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
-    schedule_template = get_schedule_template(schedule_template_file)
+    context.schedule_template = get_schedule_template(schedule_template_file)
 
-    context.survey_id = add_survey(sample_validation_rules, scheduleTemplate=schedule_template)
+    context.survey_id = add_survey(sample_validation_rules, scheduleTemplate=context.schedule_template)
 
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
@@ -300,9 +300,3 @@ def get_schedule_template(schedule_template_file):
 
     with open(schedule_template_path, 'r') as file:
         return file.read().replace('\n', '')
-
-    # with open(schedule_template_path) as file:
-    #     schedule_template_json = json.load(file)
-    #     file.close()
-    #
-    # return schedule_template_json

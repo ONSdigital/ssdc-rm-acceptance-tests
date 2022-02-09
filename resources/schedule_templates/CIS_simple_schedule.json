@@ -3,8 +3,10 @@
   "responsePeriods": [
     {
       "name": "CIS WEEK 1",
-      "dateUnit": "WEEKS",
-      "offSetFromStart": 1,
+      "dateOffSet": {
+        "dateUnit": "WEEKS",
+        "multiplier": 0
+      },
       "tasks": [
         {
           "name": "Start Of Period Letter",
@@ -20,8 +22,10 @@
     },
     {
       "name": "CIS WEEK 2",
-      "dateUnit": "WEEKS",
-      "offSetFromStart": 2,
+      "dateOffSet": {
+        "dateUnit": "WEEKS",
+        "multiplier": 2
+      },
       "tasks": [
         {
           "name": "Start Of Period Letter",

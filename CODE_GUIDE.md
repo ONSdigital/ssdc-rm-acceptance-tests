@@ -64,6 +64,8 @@ log_out_user_context_values in audit_trail_helper.py
 | bulk_sensitive_update              | Stores the bulk sensitive update cases we expect to see messages for           |
 | expected_collection_instrument_url | Stores the collection instrument URL expected on emitted `UAC_UPDATE` events   |
 | fulfilment_personalisation         | Stores the personalisation values from a received fulfilment request event     |
+| schdeule_template                  | Stores the received schedule template                                          |
+| actual_scheduled_tasks             | Stores schedule tasks                                                          |
 
 ### Sharing Code Between Steps
 
