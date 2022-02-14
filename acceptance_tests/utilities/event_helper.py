@@ -78,6 +78,13 @@ def get_exactly_one_emitted_survey_update():
     return message_received['payload']['surveyUpdate']
 
 
+def get_exact_number_of_emitted_survey_update(expected_msg_count):
+    messagea_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
+                                                           expected_msg_count=expected_msg_count)
+
+    return messagea_received
+
+
 def get_emitted_collection_exercise_update():
     message_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION,
                                                            expected_msg_count=1)[0]

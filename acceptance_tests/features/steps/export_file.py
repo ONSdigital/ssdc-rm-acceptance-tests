@@ -63,6 +63,25 @@ def create_export_file_template(context, template):
     response.raise_for_status()
 
 
+@step(
+    'for each schedule packcodes an export file template has been created with template "{template}"')
+def create_export_file_template_for_packcode(context, template):
+        context.template = template
+
+        for packcode in context.new_pack_codes:
+            url = f'{Config.SUPPORT_TOOL_API}/exportFileTemplates'
+            body = {
+                'packCode': packcode,
+                'exportFileDestination': 'SUPPLIER_A',
+                'template': json.loads(template),
+                'description': "Test description",
+                'metadata': {"foo": "bar"}
+            }
+
+            response = requests.post(url, json=body)
+            response.raise_for_status()
+
+
 def _get_uac_matching_case_id(uac_update_events, case_id):
     for uac_dto in uac_update_events:
         if uac_dto['caseId'] == case_id:

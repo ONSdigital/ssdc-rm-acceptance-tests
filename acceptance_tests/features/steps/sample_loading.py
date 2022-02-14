@@ -3,6 +3,9 @@ import json
 from pathlib import Path
 from behave import step
 
+import random
+import string
+
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
@@ -15,6 +18,7 @@ from config import Config
 SAMPLE_FILES_PATH = Config.RESOURCE_FILE_PATH.joinpath('sample_files')
 VALIDATION_RULES_PATH = Config.RESOURCE_FILE_PATH.joinpath('validation_rules')
 SCHEDULE_TEMPLATE_PATH = Config.RESOURCE_FILE_PATH.joinpath('schedule_templates')
+
 
 def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]):
     emitted_cases = get_emitted_cases(len(sample_rows))
@@ -276,7 +280,7 @@ def load_sample_file_with_schedule_template(context, schedule_template_file, sam
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
-    context.schedule_template = get_schedule_template(schedule_template_file)
+    context.schedule_template, context.new_pack_codes = get_schedule_template(schedule_template_file)
 
     context.survey_id = add_survey(sample_validation_rules, scheduleTemplate=context.schedule_template)
 
@@ -299,4 +303,20 @@ def get_schedule_template(schedule_template_file):
     schedule_template_path = SCHEDULE_TEMPLATE_PATH.joinpath(schedule_template_file)
 
     with open(schedule_template_path, 'r') as file:
-        return file.read().replace('\n', '')
+        schedule_template_str = file.read().replace('\n', '')
+
+    return replace_and_new_packCodes(schedule_template_str)
+
+
+def replace_and_new_packCodes(schedule_template_str):
+    schedule_template = json.loads(schedule_template_str)
+    new_pack_codes = []
+
+    for rp_index in range(len(schedule_template["responsePeriods"])):
+        for st_index in range(len(schedule_template["responsePeriods"][rp_index]["tasks"])):
+            new_pack_code = schedule_template["responsePeriods"][rp_index]["tasks"][st_index]["packCode"] + '_' + ''.join(
+                random.choices(string.ascii_uppercase + string.digits, k=10))
+            schedule_template["responsePeriods"][rp_index]["tasks"][st_index]["packCode"] = new_pack_code
+            new_pack_codes.append(new_pack_code)
+
+    return json.dumps(schedule_template), new_pack_codes

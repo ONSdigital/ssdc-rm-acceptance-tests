@@ -66,6 +66,7 @@ log_out_user_context_values in audit_trail_helper.py
 | fulfilment_personalisation         | Stores the personalisation values from a received fulfilment request event     |
 | schdeule_template                  | Stores the received schedule template                                          |
 | actual_scheduled_tasks             | Stores schedule tasks                                                          |
+| new_pack_codes                     | when building a schedule create new pack codes, will need multiple ones        |
 
 ### Sharing Code Between Steps
 

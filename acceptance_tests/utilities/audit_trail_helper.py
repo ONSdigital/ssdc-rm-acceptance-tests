@@ -54,6 +54,7 @@ def log_out_user_context_values(context):
     context_output += get_context_value(context, 'fulfilment_personalisation')
     context_output += get_context_value(context, 'schedule_template')
     context_output += get_context_list_value(context, 'actual_scheduled_tasks')
+    context_output += get_context_list_value(context, 'new_pack_codes')
 
     logger.error(context_output)
 
