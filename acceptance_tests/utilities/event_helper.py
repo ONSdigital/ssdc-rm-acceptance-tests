@@ -80,7 +80,7 @@ def get_exactly_one_emitted_survey_update():
 
 def get_exact_number_of_emitted_survey_update(expected_msg_count):
     messagea_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
-                                                           expected_msg_count=expected_msg_count)
+                                                            expected_msg_count=expected_msg_count)
 
     return messagea_received
 

@@ -3,17 +3,13 @@ import datetime
 import uuid
 from tenacity import retry, wait_fixed, stop_after_delay
 
-from behave import *
-
 from acceptance_tests.features.steps.export_file import get_export_file_rows
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.test_case_helper import test_helper
-import pytz
-
-utc=pytz.UTC
+from behave import step
 
 
-@then("the expected schedule is created against the new case in the database")
+@step("the expected schedule is created against the new case in the database")
 def expected_schduled_created_for_case(context):
     expected_response_periods = build_expected_schedule(context.schedule_template)["responsePeriods"]
     json_obj = get_actual_schedule(context.emitted_cases[0])
@@ -42,12 +38,11 @@ def expected_schduled_created_for_case(context):
 
             test_helper.assertEqual(actual_task["name"], expected_task["name"])
 
-            # actual_date = datetime.datetime.strptime(actual_task["rmScheduledDateTime"], '%Y-%m-%dT%H:%M:%S.%f%z')
-            # expected_date = expected_task["rmScheduledDateTime"]
-            # TypeError: can't subtract offset-naive and offset-aware datetimes :(
-            # datetime_difference_minutes = (expected_date - actual_date).total_seconds() / 60
-            #
-            # test_helper.assertLessEqual(datetime_difference_minutes, 1)
+            actual_date = datetime.datetime.strptime(actual_task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
+            expected_date = expected_task["rmScheduledDateTime"]
+
+            datetime_difference_minutes = (expected_date - actual_date).total_seconds() / 60
+            test_helper.assertLessEqual(datetime_difference_minutes, 1)
 
             task_index = task_index + 1
 
@@ -86,7 +81,6 @@ def build_expected_schedule(schedule_template_str):
 
             expected_scheduled_task["scheduledTaskStatus"] = "NOT_STARTED"
             expected_scheduled_task["rmScheduledDateTime"] = scheduled_tasks_start.utcnow()
-            #   f'{scheduled_tasks_start.utcnow().isoformat()}Z'
 
             expected_response_period["scheduledTasks"].append(expected_scheduled_task)
 
@@ -159,6 +153,8 @@ def check_processed_scheduled_task_removed_from_db(context):
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def scheduled_task_removed(context):
+    scheduled_task_successfully_removed = False
+
     for task in context.actual_scheduled_tasks:
         task_scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
         # task_scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"], '%Y-%m-%dT%H:%M:%S.%f%z')
@@ -167,11 +163,14 @@ def scheduled_task_removed(context):
             result = get_scheduled_task_by_id(task["id"])
             # need to pad out error message, more date time crap
             test_helper.assertIsNone(result, "Found task that we expected to be deleted")
+            scheduled_task_successfully_removed = True
 
         else:
             result = get_scheduled_task_by_id(task["id"])
             # need to pad out error message, more date time crap
             test_helper.assertIsNotNone(result, "Could not find task we expected to still exist")
+
+    test_helper.assertTrue(scheduled_task_successfully_removed, "No scheduled Task removed within time")
 
 
 @step("check that the schedule against the case is as expected")
@@ -179,7 +178,7 @@ def check_scheduled_is_updated_with_processed_tasks(context):
     check_tasks_updated(context)
 
 
-@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+@retry(wait=wait_fixed(1), stop=stop_after_delay(60))
 def check_tasks_updated(context):
     json_obj = get_actual_schedule(context.emitted_cases[0])
     actual_response_periods = json.loads(json_obj["value"])
@@ -205,10 +204,6 @@ def correct_exports_for_files_are_created(context):
             scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
 
             if scheduled_date < datetime.datetime.now():
-                # An export file should be created for this.  We're only looking for one row.
-
-                pack_code = task['packCode']
-
                 actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, task['packCode'])
-
                 test_helper.assertIsNotNone(actual_export_file_rows)
+                test_helper.assertEqual(actual_export_file_rows, ['"House 7"|"NW16 FNK"'])

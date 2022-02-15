@@ -314,7 +314,8 @@ def replace_and_new_packCodes(schedule_template_str):
 
     for rp_index in range(len(schedule_template["responsePeriods"])):
         for st_index in range(len(schedule_template["responsePeriods"][rp_index]["tasks"])):
-            new_pack_code = schedule_template["responsePeriods"][rp_index]["tasks"][st_index]["packCode"] + '_' + ''.join(
+            new_pack_code = schedule_template["responsePeriods"][rp_index]["tasks"][st_index][
+                                "packCode"] + '_' + ''.join(
                 random.choices(string.ascii_uppercase + string.digits, k=10))
             schedule_template["responsePeriods"][rp_index]["tasks"][st_index]["packCode"] = new_pack_code
             new_pack_codes.append(new_pack_code)
