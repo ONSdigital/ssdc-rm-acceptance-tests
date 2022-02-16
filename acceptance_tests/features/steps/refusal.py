@@ -12,12 +12,12 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("a refusal event is received")
-def send_refusal(context):
+@step('a refusal event is received and erase data is "{erase_data}"')
+def send_refusal(context, erase_data):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_refusal_message(context.correlation_id, context.originating_user,
-                                    context.emitted_cases[0]['caseId'])
+                                    context.emitted_cases[0]['caseId'], erase_data)
     context.sent_messages.append(message)
 
 
@@ -30,7 +30,7 @@ def send_bad_refusal_message(context):
     context.sent_messages.append(message)
 
 
-def _send_refusal_message(correlation_id, originating_user, case_id):
+def _send_refusal_message(correlation_id, originating_user, case_id, erase_data):
     message = json.dumps(
         {
             "header": {
@@ -46,7 +46,8 @@ def _send_refusal_message(correlation_id, originating_user, case_id):
             "payload": {
                 "refusal": {
                     "caseId": case_id,
-                    "type": "EXTRAORDINARY_REFUSAL"
+                    "type": "EXTRAORDINARY_REFUSAL",
+                    "eraseData": erase_data
                 }
             }
         })

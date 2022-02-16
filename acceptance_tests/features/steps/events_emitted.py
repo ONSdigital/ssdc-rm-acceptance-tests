@@ -1,3 +1,5 @@
+import json
+
 from behave import step
 
 from acceptance_tests.utilities.event_helper import get_emitted_case_update, get_emitted_uac_update, \
@@ -24,6 +26,19 @@ def case_update_msg_sent_with_values(context, case_field, expected_field_value):
                             f'emitted case: {emitted_case}')
     test_helper.assertEqual(str(emitted_case[case_field]), expected_field_value,
                             f'The updated case field must match the expected value, emitted case: {emitted_case}')
+
+
+@step('a CASE_UPDATE message is emitted where "{new_values}" are the updated values')
+def case_update_msg_sent_with_multiple_values(context, new_values):
+    updated_fields = json.loads(new_values)
+    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user)
+
+    test_helper.assertEqual(emitted_case['caseId'], context.emitted_cases[0]['caseId'],
+                            'The updated case is expected to be the first stored emitted case,'
+                            f'emitted case: {emitted_case}')
+    for key, value in updated_fields.items():
+        test_helper.assertEqual(emitted_case[key], value,
+                                f'The updated case field must match the expected value, emitted case: {emitted_case}')
 
 
 @step("UAC_UPDATE messages are emitted with active set to {active:boolean}")
