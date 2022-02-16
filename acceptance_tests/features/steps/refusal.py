@@ -30,7 +30,7 @@ def send_bad_refusal_message(context):
     context.sent_messages.append(message)
 
 
-def _send_refusal_message(correlation_id, originating_user, case_id, erase_data):
+def _send_refusal_message(correlation_id, originating_user, case_id, erase_data=False):
     message = json.dumps(
         {
             "header": {
