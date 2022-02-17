@@ -38,7 +38,8 @@ def case_update_msg_sent_with_multiple_values(context, new_values):
                             f'emitted case: {emitted_case}')
     for key, value in updated_fields.items():
         test_helper.assertEqual(emitted_case[key], value,
-                                f'The updated case field must match the expected value, emitted case: {emitted_case}')
+                                f'The updated case field "{key}" equals "{emitted_case[key]}", must match '
+                                f'the expected value "{value}". emitted case: {emitted_case}')
 
 
 @step("UAC_UPDATE messages are emitted with active set to {active:boolean}")
