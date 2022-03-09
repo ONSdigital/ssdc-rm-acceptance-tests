@@ -7,4 +7,4 @@ Feature: Handle EQ launch events
     Then UAC_UPDATE message is emitted with active set to true and "eqLaunched" is false
     When an EQ_LAUNCH event is received
     Then UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
-    And the events logged against the case are [NEW_CASE,EXPORT_FILE,EQ_LAUNCH]
+    And the events logged against the case are ["NEW_CASE","EXPORT_FILE","EQ_LAUNCH"]

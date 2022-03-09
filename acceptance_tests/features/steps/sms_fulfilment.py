@@ -1,15 +1,12 @@
-import json
-import random
-import string
 import uuid
 
 import requests
 from behave import step
 
+from acceptance_tests.utilities import template_helper
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.event_helper import get_exactly_one_emitted_survey_update
-from acceptance_tests.utilities.notify_helper import check_sms_fulfilment_response, \
-    check_notify_api_called_with_correct_notify_template_id
+from acceptance_tests.utilities.notify_helper import check_sms_fulfilment_response
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -35,7 +32,9 @@ def authorise_sms_pack_code(context):
 
 
 @step('a request has been made for a replacement UAC by SMS from phone number "{phone_number}"')
-def request_replacement_uac_by_sms(context, phone_number):
+@step('a request has been made for a replacement UAC by SMS from phone number "{phone_number}"'
+      ' with personalisation {personalisation}')
+def request_replacement_uac_by_sms(context, phone_number, personalisation=None):
     context.phone_number = phone_number
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = get_unique_user_email()
@@ -58,17 +57,15 @@ def request_replacement_uac_by_sms(context, phone_number):
         }
     }
 
+    if personalisation:
+        context.fulfilment_personalisation = body['payload']['smsFulfilment']['personalisation'] = personalisation
+
     response = requests.post(url, json=body)
     response.raise_for_status()
 
     context.sms_fulfilment_response_json = response.json()
 
     check_sms_fulfilment_response(context.sms_fulfilment_response_json, context.template)
-
-
-@step("notify api was called with SMS template")
-def check_notify_api_call(context):
-    check_notify_api_called_with_correct_notify_template_id(context.phone_number, context.notify_template_id)
 
 
 @step("the UAC_UPDATE message matches the SMS fulfilment UAC")
@@ -84,21 +81,7 @@ def check_uac_message_matches_sms_uac(context):
                             f"context.sms_fulfilment_response_json {context.sms_fulfilment_response_json}")
 
 
-@step('a sms template has been created with template "{template}"')
+@step('a sms template has been created with template "{template:json}"')
 def create_sms_template(context, template):
-    # By using a unique random pack_code we have better filter options
-    # We can change/remove this if we get UACS differently or a better solution is found
-    context.pack_code = 'pack_code_SMS_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-    context.notify_template_id = str(uuid.uuid4())
     context.template = template
-    url = f'{Config.SUPPORT_TOOL_API}/smsTemplates'
-    body = {
-        'notifyTemplateId': context.notify_template_id,
-        'template': json.loads(context.template),
-        'packCode': context.pack_code,
-        'description': "Test description",
-        'metadata': {"foo": "bar"}
-    }
-
-    response = requests.post(url, json=body)
-    response.raise_for_status()
+    context.pack_code, context.notify_template_id = template_helper.create_sms_template(template)
