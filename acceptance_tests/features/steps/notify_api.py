@@ -13,8 +13,8 @@ def check_sms_notify_api_call(context):
     notify_api_call = check_notify_api_called_with_correct_phone_number_and_template_id(context.phone_number,
                                                                                         context.notify_template_id)
     emitted_uac = context.emitted_uacs[0] if hasattr(context, 'emitted_uacs') else None
-    request_personalisation = (context.fulfilment_personalisation if
-                               hasattr(context, 'fulfilment_request_personalisation') else {})
+    request_personalisation = (context.fulfilment_personalisation
+                               if hasattr(context, 'fulfilment_personalisation') else {})
 
     check_notify_api_call(notify_api_call, context.template, context.emitted_cases[0], emitted_uac,
                           request_personalisation)
@@ -26,8 +26,8 @@ def check_email_notify_api_call(context):
                                                                                  context.notify_template_id)
 
     emitted_uac = context.emitted_uacs[0] if hasattr(context, 'emitted_uacs') else None
-    request_personalisation = (context.fulfilment_personalisation if
-                               hasattr(context, 'fulfilment_request_personalisation') else {})
+    request_personalisation = (context.fulfilment_personalisation
+                               if hasattr(context, 'fulfilment_personalisation') else {})
     check_notify_api_call(notify_api_call, context.template, context.emitted_cases[0], emitted_uac,
                           request_personalisation)
 

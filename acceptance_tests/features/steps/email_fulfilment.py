@@ -33,7 +33,7 @@ def authorise_sms_pack_code(context):
 
 @step('a request has been made for a replacement UAC by email from email address "{email}"')
 @step('a request has been made for a replacement UAC by email from email address "{email}"'
-      ' with personalisation {personalisation}')
+      ' with personalisation {personalisation:json}')
 def request_replacement_uac_by_email(context, email, personalisation=None):
     context.email = email
     context.correlation_id = str(uuid.uuid4())
