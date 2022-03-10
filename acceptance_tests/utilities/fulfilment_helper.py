@@ -23,7 +23,8 @@ def build_expected_fulfilment_personalisation(template: Iterable[str], case, req
                 expected_personalisation[template_item] = request_value
 
         elif template_item.startswith('__sensitive__.'):
-            expected_personalisation[template_item] = case['sampleSensitive'][template_item[len('__sensitive__.'):]]
+            expected_personalisation[template_item] = case['sampleSensitive'][
+                template_item[len('__sensitive__.'):]]
 
         else:
             expected_personalisation[template_item] = case['sample'][template_item]

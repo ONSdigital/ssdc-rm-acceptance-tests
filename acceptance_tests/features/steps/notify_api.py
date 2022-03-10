@@ -13,8 +13,7 @@ def check_sms_notify_api_call(context):
     notify_api_call = check_notify_api_called_with_correct_phone_number_and_template_id(context.phone_number,
                                                                                         context.notify_template_id)
     emitted_uac = context.emitted_uacs[0] if hasattr(context, 'emitted_uacs') else None
-    request_personalisation = (context.fulfilment_personalisation
-                               if hasattr(context, 'fulfilment_personalisation') else {})
+    request_personalisation = getattr(context, 'fulfilment_personalisation', {})
 
     check_notify_api_call(notify_api_call, context.template, context.emitted_cases[0], emitted_uac,
                           request_personalisation)
@@ -26,26 +25,25 @@ def check_email_notify_api_call(context):
                                                                                  context.notify_template_id)
 
     emitted_uac = context.emitted_uacs[0] if hasattr(context, 'emitted_uacs') else None
-    request_personalisation = (context.fulfilment_personalisation
-                               if hasattr(context, 'fulfilment_personalisation') else {})
+    request_personalisation = getattr(context, 'fulfilment_personalisation', {})
     check_notify_api_call(notify_api_call, context.template, context.emitted_cases[0], emitted_uac,
                           request_personalisation)
 
 
 def check_notify_api_call(notify_api_call, template, case, emitted_uac, request_personalisation):
-    uac_hash = emitted_uac['uacHash'] if '__uac__' in template else None
-    qid = emitted_uac['qid'] if '__qid__' in template else None
+    expected_uac_hash = emitted_uac['uacHash'] if '__uac__' in template else None
+    expected_qid = emitted_uac['qid'] if '__qid__' in template else None
 
     expected_personalisation = build_expected_fulfilment_personalisation(template, case,
                                                                          request_personalisation,
-                                                                         uac_hash=uac_hash,
-                                                                         qid=qid)
+                                                                         expected_uac_hash, expected_qid)
 
     actual_personalisation = notify_api_call.get('personalisation', {}).copy()
 
-    # We only have the uac hash to check, so amend the actual values with the hash
+    # We only have the uac hash to check against, so amend the actual values with the hash
     if '__uac__' in actual_personalisation.keys():
-        actual_personalisation['__uac_hash__'] = hashlib.sha256(actual_personalisation['__uac__'].encode()).hexdigest()
+        actual_personalisation['__uac_hash__'] = hashlib.sha256(
+            actual_personalisation['__uac__'].encode()).hexdigest()
         actual_personalisation.pop('__uac__')
 
     test_helper.assertDictEqual(actual_personalisation, expected_personalisation,

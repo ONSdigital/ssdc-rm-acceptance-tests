@@ -19,6 +19,7 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
 
     if export_file_destination:
         body['exportFileDestination'] = export_file_destination
+
     response = requests.post(create_url, json=body)
     response.raise_for_status()
 

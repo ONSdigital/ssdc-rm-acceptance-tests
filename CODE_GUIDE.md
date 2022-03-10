@@ -49,7 +49,7 @@ log_out_user_context_values in audit_trail_helper.py
 | template                           | Stores the column template used for fulfilments or action rules                |
 | telephone_capture_request          | Stores the UAC and QID returned by a telephone capture API call                |
 | notify_template_id                 | Stores the ID of the sms template used for the notify service                  |
-| sms_fulfilment_response_json       | Stores the response JSON from a `POST` to the Notify API                       |
+| fulfilment_response_json           | Stores the response JSON from a `POST` to the Notify API                       |
 | phone_number                       | Stores the phone number needed to check the notify api                         |
 | email                              | Stores the email address needed to check the notify api                        |
 | message_hashes                     | Stores the hash of sent messages, for testing exception management             |
