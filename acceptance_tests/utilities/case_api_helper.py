@@ -13,9 +13,8 @@ def get_logged_events_for_case_by_id(case_id):
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def check_if_event_list_is_exact_match(event_type_list, case_id):
+def check_if_event_list_is_exact_match(expected_logged_event_types, case_id):
     actual_logged_events = get_logged_events_for_case_by_id(case_id)
-    expected_logged_event_types = event_type_list.replace('[', '').replace(']', '').split(',')
     actual_logged_event_types = [event['eventType'] for event in actual_logged_events]
 
     test_helper.assertCountEqual(expected_logged_event_types, actual_logged_event_types,

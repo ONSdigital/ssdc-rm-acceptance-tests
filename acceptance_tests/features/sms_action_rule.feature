@@ -6,5 +6,5 @@ Feature: Check action rule for SMS feature is able to send SMS via notify
     And a sms template has been created with template "["__sensitive__.childLastName","__uac__"]"
     When a SMS action rule has been created
     Then 1 UAC_UPDATE messages are emitted with active set to true
-    And the events logged against the case are [NEW_CASE,ACTION_RULE_SMS_REQUEST,ACTION_RULE_SMS_CONFIRMATION]
+    And the events logged against the case are ["NEW_CASE","ACTION_RULE_SMS_REQUEST","ACTION_RULE_SMS_CONFIRMATION"]
     And notify api was called with SMS template with phone number "07123456666" and child surname "McChildy"

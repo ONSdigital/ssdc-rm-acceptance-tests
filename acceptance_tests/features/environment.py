@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 from datetime import datetime
@@ -18,6 +19,7 @@ from config import Config
 logger = wrap_logger(logging.getLogger(__name__))
 
 register_type(boolean=lambda text: strtobool(text))
+register_type(json=lambda text: json.loads(text))
 
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():

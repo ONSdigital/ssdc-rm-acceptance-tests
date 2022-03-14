@@ -1,5 +1,3 @@
-import json
-
 import requests
 from tenacity import retry, stop_after_delay, wait_fixed
 
@@ -9,7 +7,7 @@ from config import Config
 
 def check_sms_fulfilment_response(sms_fulfilment_response, template):
     expect_uac_hash_and_qid_in_response = any(
-        template_item in json.loads(template) for template_item in ['__qid__', '__uac__'])
+        template_item in template for template_item in ['__qid__', '__uac__'])
 
     if expect_uac_hash_and_qid_in_response:
         test_helper.assertTrue(sms_fulfilment_response['uacHash'],
@@ -23,7 +21,7 @@ def check_sms_fulfilment_response(sms_fulfilment_response, template):
 
 def check_email_fulfilment_response(email_fulfilment_response, template):
     expect_uac_hash_and_qid_in_response = any(
-        template_item in json.loads(template) for template_item in ['__qid__', '__uac__'])
+        template_item in template for template_item in ['__qid__', '__uac__'])
 
     if expect_uac_hash_and_qid_in_response:
         test_helper.assertTrue(email_fulfilment_response['uacHash'],
@@ -36,7 +34,7 @@ def check_email_fulfilment_response(email_fulfilment_response, template):
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def check_notify_api_called_with_correct_notify_template_id(phone_number, notify_template_id):
+def check_notify_api_called_with_correct_phone_number_and_template_id(phone_number, notify_template_id):
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log/sms')
     test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
     response_json = response.json()
@@ -50,7 +48,7 @@ def check_notify_api_called_with_correct_notify_template_id(phone_number, notify
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def check_notify_api_called_with_correct_email_and_notify_template_id(email, notify_template_id):
+def check_notify_api_called_with_correct_email_and_template_id(email, notify_template_id):
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log/email')
     test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
     response_json = response.json()

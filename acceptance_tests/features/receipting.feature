@@ -7,4 +7,4 @@ Feature: A case can be receipted with an event
     And UAC_UPDATE messages are emitted with active set to true
     When a receipt message is published to the pubsub receipting topic
     Then UAC_UPDATE message is emitted with active set to false and "receiptReceived" is true
-    And the events logged against the case are [NEW_CASE,EXPORT_FILE,RECEIPT]
+    And the events logged against the case are ["NEW_CASE","EXPORT_FILE","RECEIPT"]
