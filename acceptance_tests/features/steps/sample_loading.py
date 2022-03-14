@@ -1,5 +1,6 @@
 import csv
 from pathlib import Path
+
 from behave import step
 
 from acceptance_tests.utilities.collex_helper import add_collex
@@ -17,19 +18,19 @@ VALIDATION_RULES_PATH = Config.RESOURCE_FILE_PATH.joinpath('validation_rules')
 
 def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]):
     emitted_cases = get_emitted_cases(len(sample_rows))
-
+    unmatched_sample_rows = sample_rows.copy()
     for emitted_case in emitted_cases:
         matched_row = None
-        for sample_row in sample_rows:
-            if get_sample_only_data(sample_row, sensitive_columns) == emitted_case['sample']:
-
-                if get_expected_emitted_sensitive_data(sample_row, sensitive_columns) \
-                        == emitted_case['sampleSensitive']:
-                    matched_row = sample_row
-                    break
+        for sample_row in unmatched_sample_rows:
+            if (get_sample_only_data(sample_row, sensitive_columns) ==
+                    emitted_case['sample'] and
+                    get_expected_emitted_sensitive_data(sample_row, sensitive_columns) ==
+                    emitted_case['sampleSensitive']):
+                matched_row = sample_row
+                break
 
         if matched_row:
-            sample_rows.remove(matched_row)
+            unmatched_sample_rows.remove(matched_row)
         else:
             test_helper.fail(f"Could not find matching row in the sample data for case: {emitted_case} "
                              f"all emitted cases: {emitted_cases}")
@@ -247,8 +248,7 @@ def load_business_sample_file_step(context):
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
 
-@step(
-    'sample file "{sample_file_name}" with sensitive columns {sensitive_columns} is loaded successfully')
+@step('sample file "{sample_file_name}" with sensitive columns {sensitive_columns:json} is loaded successfully')
 def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns):
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,

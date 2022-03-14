@@ -81,7 +81,7 @@ def check_uac_message_matches_sms_uac(context):
                             f"context.fulfilment_response_json {context.fulfilment_response_json}")
 
 
-@step('a sms template has been created with template "{template:json}"')
+@step('an sms template has been created with template {template:json}')
 def create_sms_template(context, template):
     context.template = template
     context.pack_code, context.notify_template_id = template_helper.create_sms_template(template)

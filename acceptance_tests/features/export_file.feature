@@ -2,7 +2,7 @@ Feature: Export files can be created and sent with correct data
 
   Scenario Outline: A case is loaded, action rule triggered and export file created with differing templates with UACs
     Given sample file "<sample file>" is loaded successfully
-    And an export file template has been created with template "<template>"
+    And an export file template has been created with template <template>
     When an export file action rule has been created
     Then UAC_UPDATE messages are emitted with active set to true
     And an export file is created with correct rows
@@ -14,7 +14,7 @@ Feature: Export files can be created and sent with correct data
 
   Scenario Outline: A case is loaded, action rule triggered and export file created with differing templates no UACs
     Given sample file "<sample file>" is loaded successfully
-    And an export file template has been created with template "<template>"
+    And an export file template has been created with template <template>
     When an export file action rule has been created
     And an export file is created with correct rows
 
@@ -25,7 +25,7 @@ Feature: Export files can be created and sent with correct data
 
   Scenario Outline: A case is loaded action rule triggered and export file created with differing classifiers
     Given sample file "<sample file>" is loaded successfully
-    And an export file template has been created with template "["__uac__"]"
+    And an export file template has been created with template ["__uac__"]
     When an export file action rule has been created with classifiers "<classifiers>"
     Then <expected row count> UAC_UPDATE messages are emitted with active set to true
     Then an export file is created with correct rows

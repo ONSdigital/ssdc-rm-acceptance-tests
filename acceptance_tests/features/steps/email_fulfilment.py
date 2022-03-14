@@ -81,7 +81,7 @@ def check_uac_message_matches_email_uac(context):
                             f"context.fulfilment_response_json {context.fulfilment_response_json}")
 
 
-@step('an email template has been created with template "{template:json}"')
+@step('an email template has been created with template {template:json}')
 def create_email_template(context, template):
     context.template = template
     context.pack_code, context.notify_template_id = template_helper.create_email_template(template)
