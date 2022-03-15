@@ -1,5 +1,6 @@
 import csv
 from pathlib import Path
+from typing import List
 
 from behave import step
 
@@ -43,8 +44,7 @@ def get_sample_only_data(sample_row, sensitive_columns):
 
 
 def get_expected_emitted_sensitive_data(sample_row, sensitive_columns):
-    sensitive_only = {k: v for k, v in sample_row.items()
-                      if k in sensitive_columns}
+    sensitive_only = {k: v for k, v in sample_row.items() if k in sensitive_columns}
 
     for key, value in sensitive_only.items():
         if value:
@@ -248,8 +248,8 @@ def load_business_sample_file_step(context):
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
 
-@step('sample file "{sample_file_name}" with sensitive columns {sensitive_columns:json} is loaded successfully')
-def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns):
+@step('sample file "{sample_file_name}" with sensitive columns {sensitive_columns:array} is loaded successfully')
+def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns: List):
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,
                                                                                               sensitive_columns)

@@ -1,4 +1,5 @@
 import uuid
+from typing import List
 
 import requests
 from behave import step
@@ -81,7 +82,7 @@ def check_uac_message_matches_email_uac(context):
                             f"context.fulfilment_response_json {context.fulfilment_response_json}")
 
 
-@step('an email template has been created with template {template:json}')
-def create_email_template(context, template):
+@step('an email template has been created with template {template:array}')
+def create_email_template(context, template: List):
     context.template = template
     context.pack_code, context.notify_template_id = template_helper.create_email_template(template)

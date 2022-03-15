@@ -87,23 +87,28 @@ complex data than single strings or the other basic types supported by the defau
 use [custom registered types](https://behave.readthedocs.io/en/stable/api.html#behave.register_type). These are
 registered in the [environment.py](acceptance_tests/features/environment.py) so they are available to all steps.
 
-For example, our `json` type lets us write `json` data in the steps which will be parsed into python objects, useful for
-including dictionaries or lists in steps. e.g.
+For example, our `json` type lets us write JSON data in the steps which will be parsed into python objects like so 
 
 ```python
 @step('this step receives a json parameter {foo:json}')
 def example(foo):
-    json.dumps(foo)
+    pass
 ```
 
-This example step could be called as so to parse to a dictionary
+This example step could be called with a JSON object which will be parsed into a dictionary:
 
 ```gherkin
 When this step receives a json parameter {"spam": "eggs"}
 ```
 
-Or like so to parse to a list
+And our `array` type allows us to parse JSON arrays in to python lists, e.g.
+
+```python
+@step('this step receives an array parameter {foo:array}')
+def example(bar: List):
+    pass
+```
 
 ```gherkin
-When this step receives a json parameter ["spam", "eggs"]
+When this step receives an array parameter ["spam", "eggs"]
 ```

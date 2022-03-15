@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 
 from behave import step
-from tenacity import retry, wait_fixed, stop_after_delay
+from tenacity import retry, stop_after_delay, wait_fixed
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.database_helper import open_cursor
@@ -22,8 +22,7 @@ def data_on_case_changed(context, column, expected_value):
     retry_check_data_change(context, column, expected_value)
 
 
-@step(
-    'an UPDATE_SAMPLE event is received updating the {column} to {new_value}')
+@step('an UPDATE_SAMPLE event is received updating the {column} to {new_value}')
 def send_update_sample(context, column, new_value):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
