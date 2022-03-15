@@ -79,3 +79,31 @@ as understandable and as non-technical as possible.
 
 Assertions should use the [`test_helper`](acceptance_tests/utilities/test_case_helper.py) assertion methods and should
 always include a message with relevant explanation and data where it is useful.
+
+### Step parameter types
+
+Where we need [step parameters](https://behave.readthedocs.io/en/stable/tutorial.html#step-parameters) to include more
+complex data than single strings or the other basic types supported by the default parser, we
+use [custom registered types](https://behave.readthedocs.io/en/stable/api.html#behave.register_type). These are
+registered in the [environment.py](acceptance_tests/features/environment.py) so they are available to all steps.
+
+For example, our `json` type lets us write `json` data in the steps which will be parsed into python objects, useful for
+including dictionaries or lists in steps. e.g.
+
+```python
+@step('this step receives a json parameter {foo:json}')
+def example(foo):
+    json.dumps(foo)
+```
+
+This example step could be called as so to parse to a dictionary
+
+```gherkin
+When this step receives a json parameter {"spam": "eggs"}
+```
+
+Or like so to parse to a list
+
+```gherkin
+When this step receives a json parameter ["spam", "eggs"]
+```
