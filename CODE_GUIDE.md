@@ -101,7 +101,7 @@ This example step could be called with a JSON object which will be parsed into a
 When this step receives a json parameter {"spam": "eggs"}
 ```
 
-And our `array` type allows us to parse JSON arrays in to python lists, e.g.
+And our `array` type allows us to parse JSON arrays into python lists, e.g.
 
 ```python
 @step('this step receives an array parameter {foo:array}')
