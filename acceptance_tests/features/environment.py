@@ -1,4 +1,3 @@
-import json
 import logging
 import time
 from datetime import datetime
@@ -12,14 +11,16 @@ from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_v
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages, \
     quarantine_bad_messages_check_and_reset
 from acceptance_tests.utilities.notify_helper import reset_notify_stub
+from acceptance_tests.utilities.parameter_parsers import parse_array_to_list, parse_json_object
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
 
-register_type(boolean=lambda text: strtobool(text))
-register_type(json=lambda text: json.loads(text))
+register_type(boolean=strtobool)
+register_type(json=parse_json_object)
+register_type(array=parse_array_to_list)
 
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
