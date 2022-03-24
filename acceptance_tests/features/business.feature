@@ -1,3 +1,4 @@
+@regression
 Feature: SSDC supports business surveys
 
   Scenario: A business sample can be loaded
