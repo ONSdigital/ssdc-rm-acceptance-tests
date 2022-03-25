@@ -7,7 +7,7 @@ The Python Behave BDD tests for SSDC RM
 1. Clone [ssdc-rm-docker-dev](https://github.com/ONSdigital/ssdc-rm-docker-dev) and run `make up` to start the required
    services
 
-2. To Run all fo the tests:
+2. To Run all the tests:
     ```bash
     make test
     ```
