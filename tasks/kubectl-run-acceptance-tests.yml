@@ -10,7 +10,7 @@ params:
   GCP_PROJECT_NAME:
   KUBERNETES_CLUSTER:
   ACCEPTANCE_TESTS_IMAGE:
-  TAGS:
+  BEHAVE_TAGS:
 
 inputs:
 - name: acceptance-tests-repo
@@ -23,12 +23,6 @@ run:
       cat >~/gcloud-service-key.json <<EOL
       $SERVICE_ACCOUNT_JSON
       EOL
-
-      BEHAVE_TAGS = ''
-
-      if [ -z "$TAGS" ]; then
-        BEHAVE_TAGS=--tags=${TAGS}
-      fi
 
       # Use gcloud service account to configure kubectl
       gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
