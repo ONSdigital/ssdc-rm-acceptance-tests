@@ -1,4 +1,4 @@
-Feature: SSDC supports SIS surveys
+Feature: SRM supports simple, email driven surveys
 
   Scenario: An SIS shape sample can be loaded
     Given the sample file "email_driven.csv" with validation rules "email_driven_rules.json" is loaded successfully
