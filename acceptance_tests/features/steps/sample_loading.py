@@ -7,6 +7,7 @@ from behave import step
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
+from acceptance_tests.utilities.sample_helper import read_sample
 from acceptance_tests.utilities.survey_helper import add_survey
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_header_and_rows, \
@@ -162,10 +163,8 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
 
-# Behave thinks this step clashes with 'sample file "{sample_file_name}" is loaded successfully', prefix 'the'
-#  is a work around. Is this a behave bug?
-@step(
-    'the sample file "{sample_file_name}" with validation rules "{validation_rules_file_name}" is loaded successfully')
+@step('the sample file "{sample_file_name}"'
+      ' with validation rules "{validation_rules_file_name}" is loaded successfully')
 def load_sample_file_with_validation_rules_step(context, sample_file_name, validation_rules_file_name):
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     validation_rules_path = VALIDATION_RULES_PATH.joinpath(validation_rules_file_name)
@@ -186,6 +185,7 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
+    context.sample = read_sample(sample_file_path, sample_validation_rules)
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
 
 
