@@ -64,6 +64,7 @@ log_out_user_context_values in audit_trail_helper.py
 | bulk_sensitive_update              | Stores the bulk sensitive update cases we expect to see messages for           |
 | expected_collection_instrument_url | Stores the collection instrument URL expected on emitted `UAC_UPDATE` events   |
 | fulfilment_personalisation         | Stores the personalisation values from a received fulfilment request event     |
+| sample                             | Stores the parsed sample file rows, split into `sample` and `sensitive`        |
 
 ### Sharing Code Between Steps
 
@@ -87,7 +88,7 @@ complex data than single strings or the other basic types supported by the defau
 use [custom registered types](https://behave.readthedocs.io/en/stable/api.html#behave.register_type). These are
 registered in the [environment.py](acceptance_tests/features/environment.py) so they are available to all steps.
 
-For example, our `json` type lets us write JSON data in the steps which will be parsed into python objects like so 
+For example, our `json` type lets us write JSON data in the steps which will be parsed into python objects like so:
 
 ```python
 @step('this step receives a json parameter {foo:json}')

@@ -1,6 +1,7 @@
 # Motivation and Context
 <!--- Why is this change required? What problem does it solve? -->
 * [ ] [Context Index](/CODE_GUIDE.md#context-index) has been kept up to date
+* [ ] [Audit Trail Helper](/acceptance_tests/utilities/audit_trail_helper.py) has been kept up to date
 
 # What has changed
 <!--- What code changes has been made -->

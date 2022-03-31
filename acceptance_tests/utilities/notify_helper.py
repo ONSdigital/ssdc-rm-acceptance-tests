@@ -1,3 +1,5 @@
+from typing import List
+
 import requests
 from tenacity import retry, stop_after_delay, wait_fixed
 
@@ -59,6 +61,27 @@ def check_notify_api_called_with_correct_email_and_template_id(email, notify_tem
                             f"Incorrect Gov Notify template Id, response json {response_json}")
 
     return response_json[0]
+
+
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+def check_notify_api_email_request_calls(email_addresses: List, notify_template_id):
+    expected_number_of_calls = len(email_addresses)
+    response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log/email')
+    test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
+    response_json = response.json()
+    test_helper.assertEqual(len(response_json), expected_number_of_calls,
+                            f"Incorrect number of responses, response json {response_json}")
+
+    actual_email_addresses = {call_log_entry['email_address'] for call_log_entry in response_json}
+    expected_email_addresses = set(email_addresses)
+    test_helper.assertEqual(actual_email_addresses, expected_email_addresses,
+                            f'Log of actual email addresses in notify API calls must match expected,'
+                            f' response json: {response_json}')
+    for call_log_entry in response_json:
+        test_helper.assertEqual(call_log_entry["template_id"], notify_template_id,
+                                f"Incorrect Gov Notify template Id, response json {call_log_entry}")
+
+    return response_json
 
 
 def reset_notify_stub():
