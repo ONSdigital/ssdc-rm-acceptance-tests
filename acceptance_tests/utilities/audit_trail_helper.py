@@ -50,6 +50,9 @@ def log_out_user_context_values(context):
     context_output += get_context_list_value(context, 'bulk_invalids')
     context_output += get_context_list_value(context, 'bulk_sample_update')
     context_output += get_context_list_value(context, 'bulk_sensitive_update')
+    context_output += get_context_value(context, 'expected_collection_instrument_url')
+    context_output += get_context_value(context, 'fulfilment_personalisation')
+    context_output += get_context_list_value(context, 'sample')
 
     logger.error(context_output)
 

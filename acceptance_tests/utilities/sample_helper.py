@@ -13,7 +13,7 @@ def read_sample(sample_file_path: Path, validation_rules: List, delimiter=',') -
     for row in raw_sample:
         sample_row = {'sample': {}, 'sensitive': {}}
         for field, value in row.items():
-            if sample_columns[field]['sensitive']:
+            if sample_columns[field].get('sensitive'):
                 sample_row['sensitive'][field] = value
             else:
                 sample_row['sample'][field] = value
