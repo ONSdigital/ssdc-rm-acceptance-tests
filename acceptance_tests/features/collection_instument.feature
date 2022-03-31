@@ -1,6 +1,7 @@
 
 Feature: choose collection instruments for cases
 
+  @regression
   Scenario: A selection rule chooses the correct collection instrument based on case
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully with complex case CI selection rules
     And an export file template has been created with template ["__uac__"]

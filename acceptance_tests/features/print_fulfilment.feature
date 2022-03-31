@@ -1,5 +1,6 @@
 Feature: Print fulfilments can be requested for a case
 
+  @regression
   Scenario: A print fulfilment is requested for a case
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And an export file template has been created with template ["ADDRESS_LINE1","POSTCODE","__uac__"]

@@ -12,6 +12,7 @@ Feature: Email fulfilment
     And notify api was called with the correct email template and values
 
   @reset_notify_stub
+  @regression
   Scenario: An email fulfilment is requested for a case with no uac/qid
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And an email template has been created with template []
@@ -21,6 +22,7 @@ Feature: Email fulfilment
     And notify api was called with the correct email template and values
 
   @reset_notify_stub
+  @regression
   Scenario: An email fulfilment is requested including personalisation
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And an email template has been created with template ["__request__.name"]

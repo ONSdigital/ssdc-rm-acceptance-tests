@@ -1,5 +1,6 @@
 Feature: A case can be refused with an event
 
+  @regression
   Scenario: A case is loaded and can be refused
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     When a refusal event is received and erase data is "false"
