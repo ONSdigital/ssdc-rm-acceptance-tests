@@ -1,5 +1,6 @@
 Feature: SRM supports simple, email driven surveys
 
+  @regression
   @reset_notify_stub
   Scenario: A simple email sample driven survey can be run in SRM
     Given the sample file "email_driven.csv" with validation rules "email_driven_rules.json" is loaded successfully
