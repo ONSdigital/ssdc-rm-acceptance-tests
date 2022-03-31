@@ -32,8 +32,9 @@ def main():
 
     logging.basicConfig(level=args.log_level)
 
+    show_skipped = '--show-skipped' if args.show_skipped else '--no-skipped'
     tags_arg = f'--tags {args.tags}' if args.tags else ''
-    args = f'--logging-level {args.log_level} --format {args.format} {args.feature_directory} {tags_arg}'
+    args = f'--logging-level {args.log_level} --format {args.format} {args.feature_directory} {tags_arg} {show_skipped}'
 
     return behave_executable.main(args)
 
