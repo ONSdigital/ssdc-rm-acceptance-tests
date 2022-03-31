@@ -1,6 +1,7 @@
 
 Feature: deactivate UACs for a case
 
+  @regression
   Scenario: A case is loaded, action rule is triggered and UAC is deactivated for that case
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And an export file template has been created with template ["__uac__"]

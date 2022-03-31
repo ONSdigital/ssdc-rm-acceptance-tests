@@ -18,12 +18,22 @@ if [ "$NAMESPACE" ]; then
 fi
 echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
 
+
+BEHAVE_TAGS = ''
+
+if ! [ "$REGRESSION" = "false" ]; then
+    BEHAVE_TAGS=' --tags=~@regression'
+else
+    echo "Running with the regression tests"
+fi
+
+
 kubectl delete pod acceptance-tests --wait || true
 
 kubectl apply -f acceptance_tests_pod.yml
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
-kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features --no-logcapture --logging-level WARN"
+kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features  --no-skipped $BEHAVE_TAGS --no-logcapture --logging-level WARN"
 
 kubectl delete pod acceptance-tests || true
