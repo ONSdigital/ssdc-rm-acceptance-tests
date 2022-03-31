@@ -35,7 +35,8 @@ def step_to_do_a_thing(context):
 
 #### Context Index
 
-Every context attribute used by the tests must be described here. This table is parsed into the code to drive audit logging upon failure. 
+Every context attribute used by the tests must be described here. This table is parsed into the code to drive audit
+logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/audit_trail_helper.py).
 
 <div id="context-index-table">
 
