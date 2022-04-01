@@ -68,11 +68,12 @@ def parse_markdown_context_table(code_guide_markdown_path: Path) -> List[Dict]:
     with open(code_guide_markdown_path) as code_guide_markdown:
         # Find the start of the table
         for line in code_guide_markdown:
+
             # The start of the table is identified with a div tag
             if line == '<div id="context-index-table">\n':
                 break
         else:
-            raise ValueError('Failed to find `<div id="context-index-table">\\n` in code guide markdown')
+            raise ValueError('Failed to find `<div id="context-index-table">` in code guide markdown')
 
         # Skip the blank line after the div tag
         next(code_guide_markdown)
@@ -92,7 +93,7 @@ def parse_markdown_context_table(code_guide_markdown_path: Path) -> List[Dict]:
         context_guide = []
         for table_row in code_guide_markdown:
 
-            # Break out at the end of the table
+            # Break out when we hit the empty line at the end of the table
             if not table_row.rstrip('\n'):
                 break
 
@@ -101,8 +102,12 @@ def parse_markdown_context_table(code_guide_markdown_path: Path) -> List[Dict]:
         else:
             raise ValueError('Error parsing context attribute table markdown, did not reach end of table')
 
-        return context_guide
+    return context_guide
 
 
 def parse_markdown_table_row(table_row: str) -> List:
+    # Table rows are expected to be in the format:
+    # | foo   | bar      |
+    # We split on the pipe characters, throw away the empty first and last values either side of the table edges,
+    # then strip out any whitespace either side of the values
     return [column.strip() for column in table_row.split('|')[1:-1]]
