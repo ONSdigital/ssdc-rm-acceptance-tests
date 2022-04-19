@@ -238,7 +238,7 @@ def load_business_sample_file_step(context):
     sample_file_path = SAMPLE_FILES_PATH.joinpath('business_rsi_example_sample.csv')
     sample_rows, validation_rules = get_business_sample_columns_and_validation_rules(sample_file_path)
 
-    context.survey_id = add_survey(validation_rules, False, ':')
+    context.survey_id = add_survey(validation_rules, "http://foo.bar.json", False, ':')
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
         {
