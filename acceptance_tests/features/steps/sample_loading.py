@@ -84,10 +84,16 @@ def load_bom_sample_file_step(context, sample_file_name):
 
 @step('sample file "{sample_file_name}" is loaded successfully')
 def load_sample_file_step(context, sample_file_name):
+    load_sample_with_survey_type(context, sample_file_name, "foo.bar")
+
+
+@step('sample file "{sample_file_name}" is loaded successfully for survey type "{survey_type}"')
+def load_sample_with_survey_type(context, sample_file_name, survey_type):
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
-    context.survey_id = add_survey(sample_validation_rules)
+    sample_definition_url = "http://" + survey_type + ".json"
+    context.survey_id = add_survey(sample_validation_rules, sample_definition_url)
 
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
