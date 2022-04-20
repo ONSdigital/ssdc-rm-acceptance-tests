@@ -44,6 +44,9 @@ def main():
 def parse_tags(tags_arg):
     new_tag_arg = ''
 
+    if tags_arg is None:
+        return new_tag_arg
+
     for tag in tags_arg.split(","):
         new_tag_arg += f' --tags {tag}'
 
