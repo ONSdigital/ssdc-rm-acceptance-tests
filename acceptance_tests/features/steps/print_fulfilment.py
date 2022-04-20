@@ -14,7 +14,7 @@ from config import Config
 
 
 @step('a print fulfilment has been requested')
-@step('a print fulfilment with personalisation {personalisation} has been requested')
+@step('a print fulfilment with personalisation {personalisation:json} has been requested')
 def request_print_fulfilment_step(context, personalisation=None):
     context.correlation_id = str(uuid.uuid4())
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
@@ -39,7 +39,7 @@ def request_print_fulfilment_step(context, personalisation=None):
     }
 
     if personalisation:
-        context.fulfilment_personalisation = json.loads(personalisation)
+        context.fulfilment_personalisation = personalisation
         message_dict['payload']['printFulfilment']['personalisation'] = context.fulfilment_personalisation
 
     message = json.dumps(message_dict)

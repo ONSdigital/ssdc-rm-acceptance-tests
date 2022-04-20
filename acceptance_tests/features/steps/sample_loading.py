@@ -1,6 +1,8 @@
 import csv
 import json
 from pathlib import Path
+from typing import List
+
 from behave import step
 
 import random
@@ -9,6 +11,7 @@ import string
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
+from acceptance_tests.utilities.sample_helper import read_sample
 from acceptance_tests.utilities.survey_helper import add_survey
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_header_and_rows, \
@@ -22,19 +25,19 @@ SCHEDULE_TEMPLATE_PATH = Config.RESOURCE_FILE_PATH.joinpath('schedule_templates'
 
 def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]):
     emitted_cases = get_emitted_cases(len(sample_rows))
-
+    unmatched_sample_rows = sample_rows.copy()
     for emitted_case in emitted_cases:
         matched_row = None
-        for sample_row in sample_rows:
-            if get_sample_only_data(sample_row, sensitive_columns) == emitted_case['sample']:
-
-                if get_expected_emitted_sensitive_data(sample_row, sensitive_columns) \
-                        == emitted_case['sampleSensitive']:
-                    matched_row = sample_row
-                    break
+        for sample_row in unmatched_sample_rows:
+            if (get_sample_only_data(sample_row, sensitive_columns) ==
+                    emitted_case['sample'] and
+                    get_expected_emitted_sensitive_data(sample_row, sensitive_columns) ==
+                    emitted_case['sampleSensitive']):
+                matched_row = sample_row
+                break
 
         if matched_row:
-            sample_rows.remove(matched_row)
+            unmatched_sample_rows.remove(matched_row)
         else:
             test_helper.fail(f"Could not find matching row in the sample data for case: {emitted_case} "
                              f"all emitted cases: {emitted_cases}")
@@ -47,8 +50,7 @@ def get_sample_only_data(sample_row, sensitive_columns):
 
 
 def get_expected_emitted_sensitive_data(sample_row, sensitive_columns):
-    sensitive_only = {k: v for k, v in sample_row.items()
-                      if k in sensitive_columns}
+    sensitive_only = {k: v for k, v in sample_row.items() if k in sensitive_columns}
 
     for key, value in sensitive_only.items():
         if value:
@@ -166,10 +168,8 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
 
-# Behave thinks this step clashes with 'sample file "{sample_file_name}" is loaded successfully', prefix 'the'
-#  is a work around. Is this a behave bug?
-@step(
-    'the sample file "{sample_file_name}" with validation rules "{validation_rules_file_name}" is loaded successfully')
+@step('the sample file "{sample_file_name}"'
+      ' with validation rules "{validation_rules_file_name}" is loaded successfully')
 def load_sample_file_with_validation_rules_step(context, sample_file_name, validation_rules_file_name):
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     validation_rules_path = VALIDATION_RULES_PATH.joinpath(validation_rules_file_name)
@@ -190,6 +190,7 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
+    context.sample = read_sample(sample_file_path, sample_validation_rules)
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
 
 
@@ -252,9 +253,8 @@ def load_business_sample_file_step(context):
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
 
 
-@step(
-    'sample file "{sample_file_name}" with sensitive columns {sensitive_columns} is loaded successfully')
-def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns):
+@step('sample file "{sample_file_name}" with sensitive columns {sensitive_columns:array} is loaded successfully')
+def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns: List):
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,
                                                                                               sensitive_columns)

@@ -1,25 +1,22 @@
 import csv
 import hashlib
-import json
-import random
-import string
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
 import pgpy
-import requests
 from behave import step
 from google.cloud import storage
 from tenacity import retry, retry_if_exception_type, stop_after_delay, wait_fixed
 
+from acceptance_tests.utilities import template_helper
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
 @step("an export file is created with correct rows")
 def check_export_file(context):
-    template = context.template.replace('[', '').replace(']', '').replace('"', '').split(',')
+    template = context.template
     emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
     fulfilment_personalisation = context.fulfilment_personalisation if hasattr(context,
                                                                                'fulfilment_personalisation') else None
@@ -42,25 +39,10 @@ def check_export_file(context):
     check_export_file_matches_expected(actual_export_file_rows, expected_export_file_rows)
 
 
-@step('an export file template has been created with template "{template}"')
-def create_export_file_template(context, template):
+@step('an export file template has been created with template {template:array}')
+def create_export_file_template(context, template: List):
     context.template = template
-
-    # By using a unique random pack_code we have better filter options
-    # We can change/remove this if we get UACS differently or a better solution is found
-    context.pack_code = 'pack_code_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-
-    url = f'{Config.SUPPORT_TOOL_API}/exportFileTemplates'
-    body = {
-        'packCode': context.pack_code,
-        'exportFileDestination': 'SUPPLIER_A',
-        'template': json.loads(template),
-        'description': "Test description",
-        'metadata': {"foo": "bar"}
-    }
-
-    response = requests.post(url, json=body)
-    response.raise_for_status()
+    context.pack_code = template_helper.create_export_file_template(template)
 
 
 @step(
