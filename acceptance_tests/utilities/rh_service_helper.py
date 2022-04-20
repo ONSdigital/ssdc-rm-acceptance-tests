@@ -18,4 +18,3 @@ def check_case_from_rh_by_attribute_value_matching_case_id(attribute, value, cas
 
     test_helper.assertIn(case_id_in_rm, rh_case_ids, f"Failed to match RM case id {case_id_in_rm} in"
                                                      f" RH case_ids {rh_case_ids}")
-
