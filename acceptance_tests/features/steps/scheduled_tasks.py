@@ -4,6 +4,7 @@ import uuid
 from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.features.steps.export_file import get_export_file_rows
+from acceptance_tests.utilities.case_api_helper import get_logged_events_for_case_by_id
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.test_case_helper import test_helper
 from behave import step
@@ -207,3 +208,12 @@ def correct_exports_for_files_are_created(context):
                 actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, task['packCode'])
                 test_helper.assertIsNotNone(actual_export_file_rows)
                 test_helper.assertEqual(actual_export_file_rows, ['"House 7"|"NW16 FNK"'])
+
+
+@step("check that the event against the case is correct")
+def check_event_is_created_correctly(context):
+    events = get_logged_events_for_case_by_id(context.emitted_cases[0]['caseId'])
+    # scheduled_task_event = [event for event in events if event['scheduledTaskId'] is not None]
+    # test_helper.assertEqual(scheduled_task_event['scheduledTaskId'] == context.scheduledTaskId)
+    # test_helper.assertEqual(scheduled_task_event['source'], 'CASE_PROCESSOR')
+    # test_helper.assertEqual(scheduled_task_event['type'], 'EXPORT_FILE')
