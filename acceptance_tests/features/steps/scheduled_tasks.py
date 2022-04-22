@@ -13,9 +13,8 @@ from behave import step
 @step("the expected schedule is created against the new case in the database")
 def expected_schduled_created_for_case(context):
     expected_response_periods = build_expected_schedule(context.schedule_template)["responsePeriods"]
-    json_obj = get_actual_schedule(context.emitted_cases[0])
+    actual_response_periods = get_actual_schedule(context.emitted_cases[0])
 
-    actual_response_periods = json.loads(json_obj["value"])
     test_helper.assertEqual(len(expected_response_periods), len(actual_response_periods),
                             "ResponsePeriod counts differ")
 
@@ -39,7 +38,9 @@ def expected_schduled_created_for_case(context):
 
             test_helper.assertEqual(actual_task["name"], expected_task["name"])
 
-            actual_date = datetime.datetime.strptime(actual_task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
+            # actual_date = actual_task["scheduledDateAsString"]
+            actual_date = datetime.datetime.strptime(actual_task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
+            # datetime.datetime.strptime(actual_task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
             expected_date = expected_task["rmScheduledDateTime"]
 
             datetime_difference_minutes = (expected_date - actual_date).total_seconds() / 60
@@ -157,7 +158,7 @@ def scheduled_task_removed(context):
     scheduled_task_successfully_removed = False
 
     for task in context.actual_scheduled_tasks:
-        task_scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
+        task_scheduled_date = datetime.datetime.strptime(task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
         # task_scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"], '%Y-%m-%dT%H:%M:%S.%f%z')
 
         if task_scheduled_date < datetime.datetime.now():
@@ -186,7 +187,7 @@ def check_tasks_updated(context):
 
     for response_period in actual_response_periods:
         for task in response_period["scheduledTasks"]:
-            scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
+            scheduled_date = datetime.datetime.strptime(task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
 
             if scheduled_date < datetime.datetime.now():
                 # This would need to be more complex with receipt expected
@@ -197,12 +198,11 @@ def check_tasks_updated(context):
 
 @step("the correct export files are created for the schedule")
 def correct_exports_for_files_are_created(context):
-    json_obj = get_actual_schedule(context.emitted_cases[0])
-    actual_response_periods = json.loads(json_obj["value"])
+    actual_response_periods = get_actual_schedule(context.emitted_cases[0])
 
     for response_period in actual_response_periods:
         for task in response_period["scheduledTasks"]:
-            scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
+            scheduled_date = datetime.datetime.strptime(task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
 
             if scheduled_date < datetime.datetime.now():
                 actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, task['packCode'])
