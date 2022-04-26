@@ -15,34 +15,34 @@ from behave import step
 
 @step("the expected schedule is created against the new case in the database")
 def expected_schduled_created_for_case(context):
-    expected_response_periods = build_expected_schedule(context.schedule_template)["responsePeriods"]
-    actual_response_periods = get_actual_schedule(context.emitted_cases[0])
+    expected_scheduled_task_groups = build_expected_schedule(context.schedule_template)["scheduledTaskGroups"]
+    actual_scheduled_task_groups = get_actual_schedule(context.emitted_cases[0])
 
-    test_helper.assertEqual(len(expected_response_periods), len(actual_response_periods),
-                            "ResponsePeriod counts differ")
+    test_helper.assertEqual(len(expected_scheduled_task_groups), len(actual_scheduled_task_groups),
+                            "Expected Task Groups count differ")
 
     context.actual_scheduled_tasks = []
-
     indexer = 0
-    for expected_response_period in expected_response_periods:
-        actual_response_period = actual_response_periods[indexer]
 
-        test_helper.assertEqual(expected_response_period["name"], actual_response_period["name"])
+    for expected_scheduled_task_group in expected_scheduled_task_groups:
+        actual_scheduled_task_group = actual_scheduled_task_groups[indexer]
 
-        test_helper.assertEqual(len(expected_response_period["scheduledTasks"]),
-                                len(actual_response_period["scheduledTasks"]))
+        test_helper.assertEqual(expected_scheduled_task_group["name"], actual_scheduled_task_group["name"])
+
+        test_helper.assertEqual(len(expected_scheduled_task_group["scheduledTasks"]),
+                                len(actual_scheduled_task_group["scheduledTasks"]))
 
         task_index = 0
 
-        for expected_task in expected_response_period["scheduledTasks"]:
-            actual_task = actual_response_period["scheduledTasks"][task_index]
+        for expected_task in expected_scheduled_task_group["scheduledTasks"]:
+            actual_task = actual_scheduled_task_group["scheduledTasks"][task_index]
             test_helper.assertTrue(is_valid_uuid(actual_task["id"]))
             context.actual_scheduled_tasks.append(actual_task)
 
             test_helper.assertEqual(actual_task["name"], expected_task["name"])
 
             # actual_date = actual_task["scheduledDateAsString"]
-            actual_date = datetime.datetime.strptime(actual_task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
+            actual_date = datetime.datetime.strptime(actual_task["scheduledDateToRun"][:19], '%Y-%m-%dT%H:%M:%S')
             # datetime.datetime.strptime(actual_task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
             expected_date = expected_task["rmScheduledDateTime"]
 
@@ -57,39 +57,37 @@ def expected_schduled_created_for_case(context):
 def build_expected_schedule(schedule_template_str):
     schedule_template = json.loads(schedule_template_str)
 
-    response_periods_start = datetime.datetime.now()
+    task_group_start = datetime.datetime.now()
 
     expected_schedule = {}
-    expected_schedule["responsePeriods"] = []
+    expected_schedule["scheduledTaskGroups"] = []
 
-    for response_period in schedule_template["responsePeriods"]:
-        expected_response_period = {}
-        expected_response_period["name"] = response_period["name"]
-        expected_response_period["dateOffSet"] = {}
-        expected_response_period["dateOffSet"] = response_period["dateOffSet"]
-        response_periods_start = add_on_dateoffsets(response_periods_start, expected_response_period["dateOffSet"])
+    for schedule_template_task_group in schedule_template["scheduleTemplateTaskGroups"]:
+        expected_scheduled_task_group = {}
+        expected_scheduled_task_group["name"] = schedule_template_task_group["name"]
+        expected_scheduled_task_group["dateOffsetFromTaskGroupStart"] = {}
+        expected_scheduled_task_group["dateOffsetFromTaskGroupStart"] = schedule_template_task_group["dateOffsetFromTaskGroupStart"]
+        task_group_start = add_on_dateoffsets(task_group_start, expected_scheduled_task_group["dateOffsetFromTaskGroupStart"])
 
-        expected_response_period["scheduledTasks"] = []
+        expected_scheduled_task_group["scheduledTasks"] = []
 
-        scheduled_tasks_start = response_periods_start
+        scheduled_tasks_start = task_group_start
 
-        for scheduled_task in response_period["tasks"]:
+        for scheduled_task in schedule_template_task_group["scheduleTemplateTasks"]:
             expected_scheduled_task = {}
 
             expected_scheduled_task["name"] = scheduled_task["name"]
             expected_scheduled_task["scheduledTaskType"] = scheduled_task["scheduledTaskType"]
             expected_scheduled_task["packCode"] = scheduled_task["packCode"]
-            expected_scheduled_task["receiptRequired"] = scheduled_task["receiptRequired"]
 
-            expected_scheduled_task["dateOffSet"] = scheduled_task["dateOffSet"]
-            scheduled_tasks_start = add_on_dateoffsets(scheduled_tasks_start, expected_scheduled_task["dateOffSet"])
+            expected_scheduled_task["dateOffSetFromStart"] = scheduled_task["dateOffSetFromStart"]
+            scheduled_tasks_start = add_on_dateoffsets(scheduled_tasks_start, expected_scheduled_task["dateOffSetFromStart"])
 
-            expected_scheduled_task["scheduledTaskStatus"] = "NOT_STARTED"
             expected_scheduled_task["rmScheduledDateTime"] = scheduled_tasks_start.utcnow()
 
-            expected_response_period["scheduledTasks"].append(expected_scheduled_task)
+            expected_scheduled_task_group["scheduledTasks"].append(expected_scheduled_task)
 
-        expected_schedule["responsePeriods"].append(expected_response_period)
+        expected_schedule["scheduledTaskGroups"].append(expected_scheduled_task_group)
 
     return expected_schedule
 
@@ -126,7 +124,7 @@ def get_scheduled_task_by_id(id):
 
 
 def add_on_dateoffsets(start_time, offset):
-    multiplier = offset["multiplier"]
+    multiplier = offset["offset"]
 
     if offset["dateUnit"] == "DAYS":
         return start_time + datetime.timedelta(days=multiplier)
@@ -161,7 +159,7 @@ def scheduled_task_removed(context):
     scheduled_task_successfully_removed = False
 
     for task in context.actual_scheduled_tasks:
-        task_scheduled_date = datetime.datetime.strptime(task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
+        task_scheduled_date = datetime.datetime.strptime(task["scheduledDateToRun"][:19], '%Y-%m-%dT%H:%M:%S')
         # task_scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"], '%Y-%m-%dT%H:%M:%S.%f%z')
 
         if task_scheduled_date < datetime.datetime.now():
@@ -179,34 +177,13 @@ def scheduled_task_removed(context):
     test_helper.assertTrue(scheduled_task_successfully_removed, "No scheduled Task removed within time")
 
 
-@step("check that the schedule against the case is as expected")
-def check_scheduled_is_updated_with_processed_tasks(context):
-    check_tasks_updated(context)
-
-
-@retry(wait=wait_fixed(1), stop=stop_after_delay(60))
-def check_tasks_updated(context):
-    json_obj = get_actual_schedule(context.emitted_cases[0])
-    actual_response_periods = json.loads(json_obj["value"])
-
-    for response_period in actual_response_periods:
-        for task in response_period["scheduledTasks"]:
-            scheduled_date = datetime.datetime.strptime(task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
-
-            if scheduled_date < datetime.datetime.now():
-                # This would need to be more complex with receipt expected
-                test_helper.assertEqual(task["scheduledTaskStatus"], "SENT")
-            else:
-                test_helper.assertEqual(task["scheduledTaskStatus"], "NOT_STARTED")
-
-
 @step("the correct export files are created for the schedule")
 def correct_exports_for_files_are_created(context):
-    actual_response_periods = get_actual_schedule(context.emitted_cases[0])
+    actual_task_groups = get_actual_schedule(context.emitted_cases[0])
 
-    for response_period in actual_response_periods:
-        for task in response_period["scheduledTasks"]:
-            scheduled_date = datetime.datetime.strptime(task["scheduledDateAsString"][:19], '%Y-%m-%dT%H:%M:%S')
+    for actual_task_group in actual_task_groups:
+        for task in actual_task_group["scheduledTasks"]:
+            scheduled_date = datetime.datetime.strptime(task["scheduledDateToRun"][:19], '%Y-%m-%dT%H:%M:%S')
 
             if scheduled_date < datetime.datetime.now():
                 actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, task['packCode'])

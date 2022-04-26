@@ -1,40 +1,38 @@
 {
   "name": "CIS",
-  "responsePeriods": [
+  "scheduleTemplateTaskGroups": [
     {
       "name": "CIS WEEK 1",
-      "dateOffSet": {
+      "dateOffsetFromTaskGroupStart": {
         "dateUnit": "WEEKS",
-        "multiplier": 0
+        "offset": 0
       },
-      "tasks": [
+      "scheduleTemplateTasks": [
         {
           "name": "Start Of Period Letter",
           "scheduledTaskType": "ACTION_WITH_PACKCODE",
           "packCode": "CIS_REMINDER",
-          "receiptRequired": false,
-          "dateOffSet": {
+          "dateOffSetFromStart": {
             "dateUnit": "DAYS",
-            "multiplier": 0
+            "offset": 0
           }
         }
       ]
     },
     {
       "name": "CIS WEEK 2",
-      "dateOffSet": {
+      "dateOffsetFromTaskGroupStart": {
         "dateUnit": "WEEKS",
-        "multiplier": 2
+        "offset": 2
       },
-      "tasks": [
+      "scheduleTemplateTasks": [
         {
           "name": "Start Of Period Letter",
           "scheduledTaskType": "ACTION_WITH_PACKCODE",
           "packCode": "CIS_REMINDER",
-          "receiptRequired": false,
-          "dateOffSet": {
+          "dateOffSetFromStart": {
             "dateUnit": "DAYS",
-            "multiplier": 0
+            "offset": 0
           }
         }
       ]
