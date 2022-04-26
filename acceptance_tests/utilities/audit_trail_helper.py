@@ -57,9 +57,8 @@ def get_context_list_value(context, key):
     context_list_var = getattr(context, key)
 
     list_values = f'context.{key}, length {len(context_list_var)} \n'
-
-    for i in range(len(context_list_var)):
-        list_values += f'   context.{key}{[i]}:   {context_list_var[i]} \n'
+    for index, element in enumerate(context_list_var):
+        list_values += f'   context.{key}[{index}]:   {element} \n'
 
     return list_values
 

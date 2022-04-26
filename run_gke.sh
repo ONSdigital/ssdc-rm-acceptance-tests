@@ -22,7 +22,7 @@ echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
 BEHAVE_TAGS = ''
 
 if ! [ "$REGRESSION" = "false" ]; then
-    BEHAVE_TAGS=' --tags=~@regression  --tags=~@rh '
+   BEHAVE_TAGS=' --tags=~@regression --tags=~@rh '
 else
    BEHAVE_TAGS=' --tags=~@rh '
     echo "Running with the regression tests"
@@ -35,6 +35,6 @@ kubectl apply -f acceptance_tests_pod.yml
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
-kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features  --no-skipped $BEHAVE_TAGS --no-logcapture --logging-level WARN"
+kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features $BEHAVE_TAGS --logging-level WARN"
 
 kubectl delete pod acceptance-tests || true
