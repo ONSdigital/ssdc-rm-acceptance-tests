@@ -4,6 +4,7 @@ from pathlib import Path
 
 
 class Config:
+
     EVENT_SCHEMA_VERSION = "0.5.0"
 
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'shared-project')
@@ -20,11 +21,11 @@ class Config:
     PUBSUB_UPDATE_SAMPLE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_TOPIC', 'event_update-sample')
     PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC = os.getenv('PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC',
                                                      'event_update-sample-sensitive')
-    PUBSUB_OUTBOUND_UAC_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_UAC_SUBSCRIPTION', 'event_uac-update_rh')
-    PUBSUB_OUTBOUND_CASE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_CASE_SUBSCRIPTION', 'event_case-update_rh')
-    PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION', 'event_survey-update_rh')
+    PUBSUB_OUTBOUND_UAC_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_UAC_SUBSCRIPTION', 'event_uac-update_rh_at')
+    PUBSUB_OUTBOUND_CASE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_CASE_SUBSCRIPTION', 'event_case-update_rh_at')
+    PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION', 'event_survey-update_rh_at')
     PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION',
-                                                                 'event_collection-exercise-update_rh')
+                                                                 'event_collection-exercise-update_rh_at')
     PUBSUB_NEW_CASE_TOPIC = os.getenv('PUBSUB_NEW_CASE_TOPIC', 'event_new-case')
 
     DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')
@@ -67,6 +68,10 @@ class Config:
     CASEAPI_SERVICE_PORT = os.getenv('CASEAPI_SERVICE_PORT', '8161')
     CASEAPI_SERVICE = f'{PROTOCOL}://{CASEAPI_SERVICE_HOST}:{CASEAPI_SERVICE_PORT}'
     CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
+
+    RH_SERVICE_HOST = os.getenv('RH_SERVICE_HOST', 'localhost')
+    RH_SERVICE_PORT = os.getenv('RH_SERVICE_PORT', '8071')
+    RH_SERVICE_URL = f'{PROTOCOL}://{RH_SERVICE_HOST}:{RH_SERVICE_PORT}'
 
     RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
 

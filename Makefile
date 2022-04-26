@@ -22,7 +22,10 @@ at_tests:
 	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python run.py --log_level WARN
 
 at_tests_core:
-	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python run.py --log_level WARN --tags="~@regression"
+	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python run.py --log_level WARN --tags="~@rh,~@regression"
+
+at_tests_rm:
+	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python run.py --log_level WARN --tags="~@rh"
 
 build:
 	docker build -t europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests .

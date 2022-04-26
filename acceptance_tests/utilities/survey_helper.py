@@ -9,7 +9,8 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_separator=','):
+def add_survey(sample_validation_rules, sample_definition_url="http://foo.bar.json", sample_has_header_row=True,
+               sample_file_separator=','):
     survey_name = 'test survey ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
     url = f'{Config.SUPPORT_TOOL_API}/surveys'
@@ -18,7 +19,7 @@ def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_
             "sampleValidationRules": sample_validation_rules,
             "sampleWithHeaderRow": sample_has_header_row,
             "sampleSeparator": sample_file_separator,
-            "sampleDefinitionUrl": "http://foo.bar",
+            "sampleDefinitionUrl": sample_definition_url,
             "metadata": {'foo': 'bar'}}
 
     response = requests.post(url, json=body)
@@ -29,8 +30,10 @@ def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_
     survey_update_event = get_emitted_survey_update(survey_name)
     test_helper.assertEqual(survey_update_event['name'], survey_name,
                             'Unexpected survey name')
-    test_helper.assertEqual(survey_update_event['sampleDefinitionUrl'], "http://foo.bar",
+
+    test_helper.assertEqual(survey_update_event['sampleDefinitionUrl'], sample_definition_url,
                             'Unexpected sample definition URL')
+
     test_helper.assertEqual(survey_update_event['metadata'], {'foo': 'bar'},
                             'Unexpected metadata')
 
