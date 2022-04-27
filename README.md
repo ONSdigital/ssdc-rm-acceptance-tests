@@ -77,7 +77,7 @@ debug any feature or scenario within PyCharm without any further configuration.
 ### Custom Local Test Runs
 
 To run with custom settings locally you will need to set the environment variable `PUBSUB_EMULATOR_HOST=localhost:8538`,
-either in your environment or prefacing the call to behave:
+either in your environment or prefacing the call to behave.
 
 The tests can be run by calling the behave command line tool through pipenv (after installing dependencies
 with `pipenv install --dev`) like so:
