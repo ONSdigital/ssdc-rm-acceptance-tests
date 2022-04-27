@@ -320,4 +320,4 @@ def replace_and_new_packCodes(schedule_template_str):
             schedule_template["scheduleTemplateTaskGroups"][rp_index]["scheduleTemplateTasks"][st_index]["packCode"] = new_pack_code
             new_pack_codes.append(new_pack_code)
 
-    return json.dumps(schedule_template), new_pack_codes
+    return schedule_template, new_pack_codes

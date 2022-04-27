@@ -54,8 +54,7 @@ def expected_schduled_created_for_case(context):
         indexer = indexer + 1
 
 
-def build_expected_schedule(schedule_template_str):
-    schedule_template = json.loads(schedule_template_str)
+def build_expected_schedule(schedule_template):
 
     task_group_start = datetime.datetime.now()
 
