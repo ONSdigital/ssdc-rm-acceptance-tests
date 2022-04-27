@@ -92,7 +92,7 @@ directly.
 This can be uses to run individual feature files from the command line:
 
 ```shell
-PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features/social.feature:
+PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features/social.feature
 ```
 
 Or to run with a custom combination of tags like so:
