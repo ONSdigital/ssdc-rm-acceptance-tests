@@ -39,7 +39,7 @@ ENV=<YOUR_ENV_SUFFIX> ./run_gke.sh
 
 **NB:** assumes infrastructure and RM services exist in respective projects. RH tests are skipped.
 
-By default, this will run the core RM tests, you can run the full suite of RM regression tags tests with:
+By default, this will run the core RM tests, you can run the full suite of RM regression tests with:
 
 ```shell
 ENV=<YOUR_ENV_SUFFIX> REGRESSION=true ./run_gke.sh
