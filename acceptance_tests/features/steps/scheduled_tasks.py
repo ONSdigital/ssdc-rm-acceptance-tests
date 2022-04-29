@@ -1,8 +1,7 @@
-import json
 import datetime
 import uuid
-from time import sleep
 
+from behave import step
 from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.features.steps.export_file import get_export_file_rows
@@ -10,7 +9,6 @@ from acceptance_tests.utilities.case_api_helper import get_logged_events_for_cas
     check_if_event_list_is_exact_match
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.test_case_helper import test_helper
-from behave import step
 
 
 @step("the expected schedule is created against the new case in the database")
@@ -55,7 +53,6 @@ def expected_schduled_created_for_case(context):
 
 
 def build_expected_schedule(schedule_template):
-
     task_group_start = datetime.datetime.now()
 
     expected_schedule = {}
@@ -65,8 +62,10 @@ def build_expected_schedule(schedule_template):
         expected_scheduled_task_group = {}
         expected_scheduled_task_group["name"] = schedule_template_task_group["name"]
         expected_scheduled_task_group["dateOffsetFromTaskGroupStart"] = {}
-        expected_scheduled_task_group["dateOffsetFromTaskGroupStart"] = schedule_template_task_group["dateOffsetFromTaskGroupStart"]
-        task_group_start = add_on_dateoffsets(task_group_start, expected_scheduled_task_group["dateOffsetFromTaskGroupStart"])
+        expected_scheduled_task_group["dateOffsetFromTaskGroupStart"] \
+            = schedule_template_task_group["dateOffsetFromTaskGroupStart"]
+        task_group_start \
+            = add_on_dateoffsets(task_group_start, expected_scheduled_task_group["dateOffsetFromTaskGroupStart"])
 
         expected_scheduled_task_group["scheduledTasks"] = []
 
@@ -80,7 +79,8 @@ def build_expected_schedule(schedule_template):
             expected_scheduled_task["packCode"] = scheduled_task["packCode"]
 
             expected_scheduled_task["dateOffSetFromStart"] = scheduled_task["dateOffSetFromStart"]
-            scheduled_tasks_start = add_on_dateoffsets(scheduled_tasks_start, expected_scheduled_task["dateOffSetFromStart"])
+            scheduled_tasks_start = add_on_dateoffsets(scheduled_tasks_start,
+                                                       expected_scheduled_task["dateOffSetFromStart"])
 
             expected_scheduled_task["rmScheduledDateTime"] = scheduled_tasks_start.utcnow()
 
@@ -159,7 +159,6 @@ def scheduled_task_removed(context):
 
     for task in context.actual_scheduled_tasks:
         task_scheduled_date = datetime.datetime.strptime(task["scheduledDateToRun"][:19], '%Y-%m-%dT%H:%M:%S')
-        # task_scheduled_date = datetime.datetime.strptime(task["rmScheduledDateTime"], '%Y-%m-%dT%H:%M:%S.%f%z')
 
         if task_scheduled_date < datetime.datetime.now():
             result = get_scheduled_task_by_id(task["id"])
