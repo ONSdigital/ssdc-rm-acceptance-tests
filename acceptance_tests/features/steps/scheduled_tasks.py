@@ -97,6 +97,7 @@ def check_scheduled_tasks_in_db_match_schedule_at_start(actual_scheduled_tasks):
 
     db_tasks = []
 
+    # previously had issues using WHERE IN.  So written this way.
     for task_id in ids:
         result = get_scheduled_task_by_id(task_id)
         test_helper.assertIsNotNone(result, "Could not find ScheduledTask on table: " + task_id)
