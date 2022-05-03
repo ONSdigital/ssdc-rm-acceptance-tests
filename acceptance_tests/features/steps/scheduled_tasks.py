@@ -39,9 +39,7 @@ def expected_schduled_created_for_case(context):
 
             test_helper.assertEqual(actual_task["name"], expected_task["name"])
 
-            # actual_date = actual_task["scheduledDateAsString"]
             actual_date = datetime.datetime.strptime(actual_task["scheduledDateToRun"][:19], '%Y-%m-%dT%H:%M:%S')
-            # datetime.datetime.strptime(actual_task["rmScheduledDateTime"][:19], '%Y-%m-%dT%H:%M:%S')
             expected_date = expected_task["rmScheduledDateTime"]
 
             datetime_difference_minutes = (expected_date - actual_date).total_seconds() / 60
@@ -55,15 +53,12 @@ def expected_schduled_created_for_case(context):
 def build_expected_schedule(schedule_template):
     task_group_start = datetime.datetime.now()
 
-    expected_schedule = {}
-    expected_schedule["scheduledTaskGroups"] = []
+    expected_schedule = {"scheduledTaskGroups": []}
 
     for schedule_template_task_group in schedule_template["scheduleTemplateTaskGroups"]:
-        expected_scheduled_task_group = {}
-        expected_scheduled_task_group["name"] = schedule_template_task_group["name"]
-        expected_scheduled_task_group["dateOffsetFromTaskGroupStart"] = {}
-        expected_scheduled_task_group["dateOffsetFromTaskGroupStart"] \
-            = schedule_template_task_group["dateOffsetFromTaskGroupStart"]
+        expected_scheduled_task_group = {"name": schedule_template_task_group["name"],
+                                         "dateOffsetFromTaskGroupStart": schedule_template_task_group[
+                                             "dateOffsetFromTaskGroupStart"]}
         task_group_start \
             = add_on_dateoffsets(task_group_start, expected_scheduled_task_group["dateOffsetFromTaskGroupStart"])
 
@@ -72,13 +67,11 @@ def build_expected_schedule(schedule_template):
         scheduled_tasks_start = task_group_start
 
         for scheduled_task in schedule_template_task_group["scheduleTemplateTasks"]:
-            expected_scheduled_task = {}
+            expected_scheduled_task = {"name": scheduled_task["name"],
+                                       "scheduledTaskType": scheduled_task["scheduledTaskType"],
+                                       "packCode": scheduled_task["packCode"],
+                                       "dateOffSetFromStart": scheduled_task["dateOffSetFromStart"]}
 
-            expected_scheduled_task["name"] = scheduled_task["name"]
-            expected_scheduled_task["scheduledTaskType"] = scheduled_task["scheduledTaskType"]
-            expected_scheduled_task["packCode"] = scheduled_task["packCode"]
-
-            expected_scheduled_task["dateOffSetFromStart"] = scheduled_task["dateOffSetFromStart"]
             scheduled_tasks_start = add_on_dateoffsets(scheduled_tasks_start,
                                                        expected_scheduled_task["dateOffSetFromStart"])
 
@@ -102,21 +95,19 @@ def get_actual_schedule(actual_case):
 def check_scheduled_tasks_in_db_match_schedule_at_start(actual_scheduled_tasks):
     ids = [task["id"] for task in actual_scheduled_tasks]
 
-    # kept getting errors trying to do a where in
-
     db_tasks = []
 
-    for id in ids:
-        result = get_scheduled_task_by_id(id)
-        test_helper.assertIsNotNone(result, "Could not find ScheduledTask on table: " + id)
+    for task_id in ids:
+        result = get_scheduled_task_by_id(task_id)
+        test_helper.assertIsNotNone(result, "Could not find ScheduledTask on table: " + task_id)
         db_tasks.append(result[0])
 
     return db_tasks
 
 
-def get_scheduled_task_by_id(id):
+def get_scheduled_task_by_id(task_id):
     with open_cursor() as cur:
-        cur.execute("SELECT * FROM casev3.scheduled_tasks WHERE id = %s", (id,))
+        cur.execute("SELECT * FROM casev3.scheduled_tasks WHERE id = %s", (task_id,))
         result = cur.fetchone()
 
     return result
@@ -162,17 +153,15 @@ def scheduled_task_removed(context):
 
         if task_scheduled_date < datetime.datetime.now():
             result = get_scheduled_task_by_id(task["id"])
-            # need to pad out error message, more date time crap
-            test_helper.assertIsNone(result, "Found task that we expected to be deleted")
+            test_helper.assertIsNone(result, f"Found task that we expected to be deleted. ID {task['id']}")
             scheduled_task_successfully_removed = True
             context.scheduled_task_id = task['id']
 
         else:
             result = get_scheduled_task_by_id(task["id"])
-            # need to pad out error message, more date time crap
-            test_helper.assertIsNotNone(result, "Could not find task we expected to still exist")
+            test_helper.assertIsNotNone(result, f"Could not find task we expected to still exist.  ID {task['id']}")
 
-    test_helper.assertTrue(scheduled_task_successfully_removed, "No scheduled Task removed within time")
+    test_helper.assertTrue(scheduled_task_successfully_removed, "Sheduled Tasks not removed/processed within time")
 
 
 @step("the correct export files are created for the schedule")

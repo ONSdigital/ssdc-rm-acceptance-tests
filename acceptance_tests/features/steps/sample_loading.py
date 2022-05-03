@@ -312,12 +312,14 @@ def replace_and_new_packCodes(schedule_template_str):
     schedule_template = json.loads(schedule_template_str)
     new_pack_codes = []
 
-    for rp_index in range(len(schedule_template["scheduleTemplateTaskGroups"])):
-        for st_index in range(len(schedule_template["scheduleTemplateTaskGroups"][rp_index]["scheduleTemplateTasks"])):
-            new_pack_code \
-                = schedule_template["scheduleTemplateTaskGroups"][rp_index]["scheduleTemplateTasks"][st_index][
+    for task_group_index in range(len(schedule_template["scheduleTemplateTaskGroups"])):
+        for scheduled_task_index in range(
+                len(schedule_template["scheduleTemplateTaskGroups"][task_group_index]["scheduleTemplateTasks"])):
+            new_pack_code = schedule_template["scheduleTemplateTaskGroups"][task_group_index]["scheduleTemplateTasks"][
+                      scheduled_task_index][
                       "packCode"] + '_' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-            schedule_template["scheduleTemplateTaskGroups"][rp_index]["scheduleTemplateTasks"][st_index]["packCode"] \
+            schedule_template["scheduleTemplateTaskGroups"][task_group_index]["scheduleTemplateTasks"][
+                scheduled_task_index]["packCode"] \
                 = new_pack_code
             new_pack_codes.append(new_pack_code)
 
