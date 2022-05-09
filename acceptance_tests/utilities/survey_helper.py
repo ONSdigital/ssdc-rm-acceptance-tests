@@ -9,7 +9,8 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_separator=',', scheduleTemplate=None):
+def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_separator=',',
+               scheduleTemplate=None, sample_definition_url="http://foo.bar.json"):
     survey_name = 'test survey ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
     url = f'{Config.SUPPORT_TOOL_API}/surveys'
@@ -18,7 +19,7 @@ def add_survey(sample_validation_rules, sample_has_header_row=True, sample_file_
             "sampleValidationRules": sample_validation_rules,
             "sampleWithHeaderRow": sample_has_header_row,
             "sampleSeparator": sample_file_separator,
-            "sampleDefinitionUrl": "http://foo.bar",
+            "sampleDefinitionUrl": sample_definition_url,
             "metadata": {'foo': 'bar'},
             "scheduleTemplate": scheduleTemplate}
 

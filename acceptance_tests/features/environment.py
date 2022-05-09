@@ -25,6 +25,10 @@ register_type(array=parse_array_to_list)
 CONTEXT_ATTRIBUTES = parse_markdown_context_table(Config.CODE_GUIDE_MARKDOWN_FILE_PATH)
 
 
+def before_all(context):
+    context.config.setup_logging()
+
+
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
     # The year 3000 ought to be far enough in the future for this fulfilment to never trigger again, no?
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/?triggerDateTime=3000-01-01T00:00:00.000Z'

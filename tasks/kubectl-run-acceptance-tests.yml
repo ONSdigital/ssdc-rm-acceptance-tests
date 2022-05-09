@@ -38,6 +38,6 @@ run:
       kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
       kubectl exec -it acceptance-tests -- /bin/bash -c \
-      "sleep 2; behave acceptance_tests/features --no-skipped --no-logcapture --logging-level WARN ${BEHAVE_TAGS}"
+      "sleep 2; behave acceptance_tests/features --logging-level WARN ${BEHAVE_TAGS}"
 
       kubectl delete pod acceptance-tests || true
