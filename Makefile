@@ -16,7 +16,7 @@ check: package_vulnerability lint
 
 test_core: package_vulnerability lint run_tests_core
 
-test: package_vulnerability lint run_tests
+test: package_vulnerability lint at_tests
 
 at_tests:
 	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python run.py --log_level WARN --tags="~@rh"
