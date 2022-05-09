@@ -90,7 +90,7 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
     return received_messages
 
 
-def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=30):
+def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=60):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
     received_messages = _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout)
@@ -105,11 +105,11 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
 
 
 def get_matching_pubsub_message_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
-                                              timeout=30):
+                                              timeout=60):
     """
     Pull and ack all pubsub messages on the given subscription within the timeout, until a match is found
-    message_matcher is a function which takes the parsed message body json and returns a bool for whether it matches
-    expected an a string for helpful failure logging
+    message_matcher is a function which takes the parsed message body json and returns a bool for whether it matches,
+    and a string for describing non-matches for helpful failure logging
     """
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
