@@ -288,7 +288,7 @@ def load_sample_file_with_schedule_template(context, schedule_template_file, sam
 
     context.schedule_template, context.new_pack_codes = get_schedule_template(schedule_template_file)
 
-    context.survey_id = add_survey(sample_validation_rules, scheduleTemplate=context.schedule_template)
+    context.survey_id = add_survey(sample_validation_rules, schedule_template=context.schedule_template)
 
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
