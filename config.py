@@ -4,7 +4,6 @@ from pathlib import Path
 
 
 class Config:
-
     EVENT_SCHEMA_VERSION = "0.5.0"
 
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'shared-project')
@@ -27,6 +26,7 @@ class Config:
     PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION',
                                                                  'event_collection-exercise-update_rh_at')
     PUBSUB_NEW_CASE_TOPIC = os.getenv('PUBSUB_NEW_CASE_TOPIC', 'event_new-case')
+    PUBSUB_DEFAULT_PULL_TIMEOUT = int(os.getenv('PUBSUB_DEFAULT_PULL_TIMEOUT', 120))
 
     DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
