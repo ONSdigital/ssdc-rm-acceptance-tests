@@ -48,7 +48,8 @@ ENV=<YOUR_ENV_SUFFIX> REGRESSION=true ./run_gke.sh
 ### With Local Changes
 
 To run a locally-modified version of the acceptance tests in a pod you will have to build and tag the image, push it to
-the GCR and change the image in [acceptance_tests_pod.yml](./acceptance_tests_pod.yml) to point to your modified image tag.
+the GCR and change the image in [acceptance_tests_pod.yml](./acceptance_tests_pod.yml) to point to your modified image
+tag.
 
 ```shell script
 IMAGE_TAG=<YOUR_TAG>
@@ -105,3 +106,11 @@ PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features 
 provided in multiple args like `--tags @foo --tags @bar` are combined with an `AND`, and multiple negative tags
 like `~@foo` can only be combined with `AND` in multiple, separate tags args.
 See [Behave Tag Expressions](https://behave.readthedocs.io/en/stable/behave.html#tag-expression).
+
+### PubSub Pull Timeout
+
+The default timeout on the tests waiting for expected PubSub messages is set long to improve reliability in
+potentially "cold" cloud environments. However, this may be impractical for local runs or development as the tests may
+be very slow to fail. You can override this by setting `PUBSUB_DEFAULT_PULL_TIMEOUT` in the test environment to a
+smaller value such as `10` (seconds), since a local PubSub emulator or "warmed up" cloud environment should not need
+such a long wait for messages.

@@ -10,6 +10,7 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 from structlog import wrap_logger
+
 logger = wrap_logger(logging.getLogger(__name__))
 
 
@@ -90,7 +91,7 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
     return received_messages
 
 
-def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=60):
+def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
     received_messages = _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout)
@@ -105,7 +106,7 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
 
 
 def get_matching_pubsub_message_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
-                                              timeout=60):
+                                              timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
     """
     Pull and ack all pubsub messages on the given subscription within the timeout, until a match is found
     message_matcher is a function which takes the parsed message body json and returns a bool for whether it matches,
