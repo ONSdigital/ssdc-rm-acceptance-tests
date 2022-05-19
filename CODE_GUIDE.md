@@ -67,6 +67,9 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | expected_collection_instrument_url | Stores the collection instrument URL expected on emitted `UAC_UPDATE` events   | str      |
 | fulfilment_personalisation         | Stores the personalisation values from a received fulfilment request event     | Dict     |
 | sample                             | Stores the parsed sample file rows, split into `sample` and `sensitive`        | List     |
+| schdeule_template                  | Stores the received schedule template                                          | Dict     |
+| actual_scheduled_tasks             | Stores schedule tasks                                                          | List     |
+| new_pack_codes                     | when building a schedule create new pack codes, will need multiple ones        | List     |
 
 </div>
 

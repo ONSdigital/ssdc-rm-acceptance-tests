@@ -6,7 +6,8 @@ import requests
 from behave import step
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
-from acceptance_tests.utilities.event_helper import get_exactly_one_emitted_survey_update
+from acceptance_tests.utilities.event_helper import get_exactly_one_emitted_survey_update, \
+    get_exact_number_of_emitted_survey_update
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -73,3 +74,29 @@ def authorise_pack_code(context):
                             'Unexpected number of allowedPrintFulfilments')
     test_helper.assertEqual(allowed_print_fulfilments[0]['packCode'], context.pack_code,
                             'Unexpected allowedPrintFulfilments packCode')
+
+
+@step("fulfilments are authorised on the export file template for all the packcodes")
+def allow_fulfilments_for_each_packcode(context):
+    for pack_code in context.new_pack_codes:
+        url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyExportFileTemplates'
+        body = {
+            'surveyId': context.survey_id,
+            'packCode': pack_code
+        }
+
+        response = requests.post(url, json=body)
+        response.raise_for_status()
+
+    survey_update_msg = get_exact_number_of_emitted_survey_update(len(context.new_pack_codes))
+
+    allowed_pack_codes = []
+
+    for msg in survey_update_msg:
+        event = msg['payload']['surveyUpdate']
+        allowed_fulfilments = event['allowedPrintFulfilments']
+
+        for allowed_fulfilment in allowed_fulfilments:
+            allowed_pack_codes.append(allowed_fulfilment['packCode'])
+
+    test_helper.assertSetEqual(set(allowed_pack_codes), set(context.new_pack_codes))

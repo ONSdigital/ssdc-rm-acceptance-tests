@@ -1,0 +1,41 @@
+{
+  "name": "CIS",
+  "scheduleTemplateTaskGroups": [
+    {
+      "name": "CIS WEEK 1",
+      "dateOffsetFromTaskGroupStart": {
+        "dateUnit": "WEEKS",
+        "offset": 0
+      },
+      "scheduleTemplateTasks": [
+        {
+          "name": "Start Of Period Letter",
+          "scheduledTaskType": "ACTION_WITH_PACKCODE",
+          "packCode": "CIS_REMINDER",
+          "dateOffSetFromStart": {
+            "dateUnit": "DAYS",
+            "offset": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "CIS WEEK 2",
+      "dateOffsetFromTaskGroupStart": {
+        "dateUnit": "WEEKS",
+        "offset": 2
+      },
+      "scheduleTemplateTasks": [
+        {
+          "name": "Start Of Period Letter",
+          "scheduledTaskType": "ACTION_WITH_PACKCODE",
+          "packCode": "CIS_REMINDER",
+          "dateOffSetFromStart": {
+            "dateUnit": "DAYS",
+            "offset": 0
+          }
+        }
+      ]
+    }
+  ]
+}

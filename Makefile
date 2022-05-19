@@ -16,10 +16,10 @@ check: package_vulnerability lint
 
 test_core: package_vulnerability lint run_tests_core
 
-test: package_vulnerability lint run_tests
+test: package_vulnerability lint at_tests
 
-run_tests:
-	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@rh"
+at_tests:
+	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run python run.py --log_level WARN --tags="~@rh"
 
 run_tests_core:
 	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@rh" --tags="~@regression"
