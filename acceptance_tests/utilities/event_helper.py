@@ -9,8 +9,7 @@ from config import Config
 
 def get_emitted_cases(expected_msg_count=1):
     messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
-                                                            expected_msg_count=expected_msg_count,
-                                                            timeout=60)
+                                                            expected_msg_count=expected_msg_count)
 
     case_payloads = []
     for message_received in messages_received:
@@ -53,8 +52,7 @@ def get_emitted_uac_update(correlation_id, originating_user):
 
 def get_uac_update_events(expected_number, correlation_id, originating_user):
     messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
-                                                            expected_msg_count=expected_number,
-                                                            timeout=60)
+                                                            expected_msg_count=expected_number)
 
     uac_payloads = []
     for uac_event in messages_received:
