@@ -22,9 +22,8 @@ echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
 BEHAVE_TAGS = ''
 
 if ! [ "$REGRESSION" = "false" ]; then
-   BEHAVE_TAGS=' --tags=~@regression --tags=~@rh '
+   BEHAVE_TAGS=' --tags=~@regression '
 else
-   BEHAVE_TAGS=' --tags=~@rh '
     echo "Running with the regression tests"
 fi
 
