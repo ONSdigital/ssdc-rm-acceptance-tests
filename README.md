@@ -20,14 +20,6 @@ To run just the core tests, those not marked @regression Run:
 make run_tests_core
 ```
 
-### RH Tests
-
-Tests tagged with `@rh` require the RH services. Run these with:
-
-```shell
-make run_tests_rh
-```
-
 ## Run tests against a GCP project
 
 Run the `run_gke.sh` bash script like so, where `ENV` is the environment name suffix in the project name,
@@ -37,7 +29,7 @@ like `ssdc-rm-<ENV>`:
 ENV=<YOUR_ENV_SUFFIX> ./run_gke.sh
 ```
 
-**NB:** assumes infrastructure and RM services exist in respective projects. RH tests are skipped.
+**NB:** assumes infrastructure and RM services exist in respective projects.
 
 By default, this will run the core RM tests, you can run the full suite of RM regression tests with:
 
@@ -99,7 +91,7 @@ PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features/
 Or to run with a custom combination of tags like so:
 
 ```shell
-PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags "~@regression" --tags "@rh" 
+PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags "~@regression" 
 ```
 
 **NOTE** that tags combined in a single arg like  `--tags @foo,@bar` are combined with a logical `OR` whereas tags

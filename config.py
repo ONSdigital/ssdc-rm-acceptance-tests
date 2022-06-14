@@ -69,10 +69,6 @@ class Config:
     CASEAPI_SERVICE = f'{PROTOCOL}://{CASEAPI_SERVICE_HOST}:{CASEAPI_SERVICE_PORT}'
     CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
 
-    RH_SERVICE_HOST = os.getenv('RH_SERVICE_HOST', 'localhost')
-    RH_SERVICE_PORT = os.getenv('RH_SERVICE_PORT', '8071')
-    RH_SERVICE_URL = f'{PROTOCOL}://{RH_SERVICE_HOST}:{RH_SERVICE_PORT}'
-
     RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
 
     SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
