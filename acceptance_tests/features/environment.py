@@ -16,7 +16,6 @@ from acceptance_tests.utilities.parameter_parsers import parse_array_to_list, pa
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
-from selenium import webdriver
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -54,7 +53,16 @@ def before_scenario(context, scenario):
 
     if 'web' in context.tags:
         # if headless: etc
-        context.behave_driver = behave_webdriver.Chrome.headless(executable_path='/Users/lozel/Downloads/chromedriver')
+        # Would be good as default to be 'if local = true then not headless, else headless?
+        # Maybe even some 'bonus' sleep options when in head mode? So you can actually see it in action? for debugging?
+
+        headless = False
+        if headless:
+            context.behave_driver = behave_webdriver.Chrome.headless(
+                executable_path='/Users/lozel/Downloads/chromedriver')
+        else:
+            context.behave_driver = behave_webdriver.Chrome(executable_path='/Users/lozel/Downloads/chromedriver')
+
         context.behave_driver.implicitly_wait(10)
 
 
