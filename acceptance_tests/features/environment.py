@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 from distutils.util import strtobool
 
+import behave_webdriver
 import requests
 from behave import register_type
 from structlog import wrap_logger
@@ -52,8 +53,9 @@ def before_scenario(context, scenario):
         reset_notify_stub()
 
     if 'web' in context.tags:
-        context.browser = webdriver.Chrome(executable_path='/Users/lozel/Downloads/chromedriver')
-        context.browser.implicitly_wait(10)
+        # if headless: etc
+        context.behave_driver = behave_webdriver.Chrome.headless(executable_path='/Users/lozel/Downloads/chromedriver')
+        context.behave_driver.implicitly_wait(10)
 
 
 def after_all(_context):
@@ -71,7 +73,7 @@ def after_scenario(context, scenario):
         _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages)
 
     if 'web' in context.tags:
-        context.browser.quit()
+        context.behave_driver.quit()
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):

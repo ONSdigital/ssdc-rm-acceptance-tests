@@ -6,7 +6,7 @@ from behave import step
 
 @step("the UAC entry page is displayed")
 def display_uac_entry_page(context):
-    context.browser.get("http://localhost:9092/en/start/")
+    context.behave_driver.get("http://localhost:9092/en/start/")
 
 
 @step('page displays string "{expected_displayed_string}"')

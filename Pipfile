@@ -14,7 +14,7 @@ google-cloud-pubsub = "*"
 requests-toolbelt = "*"
 tenacity = "*"
 google-cloud-storage = "*"
-selenium="3.141.0"
+behave-webdriver = "*"
 
 [dev-packages]
 "flake8" = "*"
