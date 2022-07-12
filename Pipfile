@@ -10,10 +10,11 @@ requests = "*"
 psycopg2-binary = "*"
 paramiko = "*"
 pgpy = "*"
-google-cloud-pubsub = "==1.7.0"
+google-cloud-pubsub = "*"
 requests-toolbelt = "*"
 tenacity = "*"
 google-cloud-storage = "*"
+selenium="3.141.0"
 
 [dev-packages]
 "flake8" = "*"
