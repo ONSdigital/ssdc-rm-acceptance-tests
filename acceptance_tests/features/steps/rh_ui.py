@@ -4,11 +4,12 @@ from selenium.webdriver.common.by import By
 from behave import step
 
 from acceptance_tests.utilities.test_case_helper import test_helper
+from config import Config
 
 
 @step("the UAC entry page is displayed")
 def display_uac_entry_page(context):
-    context.behave_driver.get("http://localhost:9092/en/start/")
+    context.behave_driver.get(Config.RH_UI_URL)
 
 
 @step('link text displays string "{expected_displayed_string}"')
@@ -38,3 +39,8 @@ def open_page(context, url):
 @step('page displays string "{expected_text}"')
 def page_contains_text(context, expected_text):
     test_helper.assertIn(expected_text, context.behave_driver.page_source)
+
+
+@step("I navigate to support tool home")
+def open_support_tool_home(context):
+    context.behave_driver.get(Config.SUPPORT_TOOL_UI_URL)
