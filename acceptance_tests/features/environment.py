@@ -52,11 +52,12 @@ def before_scenario(context, scenario):
         reset_notify_stub()
 
     if 'web' in context.tags:
-        # if headless: etc
-        # Would be good as default to be 'if local = true then not headless, else headless?
-        # Maybe even some 'bonus' sleep options when in head mode? So you can actually see it in action? for debugging?
 
-        headless = False
+        headless = True
+        # Currently piggy back on this, could default to Headless and have Makefile option to run headed
+        if Config.FILE_UPLOAD_MODE == 'LOCAL':
+            headless = False
+
         if headless:
             context.behave_driver = behave_webdriver.Chrome.headless(
                 executable_path='/Users/lozel/Downloads/chromedriver')
