@@ -3,8 +3,10 @@ import time
 from datetime import datetime
 from distutils.util import strtobool
 
+import behave_webdriver
 import requests
 from behave import register_type
+from splinter import Browser
 from structlog import wrap_logger
 
 from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values, parse_markdown_context_table
@@ -50,6 +52,23 @@ def before_scenario(context, scenario):
     if "reset_notify_stub" in scenario.tags:
         reset_notify_stub()
 
+    if 'web' in context.tags:
+
+        headless = True
+        # Currently piggy back on this, could default to Headless and have Makefile option to run headed
+        if Config.FILE_UPLOAD_MODE == 'LOCAL':
+            headless = False
+
+        context.browser = Browser()
+
+        # if headless:
+        #     context.behave_driver = behave_webdriver.Chrome.headless(
+        #         executable_path='/Users/lozel/Downloads/chromedriver')
+        # else:
+        #     context.behave_driver = behave_webdriver.Chrome(executable_path='/Users/lozel/Downloads/chromedriver')
+        #
+        # context.behave_driver.implicitly_wait(10)
+
 
 def after_all(_context):
     purge_outbound_topics()
@@ -64,6 +83,9 @@ def after_scenario(context, scenario):
 
     if unexpected_bad_messages:
         _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages)
+
+    if 'web' in context.tags:
+        context.browser.quit()
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
