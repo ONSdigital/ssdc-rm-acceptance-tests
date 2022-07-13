@@ -16,7 +16,7 @@ def display_uac_entry_page(context):
 @step('link text displays string "{expected_displayed_string}"')
 def uac_not_valid_displayed(context, expected_displayed_string):
     error_text = context.behave_driver.find_element(By.CLASS_NAME, 'ons-list__link').get_attribute('text')
-    assert error_text == expected_displayed_string
+    test_helper.assertEqual(error_text, expected_displayed_string)
 
 
 @step('the user enters UAC "{uac}')
@@ -66,8 +66,24 @@ def input_recipted_uac(context):
     search_input.send_keys(context.uacs_from_actual_export_file[0] + Keys.RETURN)
 
 
-@step("they are redirected to the correct page")
+@step("they are redirected to the receipted page")
 def redirected_to_receipted_page(context):
     test_helper.assertIn('Someone has already submitted a response using this access code',
-                            context.behave_driver.page_source)
+                         context.behave_driver.page_source)
 
+
+@step("the user enters an inactive UAC")
+def enter_inactive_uac(context):
+    search_input = context.behave_driver.find_element(By.ID, 'uac')
+    search_input.send_keys(context.uacs_from_actual_export_file[0] + Keys.RETURN)
+
+
+@step("they are redirected to the inactive uac page")
+def check_on_inactive_uac_page(context):
+    test_helper.assertIn('This access code has been marked inactive', context.behave_driver.page_source)
+
+
+@step("the user clicks Access Survey without entering a UAC")
+def enter_no_uac(context):
+    search_input = context.behave_driver.find_element(By.ID, 'uac')
+    search_input.send_keys(Keys.RETURN)
