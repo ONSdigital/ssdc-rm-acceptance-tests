@@ -59,10 +59,9 @@ def before_scenario(context, scenario):
             headless = False
 
         if headless:
-            context.behave_driver = behave_webdriver.Chrome.headless(
-                executable_path='/Users/lozel/Downloads/chromedriver')
+            context.behave_driver = behave_webdriver.Chrome.headless()
         else:
-            context.behave_driver = behave_webdriver.Chrome(executable_path='/Users/lozel/Downloads/chromedriver')
+            context.behave_driver = behave_webdriver.Chrome()
 
         context.behave_driver.implicitly_wait(10)
 
