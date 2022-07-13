@@ -1,5 +1,4 @@
-import http
-from http.client import UNAUTHORIZED
+from http import HTTPStatus
 
 import requests
 from requests import HTTPError
@@ -9,7 +8,7 @@ from config import Config
 
 
 def is_exception_http_unauthorized(ex: BaseException) -> bool:
-    return isinstance(ex, HTTPError) and ex.response.status_code == http.client.UNAUTHORIZED
+    return isinstance(ex, HTTPError) and ex.response.status_code == HTTPStatus.UNAUTHORIZED
 
 
 # Retry on 401 errors as the UAC may not have been ingested into RH before the first attempt
