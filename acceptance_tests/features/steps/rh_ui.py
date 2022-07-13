@@ -1,3 +1,4 @@
+from time import sleep
 
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -44,3 +45,29 @@ def page_contains_text(context, expected_text):
 @step("I navigate to support tool home")
 def open_support_tool_home(context):
     context.behave_driver.get(Config.SUPPORT_TOOL_UI_URL)
+
+
+@step("the user enters a valid UAC")
+def enter_a_valid_uac(context):
+    search_input = context.behave_driver.find_element(By.ID, 'uac')
+    search_input.send_keys(context.uacs_from_actual_export_file[0] + Keys.RETURN)
+
+
+@step("they are redirected to EQ")
+def is_directed_to_EQ(context):
+    expected_url_start = f'{Config.EQ_URL}session?token='
+    test_helper.assertIn(expected_url_start, context.behave_driver.current_url)
+    #  Check token here with some magic code
+
+
+@step("the user enters a receipted UAC")
+def input_recipted_uac(context):
+    search_input = context.behave_driver.find_element(By.ID, 'uac')
+    search_input.send_keys(context.uacs_from_actual_export_file[0] + Keys.RETURN)
+
+
+@step("they are redirected to the correct page")
+def redirected_to_receipted_page(context):
+    test_helper.assertIn('Someone has already submitted a response using this access code',
+                            context.behave_driver.page_source)
+

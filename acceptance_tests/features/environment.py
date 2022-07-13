@@ -63,7 +63,7 @@ def before_scenario(context, scenario):
         else:
             context.behave_driver = behave_webdriver.Chrome()
 
-        context.behave_driver.implicitly_wait(10)
+        context.behave_driver.implicitly_wait(2)
 
 
 def after_all(_context):

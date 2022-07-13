@@ -79,3 +79,4 @@ class Config:
     SUPPORT_TOOL_UI_URL = os.getenv('SUPPORT_TOOL_UI_URL', 'http://localhost:9999/')
 
     RH_UI_URL = os.getenv('RH_UI_URL', 'http://localhost:9092/en/start/')
+    EQ_URL = os.getenv('EQ_URL', 'http://localhost:5000/')

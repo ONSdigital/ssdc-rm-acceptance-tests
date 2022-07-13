@@ -67,7 +67,7 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | expected_collection_instrument_url | Stores the collection instrument URL expected on emitted `UAC_UPDATE` events   | str      |
 | fulfilment_personalisation         | Stores the personalisation values from a received fulfilment request event     | Dict     |
 | sample                             | Stores the parsed sample file rows, split into `sample` and `sensitive`        | List     |
-
+| uacs_from_actual_export_file       | actual uacs written to file                                                    | List     |
 </div>
 
 ### Sharing Code Between Steps
