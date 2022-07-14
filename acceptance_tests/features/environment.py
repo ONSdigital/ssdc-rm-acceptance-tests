@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 from distutils.util import strtobool
 
+import behave_webdriver
 import requests
 from behave import register_type
 from structlog import wrap_logger
@@ -50,6 +51,19 @@ def before_scenario(context, scenario):
     if "reset_notify_stub" in scenario.tags:
         reset_notify_stub()
 
+    if 'UI' in context.tags:
+        headless = True
+        # TODO: Currently piggy back on this, could default to Headless and have Makefile option to run headed
+        if Config.FILE_UPLOAD_MODE == 'LOCAL':
+            headless = False
+
+        if headless:
+            context.behave_driver = behave_webdriver.Chrome.headless()
+        else:
+            context.behave_driver = behave_webdriver.Chrome()
+
+        context.behave_driver.implicitly_wait(2)
+
 
 def after_all(_context):
     purge_outbound_topics()
@@ -64,6 +78,9 @@ def after_scenario(context, scenario):
 
     if unexpected_bad_messages:
         _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages)
+
+    if 'UI' in context.tags:
+        context.behave_driver.quit()
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):

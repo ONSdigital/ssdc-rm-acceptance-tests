@@ -19,13 +19,13 @@ fi
 echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
 
 
-BEHAVE_TAGS = ''
+BEHAVE_TAGS=' --tags=@UI'
 
-if ! [ "$REGRESSION" = "false" ]; then
-   BEHAVE_TAGS=' --tags=~@regression '
-else
-    echo "Running with the regression tests"
-fi
+#if ! [ "$REGRESSION" = "false" ]; then
+#   BEHAVE_TAGS=' --tags=~@regression '
+#else
+#    echo "Running with the regression tests"
+#fi
 
 
 kubectl delete pod acceptance-tests --wait || true

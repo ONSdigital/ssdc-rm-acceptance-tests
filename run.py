@@ -33,25 +33,25 @@ def main():
 
     show_skipped = '--show-skipped' if args.show_skipped else '--no-skipped'
 
-    tags_arg = parse_tags(args.tags)
+    # tags_arg = parse_tags(args.tags)
 
-    args = f'--logging-level {args.log_level} --format {args.format} {args.feature_directory} {tags_arg} {show_skipped}'
+    args = f'--logging-level {args.log_level} --format {args.format} {args.feature_directory} --tags=@UI {show_skipped}'
 
     return behave_executable.main(args)
 
 
 # --tags=~@tag1,~@tag2 doesn't work.  Needs to be --tags @tag1 --tags ~@tag2
-def parse_tags(tags_arg):
-    new_tag_arg = ''
-
-    if tags_arg is None:
-        return new_tag_arg
-
-    for tag in tags_arg.split(","):
-        new_tag_arg += f' --tags {tag}'
-
-    print(new_tag_arg)
-    return new_tag_arg
+# def parse_tags(tags_arg):
+#     new_tag_arg = ''
+#
+#     if tags_arg is None:
+#         return new_tag_arg
+#
+#     for tag in tags_arg.split(","):
+#         new_tag_arg += f' --tags {tag}'
+#
+#     print(new_tag_arg)
+#     return new_tag_arg
 
 
 if __name__ == '__main__':

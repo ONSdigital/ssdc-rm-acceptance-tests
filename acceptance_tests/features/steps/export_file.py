@@ -27,13 +27,13 @@ def check_export_file(context):
 
     actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, context.pack_code)
 
-    uacs_from_actual_export_file = _get_unhashed_uacs_from_actual_export_file(
+    context.uacs_from_actual_export_file = _get_unhashed_uacs_from_actual_export_file(
         actual_export_file_rows, template
     ) if '__uac__' in template else []
 
     expected_export_file_rows = generate_expected_export_file_rows(template,
                                                                    context.emitted_cases,
-                                                                   emitted_uacs, uacs_from_actual_export_file,
+                                                                   emitted_uacs, context.uacs_from_actual_export_file,
                                                                    fulfilment_personalisation)
 
     check_export_file_matches_expected(actual_export_file_rows, expected_export_file_rows)
