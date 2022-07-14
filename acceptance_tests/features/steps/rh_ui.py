@@ -1,5 +1,3 @@
-from time import sleep
-
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from behave import step
@@ -54,8 +52,10 @@ def enter_a_valid_uac(context):
 
 
 @step("they are redirected to EQ")
-def is_directed_to_EQ(context):
-    expected_url_start = f'{Config.EQ_URL}session?token='
+def is_redirected_to_EQ(context):
+    # TODO: this should have accepted EQ_URL in it
+    # expected_url_start = f'{Config.EQ_URL}session?token='
+    expected_url_start = f'session?token='
     test_helper.assertIn(expected_url_start, context.behave_driver.current_url)
     #  Check token here with some magic code
 

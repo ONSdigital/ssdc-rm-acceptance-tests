@@ -51,10 +51,9 @@ def before_scenario(context, scenario):
     if "reset_notify_stub" in scenario.tags:
         reset_notify_stub()
 
-    if 'web' in context.tags:
-
+    if 'UI' in context.tags:
         headless = True
-        # Currently piggy back on this, could default to Headless and have Makefile option to run headed
+        # TODO: Currently piggy back on this, could default to Headless and have Makefile option to run headed
         if Config.FILE_UPLOAD_MODE == 'LOCAL':
             headless = False
 
@@ -80,7 +79,7 @@ def after_scenario(context, scenario):
     if unexpected_bad_messages:
         _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages)
 
-    if 'web' in context.tags:
+    if 'UI' in context.tags:
         context.behave_driver.quit()
 
 
