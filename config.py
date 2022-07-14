@@ -84,7 +84,7 @@ class Config:
         or RESOURCE_FILE_PATH.joinpath('dummy_keys',
                                        'dummy_eq_token_decryption_key.pem'))
     EQ_TOKEN_VERIFICATION_KEY = Path(
-        os.getenv('EQ_TOKEN_VERIFICATION_KEY_KEY')
+        os.getenv('EQ_TOKEN_VERIFICATION_KEY')
         or RESOURCE_FILE_PATH.joinpath('dummy_keys', 'dummy_eq_token_verification_key.pem'))
 
     SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
