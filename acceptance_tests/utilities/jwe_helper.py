@@ -13,13 +13,10 @@ def decrypt_signed_jwe(signed_jwe: str) -> Mapping:
     # Decrypt
     jwe_token = jwe.JWE()
     jwe_token.deserialize(signed_jwe, key=DECRYPTION_KEY)
-    jwe_payload = jwe_token.payload
 
     # Verify Signature
     jws_token = jws.JWS()
-    jws_token.deserialize(jwe_payload.decode())
-    jws_token.verify(key=VERIFICATION_KEY)
+    jws_token.deserialize(jwe_token.payload.decode(), key=VERIFICATION_KEY)
 
-    # Extract and deserialize the payload
-    payload = json.loads(jws_token.payload)
-    return payload
+    # Extract, deserialize, and return the payload
+    return json.loads(jws_token.payload)
