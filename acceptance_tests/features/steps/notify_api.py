@@ -48,3 +48,11 @@ def check_notify_api_call(notify_api_call, template, case, emitted_uac, request_
 
     test_helper.assertDictEqual(actual_personalisation, expected_personalisation,
                                 'Actual personalisation in notify API call must match expected')
+
+
+@step('we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH')
+def get_uac_from_sms_fulfilment(context):
+    notify_api_call = check_notify_api_called_with_correct_phone_number_and_template_id(context.phone_number,
+                                                                                        context.notify_template_id)
+    context.rh_launch_uac = notify_api_call['personalisation']['__uac__']
+    context.rh_launch_qid = notify_api_call['personalisation']['__qid__']

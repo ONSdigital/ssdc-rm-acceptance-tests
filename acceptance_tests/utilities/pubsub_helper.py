@@ -1,15 +1,14 @@
 import json
-import time
 import logging
+import time
 from typing import Callable, Mapping
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
+from structlog import wrap_logger
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
-
-from structlog import wrap_logger
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -54,13 +53,13 @@ def _ack_all_on_subscription(subscriber, subscription_path):
     max_messages_per_attempt = 100
 
     try:
-        response = subscriber.pull(subscription_path, max_messages=max_messages_per_attempt, timeout=2)
+        response = subscriber.pull(subscription=subscription_path, max_messages=max_messages_per_attempt, timeout=2)
     except DeadlineExceeded:
         return
 
     ack_ids = [message.ack_id for message in response.received_messages]
     if ack_ids:
-        subscriber.acknowledge(subscription_path, ack_ids)
+        subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
 
     # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
     if len(response.received_messages) == max_messages_per_attempt:
@@ -77,11 +76,12 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
     # the full time for all the expected messages to be published and pulled
     while len(received_messages) < expected_msg_count and not time.time() > deadline:
         try:
-            response = subscriber.pull(subscription_path, max_messages=expected_msg_count, timeout=1)
+            response = subscriber.pull(subscription=subscription_path, max_messages=expected_msg_count, timeout=1)
         except DeadlineExceeded:
             continue
         if response.received_messages:
-            subscriber.acknowledge(subscription_path, [message.ack_id for message in response.received_messages])
+            subscriber.acknowledge(subscription=subscription_path,
+                                   ack_ids=[message.ack_id for message in response.received_messages])
             received_messages.extend(response.received_messages)
 
     test_helper.assertEqual(len(received_messages), expected_msg_count,
@@ -122,7 +122,7 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
     # the full time for all the expected messages to be published and pulled
     while not matched_message and not time.time() > deadline:
         try:
-            response = subscriber.pull(subscription_path, max_messages=1, timeout=1)
+            response = subscriber.pull(subscription=subscription_path, max_messages=1, timeout=1)
         except DeadlineExceeded:
             continue
         if response.received_messages:
@@ -134,7 +134,7 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
             else:
                 logger.warn(f'Acking non matching message on subscription {subscription_path}, '
                             f'failed match description: {failure_description}')
-            subscriber.acknowledge(subscription_path, [received_message.ack_id])
+            subscriber.acknowledge(subscription=subscription_path, ack_ids=[received_message.ack_id])
 
     if matched_message:
         return matched_message

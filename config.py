@@ -6,6 +6,8 @@ from pathlib import Path
 class Config:
     EVENT_SCHEMA_VERSION = "0.5.0"
 
+    RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
+
     PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'shared-project')
     PUBSUB_RECEIPT_TOPIC = os.getenv('PUBSUB_RECEIPT_TOPIC', 'event_receipt')
     PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'event_refusal')
@@ -59,7 +61,11 @@ class Config:
         if EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH and EXPORT_FILE_DESTINATION_CONFIG_JSON_PATH.exists() else None
     FILE_UPLOAD_DESTINATION = os.getenv('FILE_UPLOAD_DESTINATION', str(Path.home().joinpath('Documents/export_files')))
     FILE_UPLOAD_MODE = os.getenv('FILE_UPLOAD_MODE', 'LOCAL')
-    OUR_EXPORT_FILE_DECRYPTION_KEY = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY', 'dummy-key-ssdc-rm-private.asc')
+    OUR_EXPORT_FILE_DECRYPTION_KEY = os.getenv(
+        'OUR_EXPORT_FILE_DECRYPTION_KEY',
+        str(RESOURCE_FILE_PATH.joinpath('dummy_keys',
+                                        'dummy-key-ssdc-rm-private.asc'))
+    )
     OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE', 'test')
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
@@ -69,7 +75,17 @@ class Config:
     CASEAPI_SERVICE = f'{PROTOCOL}://{CASEAPI_SERVICE_HOST}:{CASEAPI_SERVICE_PORT}'
     CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
 
-    RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
+    RH_UI_HOST = os.getenv('RH_UI_HOST', 'localhost')
+    RH_UI_PORT = os.getenv('RH_UI_PORT', '9092')
+    RH_UI_URL = f'{PROTOCOL}://{RH_UI_HOST}:{RH_UI_PORT}/'
+
+    EQ_TOKEN_DECRYPTION_KEY = Path(
+        os.getenv('EQ_TOKEN_DECRYPTION_KEY')
+        or RESOURCE_FILE_PATH.joinpath('dummy_keys',
+                                       'dummy_eq_token_decryption_key.pem'))
+    EQ_TOKEN_VERIFICATION_KEY = Path(
+        os.getenv('EQ_TOKEN_VERIFICATION_KEY')
+        or RESOURCE_FILE_PATH.joinpath('dummy_keys', 'dummy_eq_token_verification_key.pem'))
 
     SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
 
