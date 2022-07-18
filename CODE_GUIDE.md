@@ -66,8 +66,12 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | bulk_sensitive_update              | Stores the bulk sensitive update cases we expect to see messages for           | List     |
 | expected_collection_instrument_url | Stores the collection instrument URL expected on emitted `UAC_UPDATE` events   | str      |
 | fulfilment_personalisation         | Stores the personalisation values from a received fulfilment request event     | Dict     |
-| sample                             | Stores the parsed sample file rows, split into `sample` and `sensitive`        | List     |
+| sample                             | Stores the parsed sample file rows, split into `sample` and `sensitive`        | List     
 | uacs_from_actual_export_file       | actual uacs written to file                                                    | List     |
+| rh_launch_uac                      | Stores a plain text UAC for launching in RH                                    | str      |
+| rh_launch_qid                      | Stores a qid paired with the UAC used for launching in RH                      | str      |
+| rh_launch_endpoint_response        | Stores the response from the API call RH launch                                | str      |
+
 </div>
 
 ### Sharing Code Between Steps

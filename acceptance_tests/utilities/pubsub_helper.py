@@ -7,6 +7,10 @@ from google.cloud import pubsub_v1
 from structlog import wrap_logger
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
+
+from acceptance_tests.utilities.test_case_helper import test_helper
+from config import Config
+
 logger = wrap_logger(logging.getLogger(__name__))
 
 
@@ -50,6 +54,7 @@ def _ack_all_on_subscription(subscriber, subscription_path):
     ack_ids = [message.ack_id for message in response.received_messages]
     if ack_ids:
         subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
+
     # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
     if len(response.received_messages) == max_messages_per_attempt:
         _ack_all_on_subscription(subscriber, subscription_path)
@@ -119,6 +124,7 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
                 logger.warn(f'Acking non matching message on subscription {subscription_path}, '
                             f'failed match description: {failure_description}')
             subscriber.acknowledge(subscription=subscription_path, ack_ids=[received_message.ack_id])
+
     if matched_message:
         return matched_message
     test_helper.fail(f'Expected to pull a matching message on subscription {subscription_path} '

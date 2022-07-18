@@ -16,6 +16,7 @@ tenacity = "*"
 google-cloud-storage = "*"
 splinter = "*"
 selenium = "*"
+jwcrypto = "*"
 
 [dev-packages]
 "flake8" = "*"
