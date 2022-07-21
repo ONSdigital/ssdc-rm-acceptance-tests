@@ -9,7 +9,8 @@ else
     gcloud config set project $GCP_PROJECT
     gcloud container clusters get-credentials rm-k8s-cluster \
         --region europe-west2 \
-        --project $GCP_PROJECT
+        --project $GCP_PROJECT \
+        --internal-ip
 fi
 
 if [ "$NAMESPACE" ]; then
@@ -19,7 +20,7 @@ fi
 echo "Running RM Acceptance Tests [$(HTTPS_PROXY=localhost:8888 kubectl config current-context)]..."
 
 
-BEHAVE_TAGS = ''
+BEHAVE_TAGS=''
 
 if ! [ "$REGRESSION" = "false" ]; then
    BEHAVE_TAGS=' --tags=~@regression '
