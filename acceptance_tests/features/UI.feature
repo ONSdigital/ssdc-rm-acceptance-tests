@@ -4,6 +4,7 @@ Feature: Test UI
   Scenario: Works with RH-UI, Bad UAC entry display meesage
     Given the UAC entry page is displayed
     When the user enters UAC "PK39HN572FZFVHLQ"
+    Then An error section is displayed with href "#uac_invalid" is displayed with "Enter a valid access code"
     Then link text displays string "Enter a valid access code"
 
   Scenario: Works with a good UAC
@@ -44,11 +45,4 @@ Feature: Test UI
   Scenario: No access code entered
     Given the UAC entry page is displayed
     When the user clicks Access Survey without entering a UAC
-    Then link text displays string "Enter an access code"
-
-#    here as a proof of concept, works locally needs correct URL etc for GCP, not important now
-#  Scenario: Works with Support Tool
-#    Given sample file "social_sample_3_lines_fields.csv" is loaded successfully
-#    Then I navigate to support tool home
-#    Then I use the survey Id to click on the created survey
-#    Then page displays string "Survey: test survey"
+    Then An error section is displayed with href "#uac_empty" is displayed with "Enter an access code"

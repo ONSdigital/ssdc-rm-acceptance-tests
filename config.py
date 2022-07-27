@@ -76,7 +76,4 @@ class Config:
     CODE_GUIDE_MARKDOWN_FILE_PATH = Path(
         os.getenv('CODE_GUIDE_MARKDOWN_FILE_PATH') or Path(__file__).parent.joinpath('CODE_GUIDE.md'))
 
-    SUPPORT_TOOL_UI_URL = os.getenv('SUPPORT_TOOL_UI_URL', 'http://localhost:9999/')
-
     RH_UI_URL = os.getenv('RH_UI_URL', 'http://localhost:9092/en/start/')
-    EQ_URL = os.getenv('EQ_URL', 'http://localhost:5000/')

@@ -3,9 +3,9 @@ import time
 from datetime import datetime
 from distutils.util import strtobool
 
-import behave_webdriver
 import requests
 from behave import register_type
+from splinter import Browser
 from structlog import wrap_logger
 
 from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values, parse_markdown_context_table
@@ -52,17 +52,7 @@ def before_scenario(context, scenario):
         reset_notify_stub()
 
     if 'UI' in context.tags:
-        headless = True
-        # TODO: Currently piggy back on this, could default to Headless and have Makefile option to run headed
-        if Config.FILE_UPLOAD_MODE == 'LOCAL':
-            headless = False
-
-        if headless:
-            context.behave_driver = behave_webdriver.Chrome.headless()
-        else:
-            context.behave_driver = behave_webdriver.Chrome()
-
-        context.behave_driver.implicitly_wait(2)
+        context.browser = Browser('chrome', headless=True)
 
 
 def after_all(_context):
@@ -80,7 +70,7 @@ def after_scenario(context, scenario):
         _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages)
 
     if 'UI' in context.tags:
-        context.behave_driver.quit()
+        context.browser.quit()
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
