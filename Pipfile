@@ -15,6 +15,7 @@ requests-toolbelt = "*"
 tenacity = "*"
 google-cloud-storage = "*"
 splinter = "*"
+selenium = "*"
 
 [dev-packages]
 "flake8" = "*"
