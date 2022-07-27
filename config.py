@@ -81,9 +81,6 @@ class Config:
     RH_UI_PORT = os.getenv('RH_UI_PORT', '9092')
     RH_UI_URL = f'{PROTOCOL}://{RH_UI_HOST}:{RH_UI_PORT}/'
 
-    # TODO: Copy in JSON files
-    # The PEM files weren't valid ?
-
     EQ_DECRYPTION_JSON_FILE = Path(os.getenv('EQ_JSON_FILE') or RESOURCE_FILE_PATH.joinpath('dummy_keys',
                                                                                             'eq-decrypt-keys.json'))
     JWT_DICT = json.load(open(EQ_DECRYPTION_JSON_FILE))
