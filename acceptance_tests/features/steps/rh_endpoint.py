@@ -3,6 +3,7 @@ from requests import Response
 from urllib.parse import parse_qs, urlparse
 
 from acceptance_tests.utilities import jwe_helper, rh_endpoint_client
+from acceptance_tests.utilities.jwe_helper import decypting_token_and_asserts
 from acceptance_tests.utilities.test_case_helper import test_helper
 
 
@@ -25,16 +26,5 @@ def check_launch_redirect_and_token(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {launch_url}')
 
-    eq_claims = jwe_helper.decrypt_signed_jwe(query_strings['token'][0])
+    decypting_token_and_asserts(context, query_strings)
 
-    test_helper.assertEqual(eq_claims['questionnaire_id'], context.rh_launch_qid,
-                            f'Expected to find the correct QID in the claims payload, actual payload: {eq_claims}')
-    test_helper.assertEqual(eq_claims['collection_exercise_sid'], context.collex_id,
-                            'Expected to find the correct collection exercise ID in the claims payload, '
-                            f'actual payload: {eq_claims}')
-    test_helper.assertEqual(eq_claims['case_id'], context.emitted_cases[0]['caseId'],
-                            f'Expected to find the correct case ID in the claims payload, actual payload: {eq_claims}')
-
-    # Overwrite these values in the context, they are needed for checking the subsequent events
-    context.correlation_id = eq_claims['tx_id']
-    context.originating_user = eq_claims['user_id']

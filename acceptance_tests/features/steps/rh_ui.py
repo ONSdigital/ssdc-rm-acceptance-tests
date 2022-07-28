@@ -1,6 +1,9 @@
+from urllib.parse import urlparse, parse_qs
+
 from selenium.webdriver.common.keys import Keys
 from behave import step
 
+from acceptance_tests.utilities.jwe_helper import decypting_token_and_asserts
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -32,7 +35,15 @@ def enter_a_valid_uac(context):
 def is_redirected_to_EQ(context):
     expected_url_start = 'session?token='
     test_helper.assertIn(expected_url_start, context.browser.url)
-    #  Check token here with some magic code
+    query_strings = parse_qs(urlparse(context.browser.url).query)
+
+    test_helper.assertIn('token', query_strings,
+                         f'Expected to find launch token in launch URL, actual launch url: {context.browser.url}')
+    test_helper.assertEqual(
+        len(query_strings['token']), 1,
+        f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
+
+    decypting_token_and_asserts(context, query_strings)
 
 
 @step("the user enters a receipted UAC")
