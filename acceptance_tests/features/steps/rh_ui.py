@@ -7,7 +7,7 @@ from config import Config
 
 @step("the UAC entry page is displayed")
 def display_uac_entry_page(context):
-    context.browser.visit(Config.RH_UI_URL)
+    context.browser.visit(f'{Config.RH_UI_URL}/en/start')
 
 
 @step('link text displays string "{expected_displayed_string}"')
