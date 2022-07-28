@@ -20,8 +20,8 @@ def uac_not_valid_displayed(context, expected_displayed_string):
 
 @step('the user enters UAC "{uac}')
 def enter_uac(context, uac):
-    context.browser.find_by_id('uac').fill(uac + RETURN)
-
+    context.browser.find_by_id('uac').fill(uac)
+    context.browser.find_by_id('submitUACBtn').click();
 
 @step("the user enters a valid UAC")
 def enter_a_valid_uac(context):
