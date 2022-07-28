@@ -23,7 +23,7 @@ def enter_uac(context, uac):
 
 @step("the user enters a valid UAC")
 def enter_a_valid_uac(context):
-    context.browser.find_by_id('uac').fill(context.uacs_from_actual_export_file[0] + Keys.RETURN)
+    context.browser.find_by_id('uac').fill(context.rh_launch_uac + Keys.RETURN)
 
 
 @step("they are redirected to EQ")
@@ -35,7 +35,7 @@ def is_redirected_to_EQ(context):
 
 @step("the user enters a receipted UAC")
 def input_recipted_uac(context):
-    context.browser.find_by_id('uac').fill(context.uacs_from_actual_export_file[0] + Keys.RETURN)
+    context.browser.find_by_id('uac').fill(context.rh_launch_uac + Keys.RETURN)
 
 
 @step("they are redirected to the receipted page")
@@ -45,7 +45,7 @@ def redirected_to_receipted_page(context):
 
 @step("the user enters an inactive UAC")
 def enter_inactive_uac(context):
-    context.browser.find_by_id('uac').fill(context.uacs_from_actual_export_file[0] + Keys.RETURN)
+    context.browser.find_by_id('uac').fill(context.rh_launch_uac + Keys.RETURN)
 
 
 @step("they are redirected to the inactive uac page")
