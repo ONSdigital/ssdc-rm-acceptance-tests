@@ -19,7 +19,7 @@ def decrypt_signed_jwe(signed_jwe: str) -> Mapping:
     return json.loads(jws_token.payload)
 
 
-def decypting_token_and_asserts(context, query_strings: dict):
+def decrypting_token_and_asserts(context, query_strings: dict):
     eq_claims = decrypt_signed_jwe(query_strings['token'][0])
     test_helper.assertEqual(eq_claims['questionnaire_id'], context.rh_launch_qid,
                             f'Expected to find the correct QID in the claims payload, actual payload: {eq_claims}')

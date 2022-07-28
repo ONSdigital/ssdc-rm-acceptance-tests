@@ -3,7 +3,7 @@ from urllib.parse import urlparse, parse_qs
 from selenium.webdriver.common.keys import Keys
 from behave import step
 
-from acceptance_tests.utilities.jwe_helper import decypting_token_and_asserts
+from acceptance_tests.utilities.jwe_helper import decrypting_token_and_asserts
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -43,7 +43,7 @@ def is_redirected_to_EQ(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
 
-    decypting_token_and_asserts(context, query_strings)
+    decrypting_token_and_asserts(context, query_strings)
 
 
 @step("the user enters a receipted UAC")
