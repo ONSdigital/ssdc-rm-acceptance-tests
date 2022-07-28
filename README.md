@@ -11,6 +11,19 @@ The Python Behave BDD tests for SSDC RM
     ```shell
     make test
     ```
+## UI Tests
+1. You need to have ChromeDriver installed on your local path for the UI tests work, simple way:
+   ```shell
+   brew install chromedriver
+   ```
+
+2. Clone [ssdc-rm-docker-dev](https://github.com/ONSdigital/ssdc-rm-docker-dev) and run `make up` to start the required
+   services
+
+3. Run all the RM tests:
+    ```shell
+    make test
+    ```
 
 ### Core Tests
 
