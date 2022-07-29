@@ -91,3 +91,5 @@ class Config:
 
     CODE_GUIDE_MARKDOWN_FILE_PATH = Path(
         os.getenv('CODE_GUIDE_MARKDOWN_FILE_PATH') or Path(__file__).parent.joinpath('CODE_GUIDE.md'))
+
+    HEADLESS = os.getenv('HEADLESS', True)

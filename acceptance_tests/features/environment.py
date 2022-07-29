@@ -52,7 +52,7 @@ def before_scenario(context, scenario):
         reset_notify_stub()
 
     if 'UI' in context.tags:
-        context.browser = Browser('chrome', headless=True)
+        context.browser = Browser('chrome', headless=Config.HEADLESS)
 
 
 def after_all(_context):
