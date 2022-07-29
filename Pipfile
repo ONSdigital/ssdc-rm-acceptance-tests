@@ -14,8 +14,9 @@ google-cloud-pubsub = "*"
 requests-toolbelt = "*"
 tenacity = "*"
 google-cloud-storage = "*"
-jwcrypto = "*"
 splinter = "*"
+selenium = "*"
+jwcrypto = "*"
 
 [dev-packages]
 "flake8" = "*"

@@ -1,6 +1,5 @@
 from urllib.parse import urlparse, parse_qs
 
-from selenium.webdriver.common.keys import Keys
 from behave import step
 
 from acceptance_tests.utilities.jwe_helper import decrypting_token_and_asserts
@@ -24,7 +23,8 @@ def uac_not_valid_displayed(context, expected_displayed_string):
 @step('the user enters UAC "{uac}')
 def enter_uac(context, uac):
     context.browser.find_by_id('uac').fill(uac)
-    context.browser.find_by_id('submitUACBtn').click();
+    context.browser.find_by_id('submitUACBtn').click()
+
 
 @step("the user enters a valid UAC")
 def enter_a_valid_uac(context):
@@ -47,7 +47,7 @@ def is_redirected_to_EQ(context):
 
 
 @step("the user enters a receipted UAC")
-def input_recipted_uac(context):
+def input_receipted_uac(context):
     context.browser.find_by_id('uac').fill(context.rh_launch_uac + RETURN)
 
 

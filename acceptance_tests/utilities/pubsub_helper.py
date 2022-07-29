@@ -15,11 +15,8 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 def publish_to_pubsub(message, project, topic, **kwargs):
     publisher = pubsub_v1.PublisherClient()
-
     topic_path = publisher.topic_path(project, topic)
-
     future = publisher.publish(topic_path, data=message.encode('utf-8'), **kwargs)
-
     future.result(timeout=30)
 
 
@@ -33,7 +30,6 @@ def purge_outbound_topics():
 def _purge_subscription(subscription):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
-
     # TODO - the seek method should be quick and clean, but it doesn't seem reliable in our GCP CI pipeline
     # timestamp = Timestamp()
     # time_a_bit_in_the_future = datetime.utcnow() + timedelta(minutes=5)
@@ -44,19 +40,16 @@ def _purge_subscription(subscription):
     #     subscriber.seek(subscription_path, time=timestamp)
     # except MethodNotImplemented:
     #     # Seek is not implemented by the pubsub-emulator
-
     # Call ack all with 5 seconds in-between to catch any stubborn stragglers
     _ack_all_on_subscription(subscriber, subscription_path)
 
 
 def _ack_all_on_subscription(subscriber, subscription_path):
     max_messages_per_attempt = 100
-
     try:
         response = subscriber.pull(subscription=subscription_path, max_messages=max_messages_per_attempt, timeout=2)
     except DeadlineExceeded:
         return
-
     ack_ids = [message.ack_id for message in response.received_messages]
     if ack_ids:
         subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
@@ -70,7 +63,6 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
     # Synchronously pull messages one at at time until we either hit the expected number or the timeout passes.
     received_messages = []
     deadline = time.time() + timeout
-
     # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
     # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
     # the full time for all the expected messages to be published and pulled
@@ -83,7 +75,6 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
             subscriber.acknowledge(subscription=subscription_path,
                                    ack_ids=[message.ack_id for message in response.received_messages])
             received_messages.extend(response.received_messages)
-
     test_helper.assertEqual(len(received_messages), expected_msg_count,
                             f'Expected to pull exactly {expected_msg_count} message(s) from '
                             f'subscription {subscription_path} but found {len(received_messages)} '
@@ -96,11 +87,9 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
     received_messages = _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout)
     parsed_message_bodies = []
-
     for received_message in received_messages:
         parsed_body = json.loads(received_message.message.data)
         parsed_message_bodies.append(parsed_body)
-
     subscriber.close()
     return parsed_message_bodies
 
@@ -116,7 +105,6 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
     deadline = time.time() + timeout
     matched_message = None
-
     # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
     # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
     # the full time for all the expected messages to be published and pulled
@@ -138,6 +126,5 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
 
     if matched_message:
         return matched_message
-
     test_helper.fail(f'Expected to pull a matching message on subscription {subscription_path} '
                      f'but found no matches within the {timeout} second timeout')

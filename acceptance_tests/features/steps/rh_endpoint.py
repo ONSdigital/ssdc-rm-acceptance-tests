@@ -2,7 +2,7 @@ from behave import step
 from requests import Response
 from urllib.parse import parse_qs, urlparse
 
-from acceptance_tests.utilities import jwe_helper, rh_endpoint_client
+from acceptance_tests.utilities import rh_endpoint_client
 from acceptance_tests.utilities.jwe_helper import decrypting_token_and_asserts
 from acceptance_tests.utilities.test_case_helper import test_helper
 
@@ -27,4 +27,3 @@ def check_launch_redirect_and_token(context):
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {launch_url}')
 
     decrypting_token_and_asserts(context, query_strings)
-
