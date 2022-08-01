@@ -16,10 +16,9 @@ if [ "$NAMESPACE" ]; then
     kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
     echo "NAMESPACE = [$NAMESPACE] Set kubectl namespace for subsequent commands [$NAMESPACE]."
 fi
-echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
 
 
-BEHAVE_TAGS = ''
+BEHAVE_TAGS=''
 
 if ! [ "$REGRESSION" = "false" ]; then
    BEHAVE_TAGS=' --tags=~@regression '
@@ -27,10 +26,21 @@ else
     echo "Running with the regression tests"
 fi
 
+# Use the optional image tag argument, or default it to "latest"
+IMAGE_TAG="${1:-latest}"
+COMPLETE_MANIFEST="tmp_${IMAGE_TAG}_acceptance_tests_pod.yml"
+
+echo "Using image tag [$IMAGE_TAG], saving manifest as \"$COMPLETE_MANIFEST\""
+
+# Replace "$MANIFEST_IMAGE_TAG" in the target manifest with the value of IMAGE_TAG,
+# save the output to the tmp_manifests directory
+sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" acceptance_tests_pod.yml > $COMPLETE_MANIFEST
+
 
 kubectl delete pod acceptance-tests --wait || true
 
-kubectl apply -f acceptance_tests_pod.yml
+echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
+kubectl apply -f $COMPLETE_MANIFEST
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 

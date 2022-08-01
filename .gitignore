@@ -122,3 +122,6 @@ setenvs.sh
 
 # Bulk Test CSV Files
 *bulk_test.csv
+
+# Temporary manifests
+tmp_*_acceptance_tests_pod.yml

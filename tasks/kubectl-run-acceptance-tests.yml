@@ -27,17 +27,26 @@ run:
       # Use gcloud service account to configure kubectl
       gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
       gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
+      
+      
+      # Use the commit hash as the image tag in the K8s manifest
+      IMAGE_TAG=$(cat acceptance-tests-repo/.git/ref)
+      COMPLETE_MANIFEST="${IMAGE_TAG}_acceptance_tests_pod.yml"
+      sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" acceptance_tests_pod.yml > $COMPLETE_MANIFEST
 
-      # Create an acceptance tests pod and run the acceptance tests in it
-      # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
-
+      # Pre-clean up any left over acceptance test pod
       kubectl delete pod acceptance-tests --wait || true
 
-      kubectl apply -f acceptance-tests-repo/acceptance_tests_pod.yml
-
+      # Create an acceptance tests pod using the manifest with image substituted in
+      kubectl apply -f $COMPLETE_MANIFEST
+      
+      # Give the pod time to start
       kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
+      # Exec into the pod to run the tests while tailing their logs
+      # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
       kubectl exec -it acceptance-tests -- /bin/bash -c \
       "sleep 2; behave acceptance_tests/features --logging-level WARN ${BEHAVE_TAGS}"
-
+  
+      # Clean up the pod once we're finished
       kubectl delete pod acceptance-tests || true

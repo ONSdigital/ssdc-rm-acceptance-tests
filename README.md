@@ -37,6 +37,13 @@ By default, this will run the core RM tests, you can run the full suite of RM re
 ENV=<YOUR_ENV_SUFFIX> REGRESSION=true ./run_gke.sh
 ```
 
+By default the script will use the `latest` tagged acceptance tests image, you can optionally pass in a custom image tag
+like so to override it:
+
+```shell
+ENV=<YOUR_ENV_SUFFIX> ./run_gke.sh <custom_image_tag>
+```
+
 ### With Local Changes
 
 To run a locally-modified version of the acceptance tests in a pod you will have to build and tag the image, push it to
