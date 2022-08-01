@@ -6,11 +6,14 @@ image_resource:
     repository: gcr.io/google.com/cloudsdktool/cloud-sdk
 
 params:
-  SERVICE_ACCOUNT_JSON:
-  GCP_PROJECT_NAME:
-  KUBERNETES_CLUSTER:
-  ACCEPTANCE_TESTS_IMAGE:
-  BEHAVE_TAGS:
+  # Required
+  SERVICE_ACCOUNT_JSON: # GCP service account key JSON
+  GCP_PROJECT_NAME: # Target project which hosts the K8s cluster
+  KUBERNETES_CLUSTER: # Target K8s cluster ID
+
+  # Optional
+  IMAGE_TAG: # Optional, specific acceptance tests image tag. If not set, will default to using the given commit ref from the "acceptance-tests-repo"
+  BEHAVE_TAGS: # Optional, list of behave tags passed into the behave feature run
 
 inputs:
 - name: acceptance-tests-repo
@@ -27,17 +30,20 @@ run:
       # Use gcloud service account to configure kubectl
       gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
       gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
+
+      if [ -z "$IMAGE_TAG" ]; then
+        # If no explicit tag is set then use the commit ref
+        IMAGE_TAG=$(cat acceptance-tests-repo/.git/ref)
+      fi
       
-      
-      # Use the commit hash as the image tag in the K8s manifest
-      IMAGE_TAG=$(cat acceptance-tests-repo/.git/ref)
+      # Substitute the image tag into the template manifest yaml
       COMPLETE_MANIFEST="${IMAGE_TAG}_acceptance_tests_pod.yml"
       sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" acceptance_tests_pod.yml > $COMPLETE_MANIFEST
 
       # Pre-clean up any left over acceptance test pod
       kubectl delete pod acceptance-tests --wait || true
 
-      # Create an acceptance tests pod using the manifest with image substituted in
+      # Create an acceptance tests pod using the manifest with image tag substituted in
       kubectl apply -f $COMPLETE_MANIFEST
       
       # Give the pod time to start
