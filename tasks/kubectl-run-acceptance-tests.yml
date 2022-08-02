@@ -38,7 +38,7 @@ run:
       
       # Substitute the image tag into the template manifest yaml
       COMPLETE_MANIFEST="${IMAGE_TAG}_acceptance_tests_pod.yml"
-      sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" acceptance_tests_pod.yml > $COMPLETE_MANIFEST
+      sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" acceptance-tests-repo/acceptance_tests_pod.yml > $COMPLETE_MANIFEST
 
       # Pre-clean up any left over acceptance test pod
       kubectl delete pod acceptance-tests --wait || true
