@@ -5,6 +5,7 @@ from distutils.util import strtobool
 
 import requests
 from behave import register_type
+from splinter import Browser
 from structlog import wrap_logger
 
 from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values, parse_markdown_context_table
@@ -50,6 +51,9 @@ def before_scenario(context, scenario):
     if "reset_notify_stub" in scenario.tags:
         reset_notify_stub()
 
+    if 'UI' in context.tags:
+        context.browser = Browser('chrome', headless=Config.HEADLESS)
+
 
 def after_all(_context):
     purge_outbound_topics()
@@ -64,6 +68,9 @@ def after_scenario(context, scenario):
 
     if unexpected_bad_messages:
         _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages)
+
+    if 'UI' in context.tags:
+        context.browser.quit()
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
