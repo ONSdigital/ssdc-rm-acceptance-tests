@@ -26,4 +26,6 @@ def check_launch_redirect_and_token(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {launch_url}')
 
-    decrypting_token_and_asserts(context, query_strings)
+    context.correlation_id, context.originating_user = decrypting_token_and_asserts(context.rh_launch_qid,
+                                                                                    context.emitted_cases[0]['caseId'],
+                                                                                    context.collex_id, query_strings)

@@ -23,7 +23,7 @@ def uac_not_valid_displayed(context, expected_displayed_string):
 @step('the user enters UAC "{uac}')
 def enter_uac(context, uac):
     context.browser.find_by_id('uac').fill(uac)
-    context.browser.find_by_id('submitUACBtn').click()
+    context.browser.find_by_id('submit_uac_btn').click()
 
 
 @step("the user enters a valid UAC")
@@ -43,7 +43,10 @@ def is_redirected_to_EQ(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
 
-    decrypting_token_and_asserts(context, query_strings)
+    context.correlation_id, context.originating_user = decrypting_token_and_asserts(context.rh_launch_qid,
+                                                                                    context.emitted_cases[0]['caseId'],
+                                                                                    context.collex_id,
+                                                                                    query_strings)
 
 
 @step("the user enters a receipted UAC")

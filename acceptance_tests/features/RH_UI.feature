@@ -1,7 +1,7 @@
 @UI
-Feature: Test UI
+Feature: Testing the "enter a UAC" functionality of RH UI
 
-  Scenario: Works with RH-UI, Bad UAC entry display message
+  Scenario: Entering a bad UAC and error section displayed
     Given the UAC entry page is displayed
     When the user enters UAC "PK39HN572FZFVHLQ"
     Then An error section is displayed with href "#uac_invalid" is displayed with "Enter a valid access code"
