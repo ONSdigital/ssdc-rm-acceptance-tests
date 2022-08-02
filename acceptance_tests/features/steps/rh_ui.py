@@ -2,7 +2,7 @@ from urllib.parse import urlparse, parse_qs
 
 from behave import step
 
-from acceptance_tests.utilities.jwe_helper import decrypting_token_and_asserts
+from acceptance_tests.utilities.jwe_helper import decrypt_claims_token_and_check_contents
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -43,10 +43,12 @@ def is_redirected_to_EQ(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
 
-    context.correlation_id, context.originating_user = decrypting_token_and_asserts(context.rh_launch_qid,
-                                                                                    context.emitted_cases[0]['caseId'],
-                                                                                    context.collex_id,
-                                                                                    query_strings)
+    context.correlation_id, context.originating_user = decrypt_claims_token_and_check_contents(context.rh_launch_qid,
+                                                                                               context.emitted_cases[0][
+                                                                                                   'caseId'],
+                                                                                               context.collex_id,
+                                                                                               query_strings['token'][
+                                                                                                   0])
 
 
 @step("the user enters a receipted UAC")

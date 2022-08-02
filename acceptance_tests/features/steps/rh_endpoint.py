@@ -3,7 +3,7 @@ from requests import Response
 from urllib.parse import parse_qs, urlparse
 
 from acceptance_tests.utilities import rh_endpoint_client
-from acceptance_tests.utilities.jwe_helper import decrypting_token_and_asserts
+from acceptance_tests.utilities.jwe_helper import decrypt_claims_token_and_check_contents
 from acceptance_tests.utilities.test_case_helper import test_helper
 
 
@@ -26,6 +26,9 @@ def check_launch_redirect_and_token(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {launch_url}')
 
-    context.correlation_id, context.originating_user = decrypting_token_and_asserts(context.rh_launch_qid,
-                                                                                    context.emitted_cases[0]['caseId'],
-                                                                                    context.collex_id, query_strings)
+    context.correlation_id, context.originating_user = decrypt_claims_token_and_check_contents(context.rh_launch_qid,
+                                                                                               context.emitted_cases[0][
+                                                                                                   'caseId'],
+                                                                                               context.collex_id,
+                                                                                               query_strings['token'][
+                                                                                                   0])

@@ -19,9 +19,9 @@ def decrypt_signed_jwe(signed_jwe: str) -> Mapping:
     return json.loads(jws_token.payload)
 
 
-def decrypting_token_and_asserts(rh_launch_qid: str, case_id: str, collex_id: str, query_strings: dict) \
+def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, collex_id: str, token: str) \
         -> Tuple[str, str]:
-    eq_claims = decrypt_signed_jwe(query_strings['token'][0])
+    eq_claims = decrypt_signed_jwe(token)
     test_helper.assertEqual(eq_claims['questionnaire_id'], rh_launch_qid,
                             f'Expected to find the correct QID in the claims payload, actual payload: {eq_claims}')
     test_helper.assertEqual(eq_claims['collection_exercise_sid'], collex_id,
