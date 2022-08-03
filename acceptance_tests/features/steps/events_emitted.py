@@ -56,7 +56,7 @@ def check_uac_update_msgs_emitted_with_qid_active(context, active):
 def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context, active,
                                                                          field_to_test, expected_value):
     context.emitted_uacs = get_uac_update_events(len(context.emitted_cases), context.correlation_id,
-                                                 context.originating_user)
+                                                 None)
     _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
     _check_new_uacs_are_as_expected(context.emitted_uacs, active, field_to_test, expected_value)
 

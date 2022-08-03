@@ -31,7 +31,7 @@ def enter_a_valid_uac(context):
     context.browser.find_by_id('uac').fill(context.rh_launch_uac + RETURN)
 
 
-@step("they are redirected to EQ")
+@step("they are redirected to EQ with the correct token")
 def is_redirected_to_EQ(context):
     expected_url_start = 'session?token='
     test_helper.assertIn(expected_url_start, context.browser.url)
@@ -43,12 +43,12 @@ def is_redirected_to_EQ(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
 
-    context.correlation_id, context.originating_user = decrypt_claims_token_and_check_contents(context.rh_launch_qid,
-                                                                                               context.emitted_cases[0][
-                                                                                                   'caseId'],
-                                                                                               context.collex_id,
-                                                                                               query_strings['token'][
-                                                                                                   0])
+    decrypt_claims_token_and_check_contents(context.rh_launch_qid,
+                                            context.emitted_cases[0][
+                                                'caseId'],
+                                            context.collex_id,
+                                            query_strings['token'][
+                                                0])
 
 
 @step("the user enters a receipted UAC")
