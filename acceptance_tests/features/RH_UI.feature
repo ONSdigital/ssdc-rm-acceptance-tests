@@ -18,7 +18,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
     When the UAC entry page is displayed
     And the user enters a valid UAC
-    Then they are redirected to EQ
+    Then they are redirected to EQ with the correct token
 
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page

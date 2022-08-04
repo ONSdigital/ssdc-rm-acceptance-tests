@@ -1,5 +1,5 @@
 import json
-from typing import Mapping, Tuple
+from typing import Mapping
 from jwcrypto import jwe, jws
 
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -20,14 +20,21 @@ def decrypt_signed_jwe(signed_jwe: str) -> Mapping:
 
 
 def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, collex_id: str, token: str) \
-        -> Tuple[str, str]:
+        -> Mapping:
     eq_claims = decrypt_signed_jwe(token)
-    test_helper.assertEqual(eq_claims['questionnaire_id'], rh_launch_qid,
+    test_helper.assertEqual(eq_claims['survey_metadata']['data']['questionnaire_id'], rh_launch_qid,
                             f'Expected to find the correct QID in the claims payload, actual payload: {eq_claims}')
+
+    test_helper.assertEqual(eq_claims['survey_metadata']["receipting_keys"], ['questionnaire_id'],
+                            f'Expected to find the questionnaire_id as receipting key in claims payload, '
+                            f'actual payload: {eq_claims}')
+
     test_helper.assertEqual(eq_claims['collection_exercise_sid'], collex_id,
                             'Expected to find the correct collection exercise ID in the claims payload, '
                             f'actual payload: {eq_claims}')
     test_helper.assertEqual(eq_claims['case_id'], case_id,
                             f'Expected to find the correct case ID in the claims payload, actual payload: {eq_claims}')
-    # Overwrite these values in the context, they are needed for checking the subsequent events
-    return eq_claims['tx_id'], eq_claims['user_id']
+
+    test_helper.assertEqual(eq_claims["channel"], "RH", f'Expected channel to be RH, actual payload: {eq_claims}')
+
+    return eq_claims
