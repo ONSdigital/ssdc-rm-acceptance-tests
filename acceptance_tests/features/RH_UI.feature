@@ -19,6 +19,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     When the UAC entry page is displayed
     And the user enters a valid UAC
     Then they are redirected to EQ with the correct token
+    And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
 
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page
