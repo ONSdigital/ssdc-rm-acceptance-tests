@@ -43,12 +43,14 @@ def is_redirected_to_EQ(context):
         len(query_strings['token']), 1,
         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
 
-    decrypt_claims_token_and_check_contents(context.rh_launch_qid,
-                                            context.emitted_cases[0][
-                                                'caseId'],
-                                            context.collex_id,
-                                            query_strings['token'][
-                                                0])
+    eq_claims = decrypt_claims_token_and_check_contents(context.rh_launch_qid,
+                                                        context.emitted_cases[0][
+                                                            'caseId'],
+                                                        context.collex_id,
+                                                        query_strings['token'][
+                                                            0])
+
+    context.correlation_id = eq_claims['tx_id']
 
 
 @step("the user enters a receipted UAC")
