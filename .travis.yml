@@ -14,7 +14,7 @@ before_install:
   - pip uninstall -y numpy  # Remove the vulnerable Numpy which Travis provides
 
 install:
-  - pip install -U pipenv
+  - pip install -U pipenv==v2022.8.5
   - pipenv install --dev --deploy
 
 script:
