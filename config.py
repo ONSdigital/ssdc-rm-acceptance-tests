@@ -47,6 +47,7 @@ class Config:
     SUPPORT_TOOL_HOST = os.getenv('SUPPORT_TOOL_HOST', 'localhost')
     SUPPORT_TOOL_PORT = os.getenv('SUPPORT_TOOL_PORT', '9999')
     SUPPORT_TOOL_API = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}/api'
+    SUPPORT_TOOL_URL = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}'
 
     NOTIFY_SERVICE_HOST = os.getenv('NOTIFY_SERVICE_HOST', 'localhost')
     NOTIFY_SERVICE_PORT = os.getenv('NOTIFY_SERVICE_PORT', '8162')
@@ -93,4 +94,4 @@ class Config:
     CODE_GUIDE_MARKDOWN_FILE_PATH = Path(
         os.getenv('CODE_GUIDE_MARKDOWN_FILE_PATH') or Path(__file__).parent.joinpath('CODE_GUIDE.md'))
 
-    HEADLESS = strtobool(os.getenv('HEADLESS', 'True'))
+    HEADLESS = strtobool(os.getenv('HEADLESS', 'False'))
