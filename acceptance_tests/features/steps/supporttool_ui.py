@@ -3,6 +3,8 @@ import json
 from datetime import datetime
 
 from behave import step
+from selenium.webdriver.common.keys import Keys
+from tenacity import retry, wait_fixed, stop_after_delay, retry_if_exception_type
 
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -67,10 +69,12 @@ def click_create_collex_button(context):
         }
     ]
     context.browser.find_by_id('collectionExerciseReferenceTextField').fill('MVP012021')
-    context.browser.find_by_id('collectionExerciseCIRulesTextField').fill(json.dumps(collection_instrument_selection_rules))
+    context.browser.find_by_id('collectionExerciseCIRulesTextField').fill(
+        json.dumps(collection_instrument_selection_rules))
     context.browser.find_by_id('postCreateCollectionExerciseBtn').click()
     test_helper.assertEquals(
         len(context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name)), 1)
+
 
 @step('the collex is clicked on and displays the details page')
 def click_into_collex_details(context):
@@ -82,10 +86,16 @@ def click_load_sample(context, sample_file_name):
     Config.RESOURCE_FILE_PATH.joinpath('sample_files')
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     context.browser.find_by_id('contained-button-file').first.type(str(sample_file_path))
-    context.browser.reload()
-    test_helper.assertEquals(
-        len(context.browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name)), 1)
-    print(context.browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name))
+    poll_sample_appear(context.browser, sample_file_name)
+    context.browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").click()
+    context.browser.find_by_id("jobProcessBtn").click()
+    poll_sample_status_processed(context.browser)
+
+@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
+def poll_sample_status_processed(browser):
+    test_helper.assertEquals(browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").text, "PROCESSED")
 
 
-
+@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
+def poll_sample_appear(browser, sample_file_name):
+    test_helper.assertEquals(len(browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name)), 1)
