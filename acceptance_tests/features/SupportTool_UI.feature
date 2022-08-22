@@ -45,5 +45,5 @@ Feature: Test basic Support Tool Functionality
     And the email template has been added to the allow on action rule list
     And the collex is clicked on and displays the details page
     And I click the upload sample file button with file "sis_survey_link.csv"
-    When I create an email action rule
-    Then I can see the Action Rule has been triggered and emails sent to notify api
+    When I create an email action rule with email column "emailAddress"
+    Then I can see the Action Rule has been triggered and emails sent to notify api with email column "emailAddress"

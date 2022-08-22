@@ -213,21 +213,19 @@ def allowing_email_template_on_action_rule(context):
     context.browser.find_by_id("allowEmailTemplateOnActionRule").click()
 
 
-@step("I create an email action rule")
-def clicking_email_action_rule_button(context):
+@step('I create an email action rule with email column "{email_column}"')
+def clicking_email_action_rule_button(context, email_column):
     context.browser.find_by_id('createActionRuleDialogBtn').click()
     context.browser.find_by_id('selectActionRuleType').click()
     context.browser.find_by_value('Email').click()
     context.browser.find_by_id('selectActionRuleEmailPackCode').click()
     context.browser.find_by_id(context.pack_code).click()
     context.browser.find_by_id('selectActionRuleEmailColumn').click()
-
-    # TODO set to column
-    context.browser.find_by_id('emailAddress').click()
+    context.browser.find_by_id(email_column).click()
     context.browser.find_by_id('createActionRuleBtn').click()
 
 
-@step('I can see the Action Rule has been triggered and emails sent to notify api')
-def checking_for_action_rule_triggered_for_email(context):
+@step('I can see the Action Rule has been triggered and emails sent to notify api with email column "{email_column}"')
+def checking_for_action_rule_triggered_for_email(context, email_column):
     poll_action_rule_trigger(context.browser, context.pack_code)
-    check_notify_called_with_correct_emails_and_uacs(context, 'emailAddress')
+    check_notify_called_with_correct_emails_and_uacs(context, email_column)
