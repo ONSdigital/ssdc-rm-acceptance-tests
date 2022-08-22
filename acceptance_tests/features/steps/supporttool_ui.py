@@ -1,13 +1,16 @@
 import json
+import uuid
 from datetime import datetime
 from typing import List
 
 from behave import step
 from tenacity import retry, wait_fixed, stop_after_delay
 
+from acceptance_tests.features.steps.email_action_rule import check_notify_called_with_correct_emails_and_uacs
 from acceptance_tests.features.steps.export_file import check_export_file
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
 from acceptance_tests.utilities.event_helper import get_emitted_cases, get_uac_update_events
+from acceptance_tests.utilities.sample_helper import read_sample
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_and_generate_open_validation_rules
 from config import Config
@@ -37,14 +40,17 @@ def process_to_sample_load(context, survey_prefix, sample_file):
 
 
 @step(
-    'a Survey called "{survey_prefix}" plus unique suffix is created for sample file "{sample_file_name}"')
-def create_survey_in_UI(context, survey_prefix, sample_file_name):
+    'a Survey called "{survey_prefix}" plus unique suffix is created for sample file "{sample_file_name}" '
+    'with sensitive columns {sensitive_columns:array}')
+def create_survey_in_UI(context, survey_prefix, sample_file_name, sensitive_columns):
     context.survey_name = survey_prefix + get_random_alpha_numerics(5)
     context.browser.find_by_id('surveyNameTextField').fill(context.survey_name)
 
     Config.RESOURCE_FILE_PATH.joinpath('sample_files')
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
-    sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
+    sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,
+                                                                                              sensitive_columns)
+    context.sample = read_sample(sample_file_path, sample_validation_rules)
 
     context.browser.find_by_id('validationRulesTextField').fill(json.dumps(sample_validation_rules))
 
@@ -105,6 +111,7 @@ def click_load_sample(context, sample_file_name):
     poll_sample_status_processed(context.browser)
     context.browser.find_by_id('closeSampledetailsBtn').click()
     context.emitted_cases = get_emitted_cases(context.sample_count)
+
     test_helper.assertEquals(len(context.emitted_cases), context.sample_count)
 
 
@@ -125,7 +132,7 @@ def click_create_export_file_template_button(context):
 
 @step('an export file template with packcode "{packcode}" and template {template:array} has been created')
 def creating_export_file_template(context, packcode, template: List):
-    context.pack_code = packcode + get_random_alpha_numerics(5)
+    context.pack_code = f'{packcode}-' + get_random_alpha_numerics(5)
     context.template = template
     context.browser.find_by_id('packCodeTextField').fill(context.pack_code)
     context.browser.find_by_id('descriptionTextField').fill('export-file description')
@@ -172,3 +179,55 @@ def poll_action_rule_trigger(browser, pack_code):
     test_helper.assertEquals(
         len(browser.find_by_id('actionRuleTable').first.find_by_text(pack_code)), 1)
     test_helper.assertEquals(browser.find_by_id('hasTriggered').text, 'YES')
+
+
+@step('the Create Email Template button is clicked on')
+def click_create_email_template_button(context):
+    context.browser.find_by_id('openCreateEmailTemplateBtn').click()
+
+
+@step('an email template with packcode "{packcode}" and template {template:array} has been created')
+def creating_email_template(context, packcode, template: List):
+    context.pack_code = f'{packcode}-' + get_random_alpha_numerics(5)
+    context.template = template
+    context.notify_template_id = str(uuid.uuid4())
+
+    context.browser.find_by_id('EmailPackcodeTextField').fill(context.pack_code)
+    context.browser.find_by_id('EmailDescriptionTextField').fill('export-file description')
+    context.browser.find_by_id('EmailNotifyTemplateIdTextField').fill(context.notify_template_id)
+    context.browser.find_by_id('EmailTemplateTextField').fill(str(context.template).replace('\'', '\"'))
+    context.browser.find_by_id('createEmailTemplateBtn').click()
+
+
+@step('I should see the email template in the template list')
+def finding_created_email_template(context):
+    test_helper.assertEquals(
+        len(context.browser.find_by_id('emailTemplateTable').first.find_by_text(context.pack_code)), 1)
+
+
+@step("the email template has been added to the allow on action rule list")
+def allowing_email_template_on_action_rule(context):
+    context.browser.find_by_id('allowEmailTemplateDialogBtn').click()
+    context.browser.find_by_id('selectEmailTemplate').click()
+    context.browser.find_by_value(context.pack_code).click()
+    context.browser.find_by_id("allowEmailTemplateOnActionRule").click()
+
+
+@step("I create an email action rule")
+def clicking_email_action_rule_button(context):
+    context.browser.find_by_id('createActionRuleDialogBtn').click()
+    context.browser.find_by_id('selectActionRuleType').click()
+    context.browser.find_by_value('Email').click()
+    context.browser.find_by_id('selectActionRuleEmailPackCode').click()
+    context.browser.find_by_id(context.pack_code).click()
+    context.browser.find_by_id('selectActionRuleEmailColumn').click()
+
+    # TODO set to column
+    context.browser.find_by_id('emailAddress').click()
+    context.browser.find_by_id('createActionRuleBtn').click()
+
+
+@step('I can see the Action Rule has been triggered and emails sent to notify api')
+def checking_for_action_rule_triggered_for_email(context):
+    poll_action_rule_trigger(context.browser, context.pack_code)
+    check_notify_called_with_correct_emails_and_uacs(context, 'emailAddress')
