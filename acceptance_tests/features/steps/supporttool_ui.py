@@ -1,10 +1,13 @@
 import json
 from datetime import datetime
+from typing import List
 
 from behave import step
 from tenacity import retry, wait_fixed, stop_after_delay
 
+from acceptance_tests.features.steps.export_file import check_export_file
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
+from acceptance_tests.utilities.event_helper import get_emitted_cases, get_uac_update_events
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_and_generate_open_validation_rules
 from config import Config
@@ -95,11 +98,14 @@ def click_load_sample(context, sample_file_name):
     Config.RESOURCE_FILE_PATH.joinpath('sample_files')
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     context.browser.find_by_id('contained-button-file').first.type(str(sample_file_path))
+    context.sample_count = sum(1 for line in open(sample_file_path)) - 1
     poll_sample_appear(context.browser, sample_file_name)
     context.browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").click()
     context.browser.find_by_id("jobProcessBtn").click()
     poll_sample_status_processed(context.browser)
     context.browser.find_by_id('closeSampledetailsBtn').click()
+    context.emitted_cases = get_emitted_cases(context.sample_count)
+    test_helper.assertEquals(len(context.emitted_cases), context.sample_count)
 
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(30))
@@ -117,14 +123,15 @@ def click_create_export_file_template_button(context):
     context.browser.find_by_id('createExportFileTemplateBtn').click()
 
 
-@step('an export file template with packcode "{packcode}" and template "{template}" has been created')
-def creating_export_file_template(context, packcode, template):
+@step('an export file template with packcode "{packcode}" and template {template:array} has been created')
+def creating_export_file_template(context, packcode, template: List):
     context.pack_code = packcode + get_random_alpha_numerics(5)
+    context.template = template
     context.browser.find_by_id('packCodeTextField').fill(context.pack_code)
     context.browser.find_by_id('descriptionTextField').fill('export-file description')
     context.browser.find_by_id('exportFileDestinationSelectField').click()
     context.browser.find_by_id('SUPPLIER_A').click()
-    context.browser.find_by_id('templateTextField').fill(template)
+    context.browser.find_by_id('templateTextField').fill(str(context.template).replace('\'', '\"'))
     context.browser.find_by_id('createExportFileTemplateInnerBtn').click()
 
 
@@ -155,6 +162,8 @@ def clicking_action_rule_button(context):
 @step('I can see the Action Rule has been triggered and export files been created')
 def checking_for_action_rule_triggered(context):
     poll_action_rule_trigger(context.browser, context.pack_code)
+    context.emitted_uacs = get_uac_update_events(context.sample_count, None, None)
+    check_export_file(context)
 
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(30))

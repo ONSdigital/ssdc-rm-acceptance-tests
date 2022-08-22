@@ -14,13 +14,13 @@ Feature: Test basic Support Tool Functionality
   Scenario: Creating an export file template
     Given the support tool landing page is displayed
     And the Create Export File Template button is clicked on
-    When an export file template with packcode "export-file-packcode" and template "["__uac__"]" has been created
+    When an export file template with packcode "export-file-packcode" and template ["__uac__"] has been created
     Then I should see the export file template in the template list
 
   Scenario: Creating an Action Rule
     Given the support tool landing page is displayed
     And the Create Export File Template button is clicked on
-    And an export file template with packcode "export-file-packcode" and template "["__uac__"]" has been created
+    And an export file template with packcode "export-file-packcode" and template ["__uac__"] has been created
     And I should see the export file template in the template list
     And The Create Survey Button is clicked on
     And a Survey called "ActionRuleTest" plus unique suffix is created for sample file "social_sample_3_lines_fields.csv"
