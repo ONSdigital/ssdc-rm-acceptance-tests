@@ -1,10 +1,8 @@
-import time
 import json
 from datetime import datetime
 
 from behave import step
-from selenium.webdriver.common.keys import Keys
-from tenacity import retry, wait_fixed, stop_after_delay, retry_if_exception_type
+from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -22,7 +20,6 @@ def support_tool_landing_page_navigated_to(context):
 @step("The Create Survey Button is clicked on")
 def click_on_create_survey_button(context):
     context.browser.find_by_id('createSurveyBtn').click()
-
 
 @step(
     'a Survey called "{survey_prefix}" plus unique suffix is created for sample file "{sample_file_name}"')
@@ -99,3 +96,25 @@ def poll_sample_status_processed(browser):
 @retry(wait=wait_fixed(2), stop=stop_after_delay(30))
 def poll_sample_appear(browser, sample_file_name):
     test_helper.assertEquals(len(browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name)), 1)
+
+
+@step('the Create Export File Template button is clicked on')
+def click_create_export_file_template_button(context):
+    context.browser.find_by_id('createExportFileTemplateBtn').click()
+
+
+@step('an export file template with packcode "{packcode}" and template "{template}" has been created')
+def creating_export_file_template(context, packcode, template):
+    context.pack_code = packcode + get_random_alpha_numerics(5)
+    context.browser.find_by_id('packCodeTextField').fill(context.pack_code)
+    context.browser.find_by_id('descriptionTextField').fill('export-file description')
+    context.browser.find_by_id('exportFileDestinationSelectField').click()
+    context.browser.find_by_id('SUPPLIER_A').click()
+    context.browser.find_by_id('templateTextField').fill(template)
+    context.browser.find_by_id('createExportFileTemplateInnerBtn').click()
+
+
+@step('I should see the export file template in the template list')
+def finding_created_export_file(context):
+    test_helper.assertEquals(
+        len(context.browser.find_by_id('exportFileTemplateTable').first.find_by_text(context.pack_code)), 1)
