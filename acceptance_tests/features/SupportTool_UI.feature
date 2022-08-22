@@ -47,4 +47,3 @@ Feature: Test basic Support Tool Functionality
     And I click the upload sample file button with file "sis_survey_link.csv"
     When I create an email action rule
     Then I can see the Action Rule has been triggered and emails sent to notify api
-#  Do all of the above in a single step too for other tests
