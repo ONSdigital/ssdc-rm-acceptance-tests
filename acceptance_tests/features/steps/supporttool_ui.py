@@ -21,6 +21,18 @@ def support_tool_landing_page_navigated_to(context):
 def click_on_create_survey_button(context):
     context.browser.find_by_id('createSurveyBtn').click()
 
+
+@step('a survey "{survey_prefix}" and collex have been created and sample "{sample_file}"')
+def process_to_sample_load(context, survey_prefix, sample_file):
+    support_tool_landing_page_navigated_to(context)
+    click_on_create_survey_button(context)
+    create_survey_in_UI(context, survey_prefix, sample_file)
+    click_into_collex_page(context)
+    click_create_collex_button(context)
+    click_into_collex_details(context)
+    click_load_sample(context, sample_file)
+
+
 @step(
     'a Survey called "{survey_prefix}" plus unique suffix is created for sample file "{sample_file_name}"')
 def create_survey_in_UI(context, survey_prefix, sample_file_name):
@@ -87,6 +99,8 @@ def click_load_sample(context, sample_file_name):
     context.browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").click()
     context.browser.find_by_id("jobProcessBtn").click()
     poll_sample_status_processed(context.browser)
+    context.browser.find_by_id('closeSampledetailsBtn').click()
+
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(30))
 def poll_sample_status_processed(browser):
@@ -118,3 +132,34 @@ def creating_export_file_template(context, packcode, template):
 def finding_created_export_file(context):
     test_helper.assertEquals(
         len(context.browser.find_by_id('exportFileTemplateTable').first.find_by_text(context.pack_code)), 1)
+
+
+@step("the export file template has been added to the allow on action rule list")
+def allowing_export_file_template_on_action_rule(context):
+    context.browser.find_by_id('actionRuleExportFileTemplateBtn').click()
+    context.browser.find_by_id('allowExportFileTemplateSelect').click()
+    context.browser.find_by_value(context.pack_code).click()
+    context.browser.find_by_id("addAllowExportFileTemplateBtn").click()
+
+
+@step("I create an action rule")
+def clicking_action_rule_button(context):
+    context.browser.find_by_id('createActionRuleDialogBtn').click()
+    context.browser.find_by_id('selectActionRuleType').click()
+    context.browser.find_by_value('Export File').click()
+    context.browser.find_by_id('selectActionRuleExportFilePackCode').click()
+    context.browser.find_by_id(context.pack_code).click()
+    context.browser.find_by_id('createActionRuleBtn').click()
+
+
+@step('I can see the Action Rule has been triggered and export files been created')
+def checking_for_action_rule_triggered(context):
+    poll_action_rule_trigger(context.browser, context.pack_code)
+
+
+@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
+def poll_action_rule_trigger(browser, pack_code):
+    browser.reload()
+    test_helper.assertEquals(
+        len(browser.find_by_id('actionRuleTable').first.find_by_text(pack_code)), 1)
+    test_helper.assertEquals(browser.find_by_id('hasTriggered').text, 'YES')
