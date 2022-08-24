@@ -99,7 +99,6 @@ def click_into_collex_details(context):
 
 @step('I click the upload sample file button with file "{sample_file_name}"')
 def click_load_sample(context, sample_file_name):
-    Config.RESOURCE_FILE_PATH.joinpath('sample_files')
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     context.browser.find_by_id('contained-button-file').first.type(str(sample_file_path))
     context.sample_count = sum(1 for _ in open(sample_file_path)) - 1
