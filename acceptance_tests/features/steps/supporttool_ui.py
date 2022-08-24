@@ -58,7 +58,7 @@ def create_survey_in_UI(context, survey_prefix, sample_file_name, sensitive_colu
     context.browser.find_by_id('postCreateSurveyBtn').click()
 
     test_helper.assertEquals(
-        len(context.browser.find_by_id('surveyListTable').first.find_by_text(context.survey_name)), 1)
+        len(context.browser.find_by_id('surveyListTable').first.find_by_text(context.survey_name, wait_time=20)), 1)
 
 
 @step('the survey is clicked on it should display the collex page')
@@ -104,10 +104,11 @@ def click_load_sample(context, sample_file_name):
     Config.RESOURCE_FILE_PATH.joinpath('sample_files')
     sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
     context.browser.find_by_id('contained-button-file').first.type(str(sample_file_path))
-    context.sample_count = sum(1 for line in open(sample_file_path)) - 1
-    poll_sample_appear(context.browser, sample_file_name)
+    context.sample_count = sum(1 for _ in open(sample_file_path)) - 1
+    test_helper.assertEquals(
+        len(context.browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name, wait_time=20)), 1)
     context.browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").click()
-    context.browser.find_by_id("jobProcessBtn").click()
+    context.browser.find_by_id("jobProcessBtn", wait_time=20).click()
     poll_sample_status_processed(context.browser)
     context.browser.find_by_id('closeSampledetailsBtn').click()
     context.emitted_cases = get_emitted_cases(context.sample_count)
@@ -118,11 +119,6 @@ def click_load_sample(context, sample_file_name):
 @retry(wait=wait_fixed(2), stop=stop_after_delay(30))
 def poll_sample_status_processed(browser):
     test_helper.assertEquals(browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").text, "PROCESSED")
-
-
-@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
-def poll_sample_appear(browser, sample_file_name):
-    test_helper.assertEquals(len(browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name)), 1)
 
 
 @step('the Create Export File Template button is clicked on')
@@ -173,7 +169,7 @@ def checking_for_action_rule_triggered(context):
     check_export_file(context)
 
 
-@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
+@retry(wait=wait_fixed(2), stop=stop_after_delay(120))
 def poll_action_rule_trigger(browser, pack_code):
     browser.reload()
     test_helper.assertEquals(

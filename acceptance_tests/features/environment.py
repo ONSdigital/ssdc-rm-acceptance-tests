@@ -5,6 +5,7 @@ from distutils.util import strtobool
 
 import requests
 from behave import register_type
+from selenium.webdriver import DesiredCapabilities
 from splinter import Browser
 from structlog import wrap_logger
 
@@ -52,7 +53,9 @@ def before_scenario(context, scenario):
         reset_notify_stub()
 
     if 'UI' in context.tags:
-        context.browser = Browser('chrome', headless=Config.HEADLESS)
+        dc = DesiredCapabilities.CHROME
+        dc['goog:loggingPrefs'] = {'browser': 'ALL'}
+        context.browser = Browser('chrome', headless=Config.HEADLESS, desired_capabilities=dc,service_args=["--verbose"])
 
 
 def after_all(_context):
