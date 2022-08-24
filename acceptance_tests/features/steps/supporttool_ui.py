@@ -26,17 +26,6 @@ def click_on_create_survey_button(context):
     context.browser.find_by_id('createSurveyBtn').click()
 
 
-@step('a survey "{survey_prefix}" and collex have been created and sample "{sample_file}"')
-def process_to_sample_load(context, survey_prefix, sample_file):
-    support_tool_landing_page_navigated_to(context)
-    click_on_create_survey_button(context)
-    create_survey_in_UI(context, survey_prefix, sample_file)
-    click_into_collex_page(context)
-    click_create_collex_button(context)
-    click_into_collex_details(context)
-    click_load_sample(context, sample_file)
-
-
 @step(
     'a Survey called "{survey_prefix}" plus unique suffix is created for sample file "{sample_file_name}" '
     'with sensitive columns {sensitive_columns:array}')
