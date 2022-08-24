@@ -10,7 +10,6 @@ Feature: Test basic Support Tool Functionality
     And the collex is clicked on and displays the details page
     Then I click the upload sample file button with file "social_sample_3_lines_fields.csv"
 
-
   Scenario: Creating an export file template
     Given the support tool landing page is displayed
     And the Create Export File Template button is clicked on

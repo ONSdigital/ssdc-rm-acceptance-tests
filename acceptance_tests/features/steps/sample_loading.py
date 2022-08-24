@@ -14,7 +14,6 @@ from acceptance_tests.utilities.validation_rule_helper import get_sample_header_
     get_sample_rows_and_generate_open_validation_rules, get_sample_sensitive_columns, get_validation_rules
 from config import Config
 
-SAMPLE_FILES_PATH = Config.RESOURCE_FILE_PATH.joinpath('sample_files')
 VALIDATION_RULES_PATH = Config.RESOURCE_FILE_PATH.joinpath('validation_rules')
 
 
@@ -58,7 +57,7 @@ def get_expected_emitted_sensitive_data(sample_row, sensitive_columns):
 
 @step('BOM sample file "{sample_file_name}" is loaded successfully')
 def load_bom_sample_file_step(context, sample_file_name):
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
     # Fix the BOM mess
@@ -89,7 +88,7 @@ def load_sample_file_step(context, sample_file_name):
 
 @step('sample file "{sample_file_name}" is loaded successfully for survey type "{survey_type}"')
 def load_sample_with_survey_type(context, sample_file_name, survey_type):
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
     sample_definition_url = "http://" + survey_type + ".json"
@@ -112,7 +111,7 @@ def load_sample_with_survey_type(context, sample_file_name, survey_type):
 
 @step('sample file "{sample_file_name}" is loaded successfully with complex case CI selection rules')
 def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
     context.survey_id = add_survey(sample_validation_rules)
@@ -139,7 +138,7 @@ def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
 
 @step('sample file "{sample_file_name}" is loaded successfully with complex UAC CI selection rules')
 def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
     context.survey_id = add_survey(sample_validation_rules)
@@ -172,7 +171,7 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
 @step('the sample file "{sample_file_name}"'
       ' with validation rules "{validation_rules_file_name}" is loaded successfully')
 def load_sample_file_with_validation_rules_step(context, sample_file_name, validation_rules_file_name):
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     validation_rules_path = VALIDATION_RULES_PATH.joinpath(validation_rules_file_name)
     _, sample_rows = get_sample_header_and_rows(sample_file_path)
     sample_validation_rules = get_validation_rules(validation_rules_path)
@@ -235,7 +234,7 @@ def get_business_sample_columns_and_validation_rules(sample_file_path: Path):
 
 @step('business sample file is loaded successfully')
 def load_business_sample_file_step(context):
-    sample_file_path = SAMPLE_FILES_PATH.joinpath('business_rsi_example_sample.csv')
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath('business_rsi_example_sample.csv')
     sample_rows, validation_rules = get_business_sample_columns_and_validation_rules(sample_file_path)
 
     context.survey_id = add_survey(validation_rules, "http://foo.bar.json", False, ':')
@@ -256,7 +255,7 @@ def load_business_sample_file_step(context):
 
 @step('sample file "{sample_file_name}" with sensitive columns {sensitive_columns:array} is loaded successfully')
 def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_name, sensitive_columns: List):
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,
                                                                                               sensitive_columns)
 

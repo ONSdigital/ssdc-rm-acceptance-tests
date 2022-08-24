@@ -15,8 +15,6 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_and_generate_open_validation_rules
 from config import Config
 
-SAMPLE_FILES_PATH = Config.RESOURCE_FILE_PATH.joinpath('sample_files')
-
 
 @step("the support tool landing page is displayed")
 def support_tool_landing_page_navigated_to(context):
@@ -47,7 +45,7 @@ def create_survey_in_UI(context, survey_prefix, sample_file_name, sensitive_colu
     context.browser.find_by_id('surveyNameTextField').fill(context.survey_name)
 
     Config.RESOURCE_FILE_PATH.joinpath('sample_files')
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,
                                                                                               sensitive_columns)
     context.sample = read_sample(sample_file_path, sample_validation_rules)
@@ -102,7 +100,7 @@ def click_into_collex_details(context):
 @step('I click the upload sample file button with file "{sample_file_name}"')
 def click_load_sample(context, sample_file_name):
     Config.RESOURCE_FILE_PATH.joinpath('sample_files')
-    sample_file_path = SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     context.browser.find_by_id('contained-button-file').first.type(str(sample_file_path))
     context.sample_count = sum(1 for _ in open(sample_file_path)) - 1
     test_helper.assertEquals(
