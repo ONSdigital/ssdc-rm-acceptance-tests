@@ -55,7 +55,8 @@ def before_scenario(context, scenario):
     if 'UI' in context.tags:
         dc = DesiredCapabilities.CHROME
         dc['goog:loggingPrefs'] = {'browser': 'ALL'}
-        context.browser = Browser('chrome', headless=Config.HEADLESS, desired_capabilities=dc,service_args=["--verbose"])
+        context.browser = Browser('chrome', headless=Config.HEADLESS, desired_capabilities=dc,
+                                  service_args=["--verbose"])
 
 
 def after_all(_context):
