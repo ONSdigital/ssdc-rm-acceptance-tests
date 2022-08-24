@@ -44,7 +44,6 @@ def create_survey_in_UI(context, survey_prefix, sample_file_name, sensitive_colu
     context.survey_name = survey_prefix + get_random_alpha_numerics(5)
     context.browser.find_by_id('surveyNameTextField').fill(context.survey_name)
 
-    Config.RESOURCE_FILE_PATH.joinpath('sample_files')
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,
                                                                                               sensitive_columns)
