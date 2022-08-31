@@ -18,12 +18,32 @@ def send_receipt(context):
     context.sent_messages.append(message)
 
 
+@step("a receipt message is published to the sdx pubsub receipting topic")
+def send_sdx_receipt(context):
+    message = _send_sdx_receipt(context.emitted_uacs[0]['qid'])
+    context.sent_messages.append(message)
+
+
 @step('a bad receipt message is put on the topic')
 def a_bad_receipt_message_is_put_on_the_topic(context):
     context.originating_user = add_random_suffix_to_email(context.scenario_name)
     message = _send_receipt_message(str(uuid.uuid4()), context.originating_user, "987654321")
     context.message_hashes = [hashlib.sha256(message.encode('utf-8')).hexdigest()]
     context.sent_messages.append(message)
+
+
+def _send_sdx_receipt(qid):
+    message = json.dumps({
+        "data": {
+            "questionnaire_id": qid,
+            "source": "SRM"
+        }}
+    )
+
+    publish_to_pubsub(message,
+                      Config.PUBSUB_PROJECT,
+                      'event_sdx_receipt', content_type="application/json")
+    return message
 
 
 def _send_receipt_message(correlation_id, originating_user, qid):
