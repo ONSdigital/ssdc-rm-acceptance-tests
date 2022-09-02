@@ -20,6 +20,8 @@ def send_receipt(context):
 
 @step("a receipt message is published to the sdx pubsub receipting topic")
 def send_sdx_receipt(context):
+    # For the SDX receipt we do not set the correlation id so we need to make sure it's not set for any future checks
+    context.correlation_id = None
     message = _send_sdx_receipt(context.emitted_uacs[0]['qid'])
     context.sent_messages.append(message)
 
