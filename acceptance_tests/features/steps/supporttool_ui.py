@@ -86,7 +86,7 @@ def click_create_collex_button(context):
     get_emitted_collection_exercise_update()
 
 
-@step('the collection exercise is clicked on and displays the details page')
+@step('the collection exercise is clicked on, navigating to the selected exercise details page')
 def click_into_collex_details(context):
     context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name).click()
 

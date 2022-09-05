@@ -7,7 +7,7 @@ Feature: Test basic Support Tool Functionality
     And a Survey called "CreateSurveyTest" plus unique suffix is created for sample file "social_sample_3_lines_fields.csv" with sensitive columns []
     When the survey is clicked on it should display the collection exercise page
     And the create collection exercise button is clicked, the details are submitted and the exercise is created
-    And the collection exercise is clicked on and displays the details page
+    And the collection exercise is clicked on, navigating to the selected exercise details page
     Then I click the upload sample file button with file "social_sample_3_lines_fields.csv"
 
   Scenario: Create an export file template
@@ -26,7 +26,7 @@ Feature: Test basic Support Tool Functionality
     And the survey is clicked on it should display the collection exercise page
     And the create collection exercise button is clicked, the details are submitted and the exercise is created
     And the export file template has been added to the allow on action rule list
-    And the collection exercise is clicked on and displays the details page
+    And the collection exercise is clicked on, navigating to the selected exercise details page
     And I click the upload sample file button with file "social_sample_3_lines_fields.csv"
     When I create an action rule
     Then I can see the Action Rule has been triggered and export files been created
@@ -42,7 +42,7 @@ Feature: Test basic Support Tool Functionality
     And the survey is clicked on it should display the collection exercise page
     And the create collection exercise button is clicked, the details are submitted and the exercise is created
     And the email template has been added to the allow on action rule list
-    And the collection exercise is clicked on and displays the details page
+    And the collection exercise is clicked on, navigating to the selected exercise details page
     And I click the upload sample file button with file "sis_survey_link.csv"
     When I create an email action rule with email column "emailAddress"
     Then I can see the Action Rule has been triggered and emails sent to notify api with email column "emailAddress"
