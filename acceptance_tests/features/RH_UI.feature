@@ -4,7 +4,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
   Scenario: Entering a bad UAC and error section displayed
     Given the UAC entry page is displayed
     When the user enters UAC "PK39HN572FZFVHLQ"
-    Then An error section is displayed with href "#uac_invalid" is displayed with "Enter a valid access code"
+    Then an error section is displayed with href "#uac_invalid" is displayed with "Enter a valid access code"
     And link text displays string "Enter a valid access code"
 
   @reset_notify_stub
@@ -55,4 +55,4 @@ Feature: Testing the "enter a UAC" functionality of RH UI
   Scenario: No access code entered
     Given the UAC entry page is displayed
     When the user clicks Access Survey without entering a UAC
-    Then An error section is displayed with href "#uac_empty" is displayed with "Enter an access code"
+    Then an error section is displayed with href "#uac_empty" is displayed with "Enter an access code"
