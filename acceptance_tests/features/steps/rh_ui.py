@@ -80,6 +80,6 @@ def enter_no_uac(context):
 
 @step('an error section is displayed with href "{href_name}" is displayed with "{expected_text}"')
 def error_section_displayed(context, href_name, expected_text):
-    test_helper.assertEqual(context.browser.find_by_id('error-summary-title').text, 'There is a problem with this page')
+    test_helper.assertEqual(context.browser.find_by_id('alert').text, 'There is a problem with this page')
     error_text = context.browser.links.find_by_href(href_name).text
     test_helper.assertEqual(error_text, expected_text)
