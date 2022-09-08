@@ -44,7 +44,7 @@ def _send_sdx_receipt(qid):
 
     publish_to_pubsub(message,
                       Config.PUBSUB_PROJECT,
-                      'event_sdx_receipt', content_type="application/json")
+                      'sdx_receipt', content_type="application/json")
     return message
 
 
