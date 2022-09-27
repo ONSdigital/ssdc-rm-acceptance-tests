@@ -60,7 +60,6 @@ def before_scenario(context, scenario):
 
 
 def after_all(_context):
-    purge_outbound_topics()
     move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
 
@@ -75,6 +74,9 @@ def after_scenario(context, scenario):
 
     if 'UI' in context.tags:
         context.browser.quit()
+
+    if purge_outbound_topics():
+        test_helper.fail('There are left over messages on some topics that were not expected.')
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
