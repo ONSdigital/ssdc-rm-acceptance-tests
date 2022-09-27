@@ -205,11 +205,11 @@ def click_email_action_rule_button(context, email_column):
     context.browser.find_by_id('createActionRuleDialogBtn').click()
     context.browser.find_by_id('selectActionRuleType').click()
     context.browser.find_by_value('Email').click()
-    context.browser.find_by_id('selectActionRuleEmailPackCode', wait_time=20).click()
+    context.browser.find_by_id('selectActionRuleEmailPackCode').click()
     context.browser.find_by_id(context.pack_code, wait_time=20).click()
-    context.browser.find_by_id('selectActionRuleEmailColumn', wait_time=20).click()
+    context.browser.find_by_id('selectActionRuleEmailColumn').click()
     context.browser.find_by_id(email_column, wait_time=20).click()
-    context.browser.find_by_id('createActionRuleBtn', wait_time=20).click()
+    context.browser.find_by_id('createActionRuleBtn').click()
 
 
 @step('I can see the Action Rule has been triggered and emails sent to notify api with email column "{email_column}"')
