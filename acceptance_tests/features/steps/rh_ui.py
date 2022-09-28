@@ -33,14 +33,14 @@ def enter_a_valid_uac(context):
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def check_redirected_to_eq(url):
+def check_redirected_to_eq(browser):
     expected_url_start = 'session?token='
-    test_helper.assertIn(expected_url_start, url)
+    test_helper.assertIn(expected_url_start,browser.url)
 
 
 @step("they are redirected to EQ with the correct token")
 def is_redirected_to_EQ(context):
-    check_redirected_to_eq(context.browser.url)
+    check_redirected_to_eq(context.browser)
 
     query_strings = parse_qs(urlparse(context.browser.url).query)
 
