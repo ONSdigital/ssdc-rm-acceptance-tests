@@ -1,4 +1,3 @@
-from time import sleep
 from urllib.parse import urlparse, parse_qs
 
 from behave import step
