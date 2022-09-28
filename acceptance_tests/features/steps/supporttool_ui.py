@@ -206,9 +206,9 @@ def click_email_action_rule_button(context, email_column):
     context.browser.find_by_id('selectActionRuleType').click()
     context.browser.find_by_value('Email').click()
     context.browser.find_by_id('selectActionRuleEmailPackCode').click()
-    context.browser.find_by_id(context.pack_code).click()
+    context.browser.find_by_id(context.pack_code, wait_time=20).click()
     context.browser.find_by_id('selectActionRuleEmailColumn').click()
-    context.browser.find_by_id(email_column).click()
+    context.browser.find_by_id(email_column, wait_time=20).click()
     context.browser.find_by_id('createActionRuleBtn').click()
 
 
