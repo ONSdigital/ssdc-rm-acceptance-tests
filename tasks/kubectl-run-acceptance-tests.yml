@@ -26,7 +26,7 @@ run:
       cat >~/gcloud-service-key.json <<EOL
       $SERVICE_ACCOUNT_JSON
       EOL
-
+      export USE_GKE_GCLOUD_AUTH_PLUGIN=True
       # Use gcloud service account to configure kubectl
       gcloud auth activate-service-account --key-file ~/gcloud-service-key.json
       gcloud container clusters get-credentials ${KUBERNETES_CLUSTER} --zone europe-west2 --project ${GCP_PROJECT_NAME}
