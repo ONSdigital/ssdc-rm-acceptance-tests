@@ -1,13 +1,14 @@
 from urllib.parse import urlparse, parse_qs
 
 from behave import step
-from tenacity import wait_fixed, stop_after_delay, retry
 
 from acceptance_tests.features.steps.events_emitted import \
-    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value
+    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value_step
 from acceptance_tests.features.steps.rh_endpoint import check_launch_redirect_and_token
 from acceptance_tests.utilities import rh_endpoint_client
+from acceptance_tests.utilities.event_helper import check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value
 from acceptance_tests.utilities.jwe_helper import decrypt_claims_token_and_check_contents
+from acceptance_tests.utilities.rh_helper import check_launch_redirect_and_get_eq_claims
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -90,16 +91,13 @@ def error_section_displayed(context, href_name, expected_text):
     test_helper.assertEqual(error_text, expected_text)
 
 
-@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def retry_launch_eq(rh_launch_uac):
-    rh_launch_endpoint_response = rh_endpoint_client.post_to_launch_endpoint(rh_launch_uac)
-    rh_launch_endpoint_response.raise_for_status()
-
-    return rh_launch_endpoint_response
-
-
 @step("check UAC is in firestore via eqLaunched endpoint")
 def check_uac_in_firestore(context):
-    context.rh_launch_endpoint_response = retry_launch_eq(context.rh_launch_uac)
-    check_launch_redirect_and_token(context)
-    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context, True, "eqLaunched", True)
+    context.rh_launch_endpoint_response = rh_endpoint_client.post_to_launch_endpoint(context.rh_launch_uac)
+    eq_claims = check_launch_redirect_and_get_eq_claims(context.rh_launch_endpoint_response,
+                                                        context.rh_launch_qid,
+                                                        context.emitted_cases[0]['caseId'],
+                                                        context.collex_id)
+    context.correlation_id = eq_claims['tx_id']
+    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context.emitted_cases, context.correlation_id,
+                                                                         True, "eqLaunched", True)
