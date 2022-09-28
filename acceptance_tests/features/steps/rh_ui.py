@@ -1,6 +1,8 @@
+from time import sleep
 from urllib.parse import urlparse, parse_qs
 
 from behave import step
+from tenacity import retry, wait_fixed, stop_after_delay
 
 from acceptance_tests.utilities.jwe_helper import decrypt_claims_token_and_check_contents
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -31,10 +33,16 @@ def enter_a_valid_uac(context):
     context.browser.find_by_id('uac').fill(context.rh_launch_uac + RETURN)
 
 
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+def check_redirected_to_eq(url):
+    expected_url_start = 'session?token='
+    test_helper.assertIn(expected_url_start, url)
+
+
 @step("they are redirected to EQ with the correct token")
 def is_redirected_to_EQ(context):
-    expected_url_start = 'session?token='
-    test_helper.assertIn(expected_url_start, context.browser.url)
+    check_redirected_to_eq(context.browser.url)
+
     query_strings = parse_qs(urlparse(context.browser.url).query)
 
     test_helper.assertIn('token', query_strings,
