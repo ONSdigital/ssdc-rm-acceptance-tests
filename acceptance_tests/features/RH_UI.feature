@@ -16,6 +16,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And UAC_UPDATE messages are emitted with active set to true
     And the UAC_UPDATE message matches the SMS fulfilment UAC
     And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
+    And check UAC is in firestore via eqLaunched endpoint
     When the UAC entry page is displayed
     And the user enters a valid UAC
     Then they are redirected to EQ with the correct token
