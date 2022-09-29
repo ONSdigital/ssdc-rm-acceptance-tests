@@ -5,4 +5,4 @@ Feature: Telephone capture
     When there is a request for telephone capture of a case
     Then a UAC and QID with questionnaire type "01" type are generated and returned
     And the events logged against the case are ["NEW_CASE","TELEPHONE_CAPTURE"]
-    And A UAC_UPDATE event is sent for the record in the sample file
+    And UAC_UPDATE messages are emitted with active set to true

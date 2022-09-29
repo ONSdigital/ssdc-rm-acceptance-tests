@@ -181,10 +181,3 @@ def case_updated_emitted_with_correct_sensitve_data(context):
                             f'The emitted case, {emitted_case} does not match the case {context.case_id}')
     test_helper.assertEqual(emitted_case["sampleSensitive"]['PHONE_NUMBER'], "REDACTED",
                             "Expected emitted_case['sampleSensitive']['PHONE_NUMBER'] to equal 'REDACTED'")
-
-
-@step("A UAC_UPDATE event is sent for the record in the sample file")
-def step_impl(context):
-    emitted_uac = get_emitted_uac_update(context.correlation_id, context.originating_user)
-    test_helper.assertEqual(emitted_uac['caseId'], context.emitted_cases[0]['caseId'],
-                            f'The UAC_UPDATE message case ID must match the first case ID, emitted_uac {emitted_uac}')

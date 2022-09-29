@@ -29,13 +29,13 @@ def publish_to_pubsub(message, project, topic, **kwargs):
 
 
 def purge_outbound_topics():
-    leftover_messages = False
+    subscriptions_with_leftover_messages = []
 
     for subscription_to_purge in subscriptions:
         if _purge_subscription(subscription_to_purge):
-            leftover_messages = True
+            subscriptions_with_leftover_messages.append(subscription_to_purge)
 
-    return leftover_messages
+    return subscriptions_with_leftover_messages
 
 
 def _purge_subscription(subscription):
@@ -59,24 +59,23 @@ def _purge_subscription(subscription):
 
 def _ack_all_on_subscription(subscriber, subscription_path):
     max_messages_per_attempt = 100
-    leftover_messages = False
 
     try:
         response = subscriber.pull(subscription=subscription_path, max_messages=max_messages_per_attempt, timeout=2)
     except DeadlineExceeded:
         return
 
-    ack_ids = [message.ack_id for message in response.received_messages]
-    if ack_ids:
-        leftover_messages = True
+    messages = response.received_messages
+    if messages:
+        ack_ids = [message.ack_id for message in messages]
+        logger.error(f'The following leftover messages exist on {subscription_path}: {messages}')
         subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
-        print(subscription_path)
 
     # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
     if len(response.received_messages) == max_messages_per_attempt:
         _ack_all_on_subscription(subscriber, subscription_path)
 
-    return leftover_messages
+    return messages
 
 
 def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout):
