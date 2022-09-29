@@ -1,6 +1,5 @@
 Feature: Handle EQ launch events
 
-
   Scenario: EQ launched events are logged and the case flag is updated
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And an export file template has been created with template ["__uac__"]

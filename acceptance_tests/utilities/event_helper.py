@@ -111,6 +111,8 @@ def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(emitted
     _check_uacs_updated_match_cases(emitted_uacs, emitted_cases)
     _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test, expected_value)
 
+    return emitted_uacs
+
 
 def _check_uacs_updated_match_cases(uac_update_events, cases):
     test_helper.assertSetEqual(set(uac['caseId'] for uac in uac_update_events),
