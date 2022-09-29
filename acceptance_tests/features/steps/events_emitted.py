@@ -2,7 +2,8 @@ from behave import step
 
 from acceptance_tests.utilities.event_helper import check_invalid_case_reason_matches_on_event, \
     get_emitted_case_events_by_type, get_emitted_case_update, get_emitted_cases, get_emitted_uac_update, \
-    get_uac_update_events
+    get_uac_update_events, _check_uacs_updated_match_cases, _check_new_uacs_are_as_expected, \
+    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value
 from acceptance_tests.utilities.test_case_helper import test_helper
 
 
@@ -53,12 +54,11 @@ def check_uac_update_msgs_emitted_with_qid_active(context, active):
 @step(
     'UAC_UPDATE message is emitted with active set to {active:boolean} and "{field_to_test}" is'
     ' {expected_value:boolean}')
-def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context, active,
-                                                                         field_to_test, expected_value):
-    context.emitted_uacs = get_uac_update_events(len(context.emitted_cases), context.correlation_id,
-                                                 None)
-    _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
-    _check_new_uacs_are_as_expected(context.emitted_uacs, active, field_to_test, expected_value)
+def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value_step(context, active, field_to_test,
+                                                                              expected_value):
+    context.emitted_uacs = check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(
+        context.emitted_cases, context.correlation_id,
+        active, field_to_test, expected_value)
 
 
 @step("{expected_count:d} UAC_UPDATE messages are emitted with active set to {active:boolean}")
@@ -79,26 +79,6 @@ def check_case_updated_emitted_for_new_case(context):
     emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user)
     test_helper.assertEqual(emitted_case['caseId'], context.case_id,
                             f'The emitted case, {emitted_case} does not match the case {context.case_id}')
-
-
-def _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test=None, expected_value=None):
-    for uac in emitted_uacs:
-        test_helper.assertEqual(uac['active'], active, f"UAC {uac} active status doesn't equal expected {active}")
-
-        if field_to_test:
-            test_helper.assertEqual(uac[field_to_test], expected_value,
-                                    f"UAC {uac} field {field_to_test} doesn't equal expected {expected_value}")
-
-
-def _check_uacs_updated_match_cases(uac_update_events, cases):
-    test_helper.assertSetEqual(set(uac['caseId'] for uac in uac_update_events),
-                               set(case['caseId'] for case in cases),
-                               'The UAC updated events should be linked to the given set of case IDs')
-
-    test_helper.assertEqual(len(uac_update_events), len(cases),
-                            'There should be one and only one UAC updated event for each given case ID,'
-                            f'uac_update_events: {uac_update_events} '
-                            f'cases {cases}')
 
 
 @step("a CASE_UPDATE message is emitted for each bulk updated case with expected refusal type")

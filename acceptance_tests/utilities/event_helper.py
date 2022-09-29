@@ -103,3 +103,32 @@ def check_invalid_case_reason_matches_on_event(event_id, expected_reason):
 
         test_helper.assertEqual(result[0]['invalidCase']['reason'], expected_reason,
                                 "The invalid case reason doesn't matched expected")
+
+
+def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(emitted_cases, correlation_id,
+                                                                         active, field_to_test, expected_value):
+    emitted_uacs = get_uac_update_events(len(emitted_cases), correlation_id, None)
+    _check_uacs_updated_match_cases(emitted_uacs, emitted_cases)
+    _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test, expected_value)
+
+    return emitted_uacs
+
+
+def _check_uacs_updated_match_cases(uac_update_events, cases):
+    test_helper.assertSetEqual(set(uac['caseId'] for uac in uac_update_events),
+                               set(case['caseId'] for case in cases),
+                               'The UAC updated events should be linked to the given set of case IDs')
+
+    test_helper.assertEqual(len(uac_update_events), len(cases),
+                            'There should be one and only one UAC updated event for each given case ID,'
+                            f'uac_update_events: {uac_update_events} '
+                            f'cases {cases}')
+
+
+def _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test=None, expected_value=None):
+    for uac in emitted_uacs:
+        test_helper.assertEqual(uac['active'], active, f"UAC {uac} active status doesn't equal expected {active}")
+
+        if field_to_test:
+            test_helper.assertEqual(uac[field_to_test], expected_value,
+                                    f"UAC {uac} field {field_to_test} doesn't equal expected {expected_value}")
