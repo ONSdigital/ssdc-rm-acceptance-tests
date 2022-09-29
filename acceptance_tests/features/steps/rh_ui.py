@@ -2,9 +2,6 @@ from urllib.parse import urlparse, parse_qs
 
 from behave import step
 
-from acceptance_tests.features.steps.events_emitted import \
-    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value_step
-from acceptance_tests.features.steps.rh_endpoint import check_launch_redirect_and_token
 from acceptance_tests.utilities import rh_endpoint_client
 from acceptance_tests.utilities.event_helper import check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value
 from acceptance_tests.utilities.jwe_helper import decrypt_claims_token_and_check_contents

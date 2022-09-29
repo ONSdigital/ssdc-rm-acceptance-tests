@@ -15,4 +15,3 @@ def check_launch_redirect_and_token(context):
                                                         context.emitted_cases[0]['caseId'],
                                                         context.collex_id)
     context.correlation_id = eq_claims['tx_id']
-
