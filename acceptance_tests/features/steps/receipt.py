@@ -37,7 +37,7 @@ def a_bad_receipt_message_is_put_on_the_topic(context):
 def _send_sdx_receipt(qid):
     message = json.dumps({
         "data": {
-            "questionnaire_id": qid,
+            "qid": qid,
             "source": "SRM"
         }}
     )

@@ -8,7 +8,7 @@ Feature: Check exception manager is called for every topic and handles them as e
   @regression
   Scenario: Deactivate unknown UAC turns up in exception manager
     When a bad deactivate uac message is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Questionnaire Id '123456789' not found!"
+    Then a bad message appears in exception manager with exception message containing "qid '123456789' not found!"
     And each bad msg can be successfully quarantined
 
   @regression
@@ -20,7 +20,7 @@ Feature: Check exception manager is called for every topic and handles them as e
   @regression
   Scenario: Bad receipt message turns up in exception manager
     When a bad receipt message is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Questionnaire Id '987654321' not found!"
+    Then a bad message appears in exception manager with exception message containing "qid '987654321' not found!"
     And each bad msg can be successfully quarantined
 
   @regression
@@ -32,7 +32,7 @@ Feature: Check exception manager is called for every topic and handles them as e
   @regression
   Scenario: Bad respondent authenticated message turns up in exception manager
     When a bad respondent authenticated event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Questionnaire Id '666' not found!"
+    Then a bad message appears in exception manager with exception message containing "qid '666' not found!"
     And each bad msg can be successfully quarantined
 
   @regression
@@ -50,7 +50,7 @@ Feature: Check exception manager is called for every topic and handles them as e
   @regression
   Scenario: Bad EQ launched message turns up in exception manager
     When a bad EQ launched event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "Questionnaire Id '555555' not found!"
+    Then a bad message appears in exception manager with exception message containing "qid '555555' not found!"
     And each bad msg can be successfully quarantined
 
   @regression
