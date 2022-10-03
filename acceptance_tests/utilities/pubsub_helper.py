@@ -12,6 +12,11 @@ from config import Config
 
 logger = wrap_logger(logging.getLogger(__name__))
 
+subscriptions = [Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
+                 Config.PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION,
+                 Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
+                 Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION]
+
 
 def publish_to_pubsub(message, project, topic, **kwargs):
     publisher = pubsub_v1.PublisherClient()
@@ -24,10 +29,13 @@ def publish_to_pubsub(message, project, topic, **kwargs):
 
 
 def purge_outbound_topics():
-    _purge_subscription(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION)
-    _purge_subscription(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION)
+    subscriptions_with_leftover_messages = []
+
+    for subscription_to_purge in subscriptions:
+        if _purge_subscription(subscription_to_purge):
+            subscriptions_with_leftover_messages.append(subscription_to_purge)
+
+    return subscriptions_with_leftover_messages
 
 
 def _purge_subscription(subscription):
@@ -46,7 +54,7 @@ def _purge_subscription(subscription):
     #     # Seek is not implemented by the pubsub-emulator
 
     # Call ack all with 5 seconds in-between to catch any stubborn stragglers
-    _ack_all_on_subscription(subscriber, subscription_path)
+    return _ack_all_on_subscription(subscriber, subscription_path)
 
 
 def _ack_all_on_subscription(subscriber, subscription_path):
@@ -57,13 +65,17 @@ def _ack_all_on_subscription(subscriber, subscription_path):
     except DeadlineExceeded:
         return
 
-    ack_ids = [message.ack_id for message in response.received_messages]
-    if ack_ids:
+    messages = response.received_messages
+    if messages:
+        ack_ids = [message.ack_id for message in messages]
+        logger.error(f'The following leftover messages exist on {subscription_path}: {messages}')
         subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
 
     # It's possible (though unlikely) that they could be > max_messages on the topic so keep deleting till empty
     if len(response.received_messages) == max_messages_per_attempt:
         _ack_all_on_subscription(subscriber, subscription_path)
+
+    return messages
 
 
 def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout):

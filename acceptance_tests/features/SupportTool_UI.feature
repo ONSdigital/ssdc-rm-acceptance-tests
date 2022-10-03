@@ -46,3 +46,4 @@ Feature: Test basic Support Tool Functionality
     And I click the upload sample file button with file "sis_survey_link.csv"
     When I create an email action rule with email column "emailAddress"
     Then I can see the Action Rule has been triggered and emails sent to notify api with email column "emailAddress"
+    And UAC_UPDATE messages are emitted with active set to true
