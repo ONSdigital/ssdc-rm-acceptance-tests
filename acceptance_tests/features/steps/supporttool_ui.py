@@ -67,7 +67,7 @@ def click_create_collex_button(context):
     collection_instrument_selection_rules = [
         {
             "priority": 100,
-            "spelExpression": "caze.sample['POSTCODE'] == 'NW16 FNK'",
+            "spelExpression": "caze.sample['schoolId'] == '123'",
             "collectionInstrumentUrl": context.expected_collection_instrument_url
         },
         {
