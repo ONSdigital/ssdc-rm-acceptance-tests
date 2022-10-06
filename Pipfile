@@ -16,8 +16,7 @@ tenacity = "*"
 google-cloud-storage = "*"
 splinter = {extras = ["selenium3"], version = "*"}
 jwcrypto = "*"
-# Pin cryptography back to older version, fixes jwcrypto upgrade issues.
-cryptography = "~=37.0.4"
+cryptography = "~=37.0"  # TODO Version 38 breaks PGPY, remove this dependency once PGPY is fixed
 
 [dev-packages]
 "flake8" = "*"
