@@ -57,4 +57,4 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
         if delete_after_upload:
             os.unlink(file_path)
     else:
-        test_helper.fail("File did not pass validation before timeout")
+        test_helper.fail(f"File did not pass validation before timeout, job response: {response.json()}")

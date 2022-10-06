@@ -3,7 +3,8 @@
     "columnName": "emailAddress",
     "rules": [
       {
-        "className": "uk.gov.ons.ssdc.common.validation.EmailRule"
+        "className": "uk.gov.ons.ssdc.common.validation.EmailRule",
+        "mandatory": true
       }
     ],
     "sensitive": true
