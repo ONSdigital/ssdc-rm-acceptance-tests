@@ -214,8 +214,7 @@
     "columnName": "EMAIL",
     "rules": [
       {
-        "className": "uk.gov.ons.ssdc.common.validation.EmailRule",
-        "optional":  true
+        "className": "uk.gov.ons.ssdc.common.validation.EmailRule"
       }
     ]
   }
