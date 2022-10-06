@@ -16,6 +16,7 @@ tenacity = "*"
 google-cloud-storage = "*"
 splinter = {extras = ["selenium3"], version = "*"}
 jwcrypto = "*"
+cryptography = "~=37.0" # Needed tempoorarily to fix pgpy dependency issue
 
 [dev-packages]
 "flake8" = "*"
