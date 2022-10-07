@@ -294,6 +294,7 @@
             "version": "==2.4.0"
         },
         "googleapis-common-protos": {
+            "extras": [],
             "hashes": [
                 "sha256:8eb2cbc91b69feaf23e32452a7ae60e791e09967d81d4fcc7fc388182d1bd394",
                 "sha256:c25873c47279387cfdcbdafa36149887901d36202cb645a0e4f29686bf6e4417"
@@ -395,6 +396,7 @@
             "hashes": [
                 "sha256:9ff82852bcb65d139813e2a5197627a94966245c897796760a3a2a8eb66f020b"
             ],
+            "markers": "python_version >= '3.0'",
             "version": "==1.19.0"
         },
         "parse-type": {

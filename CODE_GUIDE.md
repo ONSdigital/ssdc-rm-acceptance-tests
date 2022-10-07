@@ -49,7 +49,6 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | emitted_uacs                       | Stores the UAC DTO objects from the emitted `UAC_UPDATE` events                | List     |
 | pack_code                          | Stores the pack code used for fulfilments or action rules                      | str      |
 | template                           | Stores the column template used for fulfilments or action rules                | Template |
-| telephone_capture_request          | Stores the UAC and QID returned by a telephone capture API call                | Dict     |
 | notify_template_id                 | Stores the ID of the sms template used for the notify service                  | UUID     |
 | fulfilment_response_json           | Stores the response JSON from a `POST` to the Notify API                       | Dict     |
 | phone_number                       | Stores the phone number needed to check the notify api                         | str      |
