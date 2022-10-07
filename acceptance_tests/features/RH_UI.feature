@@ -1,11 +1,15 @@
 @UI
 Feature: Testing the "enter a UAC" functionality of RH UI
-
-  Scenario: Entering a bad UAC and error section displayed
-    Given the UAC entry page is displayed
+  Scenario Outline: Entering a bad UAC and error section displayed X
+    Given the UAC entry page is displayed for <language code>
     When the user enters UAC "PK39HN572FZFVHLQ"
-    Then an error section is displayed with href "#uac_invalid" is displayed with "Enter a valid access code"
-    And link text displays string "Enter a valid access code"
+    Then an error section is headed <error section header> and href "#uac_invalid" is <expected error text>
+    And link text displays string <expected link test>
+
+  Examples:
+    | language code   | expected error text          | error section header                 | expected link test          |
+    |  "en"           | "Enter a valid access code"  | "There is a problem with this page"  | "Enter a valid access code" |
+    |  "cy"           | "Rhowch god mynediad dilys"  | "Mae problem gyda'r dudalen hon"     | "Rhowch god mynediad dilys" |
 
   @reset_notify_stub
   Scenario: Works with a good UAC

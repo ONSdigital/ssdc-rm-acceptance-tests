@@ -17,6 +17,12 @@ def display_uac_entry_page(context):
     context.browser.visit(f'{Config.RH_UI_URL}en/start')
 
 
+@step('the UAC entry page is displayed for "{language_code}"')
+def display_uac_entry_page_for_language(context, language_code):
+    page = f'{Config.RH_UI_URL}{language_code}/start'
+    context.browser.visit(f'{Config.RH_UI_URL}{language_code}/start')
+
+
 @step('link text displays string "{expected_displayed_string}"')
 def uac_not_valid_displayed(context, expected_displayed_string):
     error_text = context.browser.links.find_by_href('#uac_invalid').text
@@ -98,3 +104,22 @@ def check_uac_in_firestore(context):
     context.correlation_id = eq_claims['tx_id']
     check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context.emitted_cases, context.correlation_id,
                                                                          True, "eqLaunched", True)
+
+
+@step('an error section is headed "{error_section_header}" and href "{href_name}" is "{expected_text}"')
+def error_section_displayed_with_header_text(context, error_section_header, href_name, expected_text):
+    test_helper.assertEqual(context.browser.find_by_id('alert').text, error_section_header)
+    error_text = context.browser.links.find_by_href(href_name).text
+    test_helper.assertEqual(error_text, expected_text)
+
+
+
+
+def step_impl(context, arg0, arg1):
+    """
+    :type context: behave.runner.Context
+    :type arg0: str
+    :type arg1: str
+    """
+    raise NotImplementedError(
+        u'STEP: Then an error section is headed <error section header> and href "#uac_invalid" is <expected error text>')
