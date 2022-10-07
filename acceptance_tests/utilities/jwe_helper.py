@@ -22,11 +22,11 @@ def decrypt_signed_jwe(signed_jwe: str) -> Mapping:
 def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, collex_id: str, token: str) \
         -> Mapping:
     eq_claims = decrypt_signed_jwe(token)
-    test_helper.assertEqual(eq_claims['survey_metadata']['data']['questionnaire_id'], rh_launch_qid,
+    test_helper.assertEqual(eq_claims['survey_metadata']['data']['qid'], rh_launch_qid,
                             f'Expected to find the correct QID in the claims payload, actual payload: {eq_claims}')
 
-    test_helper.assertEqual(eq_claims['survey_metadata']["receipting_keys"], ['questionnaire_id', 'source'],
-                            f'Expected to find the questionnaire_id as receipting key in claims payload, '
+    test_helper.assertEqual(eq_claims['survey_metadata']["receipting_keys"], ['qid', 'source'],
+                            f'Expected to find the qid as receipting key in claims payload, '
                             f'actual payload: {eq_claims}')
     test_helper.assertEqual(eq_claims['survey_metadata']['data']['source'], "SRM",
                             f'Expected to find the correct source in the claims payload, actual payload: {eq_claims}')
