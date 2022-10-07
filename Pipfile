@@ -10,6 +10,7 @@ requests = "*"
 psycopg2-binary = "*"
 paramiko = "*"
 pgpy = "*"
+cryptography = "~=37.0"  # TODO Version 38 breaks PGPY, remove this dependency once PGPY is fixed
 google-cloud-pubsub = "*"
 requests-toolbelt = "*"
 tenacity = "*"
