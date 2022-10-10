@@ -9,6 +9,12 @@ def create_export_file_action_rule_with_classifiers(context, classifiers):
     create_export_file_action_rule(context.collex_id, classifiers, context.pack_code)
 
 
+@step(
+    'an export file action rule has been created with UAC metadata "{uac_metadata:json}" and classifiers "{classifiers}"')
+def create_export_file_action_rule_with_classifiers_and_uac_metadata(context, classifiers, uac_metadata):
+    create_export_file_action_rule(context.collex_id, classifiers, context.pack_code, uac_metadata=uac_metadata)
+
+
 @step('an export file action rule has been created')
 def create_export_file_action_rule_no_classifiers(context):
     create_export_file_action_rule(context.collex_id, '', context.pack_code)

@@ -5,7 +5,7 @@ import requests
 from config import Config
 
 
-def create_export_file_action_rule(collex_id, classifiers, pack_code):
+def create_export_file_action_rule(collex_id, classifiers, pack_code, uac_metadata=None):
     url = f'{Config.SUPPORT_TOOL_API}/actionRules'
     body = {
         'type': 'EXPORT_FILE',
@@ -14,6 +14,9 @@ def create_export_file_action_rule(collex_id, classifiers, pack_code):
         'classifiers': classifiers,
         'collectionExerciseId': collex_id
     }
+
+    if uac_metadata:
+        body['uacMetadata'] = uac_metadata
 
     response = requests.post(url, json=body)
     response.raise_for_status()

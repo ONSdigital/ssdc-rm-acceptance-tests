@@ -12,7 +12,7 @@
     ]
   },
   {
-    "columnName": "ADDRESS_LINE_1",
+    "columnName": "ADDRESS_LINE1",
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
@@ -24,7 +24,7 @@
     ]
   },
   {
-    "columnName": "ADDRESS_LINE_2",
+    "columnName": "ADDRESS_LINE2",
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
@@ -33,7 +33,7 @@
     ]
   },
   {
-    "columnName": "ADDRESS_LINE_3",
+    "columnName": "ADDRESS_LINE3",
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
@@ -216,6 +216,17 @@
       {
         "className": "uk.gov.ons.ssdc.common.validation.EmailRule"
       }
-    ]
+    ],
+    "sensitive": true
+  },
+  {
+    "columnName": "NEXT_WAVE",
+    "rules": [
+      {"className": "uk.gov.ons.ssdc.common.validation.NumericRule"},
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 5
+      }
+      ]
   }
 ]
