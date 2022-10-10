@@ -111,15 +111,3 @@ def error_section_displayed_with_header_text(context, error_section_header, href
     test_helper.assertEqual(context.browser.find_by_id('alert').text, error_section_header)
     error_text = context.browser.links.find_by_href(href_name).text
     test_helper.assertEqual(error_text, expected_text)
-
-
-
-
-def step_impl(context, arg0, arg1):
-    """
-    :type context: behave.runner.Context
-    :type arg0: str
-    :type arg1: str
-    """
-    raise NotImplementedError(
-        u'STEP: Then an error section is headed <error section header> and href "#uac_invalid" is <expected error text>')
