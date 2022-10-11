@@ -19,7 +19,6 @@ def display_uac_entry_page(context):
 
 @step('the UAC entry page is displayed for "{language_code}"')
 def display_uac_entry_page_for_language(context, language_code):
-    page = f'{Config.RH_UI_URL}{language_code}/start'
     context.browser.visit(f'{Config.RH_UI_URL}{language_code}/start')
 
 
