@@ -2,6 +2,7 @@ FULL_NAME,ADDRESS_LINE1,ADDRESS_LINE2,ADDRESS_LINE3,TOWN_NAME,POSTCODE,NAME,TLA,
 The Resident1,Apartment 1,57 Dummy Road South,,Belfast,BT10 0XX,Resident1,COV,111111111111,COV 111111111111,September,2022,0,Northern Ireland,BT10 0,2,Northern Ireland 1,the.resident1@example.com,1
 The Resident2,Apartment 1,57 Dummy Road South,,Belfast,BT10 0XX,Resident2,COV,111111111111,COV 111111111111,September,2022,1,Northern Ireland,BT10 0,2,Northern Ireland 1,the.resident2@example.com,1
 The Resident3,Apartment 1,57 Dummy Road South,,Belfast,BT10 0XX,Resident3,COV,111111111111,COV 111111111111,September,2022,0,Northern Ireland,BT10 0,2,Northern Ireland 1,the.resident3@example.com,
-The Resident4,246 Test Road,,,Town,BT00 0XX,Resident,COV,222222222222,COV 222222222222,September,2022,1,Northern Ireland,BT11 0,1,Northern Ireland 1,,1
-The Resident5,246 Test Road,,,Town,BT00 0XX,Resident,COV,222222222222,COV 222222222222,September,2022,0,Northern Ireland,BT11 0,1,Northern Ireland 1,,1
-The Resident6,246 Test Road,,,Town,BT00 0XX,Resident,COV,222222222222,COV 222222222222,September,2022,1,Northern Ireland,BT11 0,1,Northern Ireland 1,,
+The Resident4,246 Test Road,,,Town,BT00 0XX,Resident4,COV,222222222222,COV 222222222222,September,2022,1,Northern Ireland,BT11 0,1,Northern Ireland 1,,1
+The Resident5,246 Test Road,,,Town,BT00 0XX,Resident5,COV,222222222222,COV 222222222222,September,2022,0,Northern Ireland,BT11 0,1,Northern Ireland 1,,1
+The Resident6,246 Test Road,,,Town,BT00 0XX,Resident6,COV,222222222222,COV 222222222222,September,2022,0,Northern Ireland,BT11 0,1,Northern Ireland 1,,1
+The Resident7,246 Test Road,,,Town,BT00 0XX,Resident7,COV,222222222222,COV 222222222222,September,2022,1,Northern Ireland,BT11 0,1,Northern Ireland 1,,
