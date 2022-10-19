@@ -8,9 +8,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And link text displays string <expected link test>
 
     Examples:
-      | language code | expected error text         | error section header                | expected link test          |
-      | "en"          | "Enter a valid access code" | "There is a problem with this page" | "Enter a valid access code" |
-      | "cy"          | "PLACEHOLDER WELSH Rhowch god mynediad dilys" | "Mae problem gyda'r dudalen hon"    | "PLACEHOLDER WELSH Rhowch god mynediad dilys" |
+      | language code | expected error text                           | error section header                               | expected link test                            |
+      | "en"          | "Enter a valid access code"                   | "There is a problem with this page"                | "Enter a valid access code"                   |
+      | "cy"          | "PLACEHOLDER WELSH Rhowch god mynediad dilys" | "PLACEHOLDER WELSH Mae problem gyda'r dudalen hon" | "PLACEHOLDER WELSH Rhowch god mynediad dilys" |
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
@@ -28,7 +28,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
 
     Examples:
-      | language code | expected text                   |
+      | language code | expected text                                 |
       | "en"          | "Start study - ONS Surveys"                   |
       | "cy"          | "PLACEHOLDER WELSH Start study - ONS Surveys" |
 
