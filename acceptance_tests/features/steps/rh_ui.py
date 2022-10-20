@@ -35,7 +35,7 @@ def uac_not_valid_displayed(context, expected_displayed_string):
     test_helper.assertEqual(error_text, expected_displayed_string)
 
 
-@step('the user enters UAC "{uac}')
+@step('the user enters UAC "{uac}"')
 def enter_uac(context, uac):
     context.browser.find_by_id('uac').fill(uac)
     context.browser.find_by_id('submit_uac_btn').click()
