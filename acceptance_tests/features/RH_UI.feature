@@ -66,4 +66,4 @@ Feature: Testing the "enter a UAC" functionality of RH UI
   Scenario: No access code entered
     Given the UAC entry page is displayed
     When the user clicks Access Survey without entering a UAC
-    Then an error section is displayed with href "#uac_empty" is displayed with "Enter an access code"
+    Then an error section is headed "There is a problem with this page" and href "#uac_empty" is "Enter an access code"

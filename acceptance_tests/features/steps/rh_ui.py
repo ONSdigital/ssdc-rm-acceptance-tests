@@ -93,13 +93,6 @@ def enter_no_uac(context):
     context.browser.find_by_id('uac').fill(RETURN)
 
 
-@step('an error section is displayed with href "{href_name}" is displayed with "{expected_text}"')
-def error_section_displayed(context, href_name, expected_text):
-    test_helper.assertEqual(context.browser.find_by_id('alert').text, 'There is a problem with this page')
-    error_text = context.browser.links.find_by_href(href_name).text
-    test_helper.assertEqual(error_text, expected_text)
-
-
 @step('check UAC is in firestore via eqLaunched endpoint for the correct "{language_code}"')
 def check_uac_in_firestore(context, language_code):
     context.rh_launch_endpoint_response = rh_endpoint_client.post_to_launch_endpoint(language_code,
