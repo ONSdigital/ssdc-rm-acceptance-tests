@@ -25,12 +25,9 @@ def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, co
     test_helper.assertEqual(eq_claims['survey_metadata']['data']['qid'], rh_launch_qid,
                             f'Expected to find the correct QID in the claims payload, actual payload: {eq_claims}')
 
-    test_helper.assertEqual(eq_claims['survey_metadata']["receipting_keys"], ['qid', 'source'],
+    test_helper.assertEqual(eq_claims['survey_metadata']["receipting_keys"], ['qid'],
                             f'Expected to find the qid as receipting key in claims payload, '
                             f'actual payload: {eq_claims}')
-    test_helper.assertEqual(eq_claims['survey_metadata']['data']['source'], "SRM",
-                            f'Expected to find the correct source in the claims payload, actual payload: {eq_claims}')
-
     test_helper.assertEqual(eq_claims['collection_exercise_sid'], collex_id,
                             'Expected to find the correct collection exercise ID in the claims payload, '
                             f'actual payload: {eq_claims}')
