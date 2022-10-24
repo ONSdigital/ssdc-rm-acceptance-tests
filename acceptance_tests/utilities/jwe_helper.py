@@ -19,7 +19,8 @@ def decrypt_signed_jwe(signed_jwe: str) -> Mapping:
     return json.loads(jws_token.payload)
 
 
-def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, collex_id: str, token: str) \
+def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, collex_id: str, token: str,
+                                            language_code: str) \
         -> Mapping:
     eq_claims = decrypt_signed_jwe(token)
     test_helper.assertEqual(eq_claims['survey_metadata']['data']['qid'], rh_launch_qid,
@@ -38,5 +39,8 @@ def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, co
                             f'Expected to find the correct case ID in the claims payload, actual payload: {eq_claims}')
 
     test_helper.assertEqual(eq_claims["channel"], "RH", f'Expected channel to be RH, actual payload: {eq_claims}')
+
+    test_helper.assertEqual(eq_claims["language_code"], language_code,
+                            f'Expected correct language code: actual payload: {eq_claims}')
 
     return eq_claims

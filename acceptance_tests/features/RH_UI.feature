@@ -1,14 +1,19 @@
 @UI
 Feature: Testing the "enter a UAC" functionality of RH UI
 
-  Scenario: Entering a bad UAC and error section displayed
-    Given the UAC entry page is displayed
+  Scenario Outline: Entering a bad UAC and error section displayed X
+    Given the UAC entry page is displayed for "<language code>"
     When the user enters UAC "PK39HN572FZFVHLQ"
-    Then an error section is displayed with href "#uac_invalid" is displayed with "Enter a valid access code"
-    And link text displays string "Enter a valid access code"
+    Then an error section is headed "<error section header>" and href "#uac_invalid" is "<expected error text>"
+    And link text displays string "<expected link test>"
+
+    Examples:
+      | language code | expected error text                           | error section header                               | expected link test                            |
+      | en            | Enter a valid access code                     | There is a problem with this page                  | Enter a valid access code                     |
+      | cy            | PLACEHOLDER WELSH Rhowch god mynediad dilys   | PLACEHOLDER WELSH Mae problem gyda'r dudalen hon   | PLACEHOLDER WELSH Rhowch god mynediad dilys   |
 
   @reset_notify_stub
-  Scenario: Works with a good UAC
+  Scenario Outline: Works with a good UAC
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
     And an sms template has been created with template ["__uac__", "__qid__"]
     And fulfilments are authorised on sms template
@@ -16,11 +21,16 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And UAC_UPDATE messages are emitted with active set to true
     And the UAC_UPDATE message matches the SMS fulfilment UAC
     And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
-    And check UAC is in firestore via eqLaunched endpoint
-    When the UAC entry page is displayed
+    And check UAC is in firestore via eqLaunched endpoint for the correct "<language code>"
+    When the UAC entry page is titled "<expected text>" and is displayed for "<language code>"
     And the user enters a valid UAC
-    Then they are redirected to EQ with the correct token
+    Then they are redirected to EQ with the correct token and language set to "<language code>"
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
+
+    Examples:
+      | language code | expected text                               |
+      | en            | Start study - ONS Surveys                   |
+      | cy            | PLACEHOLDER WELSH Start study - ONS Surveys |
 
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page
@@ -56,4 +66,4 @@ Feature: Testing the "enter a UAC" functionality of RH UI
   Scenario: No access code entered
     Given the UAC entry page is displayed
     When the user clicks Access Survey without entering a UAC
-    Then an error section is displayed with href "#uac_empty" is displayed with "Enter an access code"
+    Then an error section is headed "There is a problem with this page" and href "#uac_empty" is "Enter an access code"

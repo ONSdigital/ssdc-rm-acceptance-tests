@@ -5,7 +5,8 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from urllib.parse import parse_qs, urlparse
 
 
-def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response, rh_launch_qid, case_id, collex_id):
+def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response, rh_launch_qid, case_id, collex_id,
+                                            language_code):
     response: Response = rh_launch_endpoint_response
     test_helper.assertTrue(response.is_redirect, 'Expected RH response to redirect to EQ launch')
 
@@ -21,4 +22,5 @@ def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response, rh_laun
     return decrypt_claims_token_and_check_contents(rh_launch_qid,
                                                    case_id,
                                                    collex_id,
-                                                   query_strings['token'][0])
+                                                   query_strings['token'][0],
+                                                   language_code)
