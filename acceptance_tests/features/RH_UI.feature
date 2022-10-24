@@ -28,9 +28,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
 
     Examples:
-      | language code | expected text                               |
-      | en            | Start study - ONS Surveys                   |
-      | cy            | PLACEHOLDER WELSH Start study - ONS Surveys |
+      | language code | expected text                                                 |
+      | en            | Start study - ONS Surveys                                     |
+      | cy            | PLACEHOLDER WELSH Start study - PLACEHOLDER WELSH ONS Surveys |
 
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page
