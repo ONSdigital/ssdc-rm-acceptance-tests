@@ -138,10 +138,10 @@ def find_created_export_file(context):
 
 @step("the export file template has been added to the allow on action rule list")
 def allow_export_file_template_on_action_rule(context):
-    context.browser.find_by_id('actionRuleExportFileTemplateBtn', wait_time=20).click()
-    context.browser.find_by_id('allowExportFileTemplateSelect', wait_time=20).click()
-    context.browser.find_by_value(context.pack_code, wait_time=20).click()
-    context.browser.find_by_id("addAllowExportFileTemplateBtn", wait_time=20).click()
+    context.browser.find_by_id('actionRuleExportFileTemplateBtn').click()
+    context.browser.find_by_id('allowExportFileTemplateSelect').click()
+    context.browser.find_by_value(context.pack_code).click()
+    context.browser.find_by_id("addAllowExportFileTemplateBtn").click()
 
 
 @step("I create an action rule")
