@@ -132,15 +132,16 @@ def create_export_file_template(context, packcode, template: List):
 @step('I should see the export file template in the template list')
 def find_created_export_file(context):
     test_helper.assertEquals(
-        len(context.browser.find_by_id('exportFileTemplateTable').first.find_by_text(context.pack_code)), 1)
+        len(context.browser.find_by_id('exportFileTemplateTable', wait_time=20).first
+            .find_by_text(context.pack_code, wait_time=20)), 1)
 
 
 @step("the export file template has been added to the allow on action rule list")
 def allow_export_file_template_on_action_rule(context):
-    context.browser.find_by_id('actionRuleExportFileTemplateBtn').click()
-    context.browser.find_by_id('allowExportFileTemplateSelect').click()
-    context.browser.find_by_value(context.pack_code).click()
-    context.browser.find_by_id("addAllowExportFileTemplateBtn").click()
+    context.browser.find_by_id('actionRuleExportFileTemplateBtn', wait_time=20).click()
+    context.browser.find_by_id('allowExportFileTemplateSelect', wait_time=20).click()
+    context.browser.find_by_value(context.pack_code, wait_time=20).click()
+    context.browser.find_by_id("addAllowExportFileTemplateBtn", wait_time=20).click()
 
 
 @step("I create an action rule")
