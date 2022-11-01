@@ -195,7 +195,7 @@ def find_created_email_template(context):
 
 @step("the email template has been added to the allow on action rule list")
 def allow_email_template_on_action_rule(context):
-    context.browser.find_by_id('allowEmailTemplateDialogBtn').click()
+    context.browser.find_by_id('allowEmailTemplateDialogBtn', wait_time=20).click()
     context.browser.find_by_id('selectEmailTemplate').click()
     context.browser.find_by_id(context.pack_code).click()
     context.browser.find_by_id("allowEmailTemplateOnActionRule").click()
