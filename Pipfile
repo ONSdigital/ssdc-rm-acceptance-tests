@@ -17,6 +17,7 @@ tenacity = "*"
 google-cloud-storage = "*"
 splinter = {extras = ["selenium3"], version = "*"}
 jwcrypto = "*"
+wheel = "~=0.38" 
 
 [dev-packages]
 "flake8" = "*"
