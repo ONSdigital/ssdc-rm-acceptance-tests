@@ -2,7 +2,7 @@ install:
 	pipenv install --dev
 
 package_vulnerability:
-	PIPENV_PYUP_API_KEY="" pipenv check
+	PIPENV_PYUP_API_KEY="" pipenv check -i 51499 -i 51457
 
 flake:
 	pipenv run flake8 .

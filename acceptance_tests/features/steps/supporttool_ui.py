@@ -132,7 +132,8 @@ def create_export_file_template(context, packcode, template: List):
 @step('I should see the export file template in the template list')
 def find_created_export_file(context):
     test_helper.assertEquals(
-        len(context.browser.find_by_id('exportFileTemplateTable').first.find_by_text(context.pack_code)), 1)
+        len(context.browser.find_by_id('exportFileTemplateTable', wait_time=20).first
+            .find_by_text(context.pack_code, wait_time=20)), 1)
 
 
 @step("the export file template has been added to the allow on action rule list")
@@ -194,7 +195,7 @@ def find_created_email_template(context):
 
 @step("the email template has been added to the allow on action rule list")
 def allow_email_template_on_action_rule(context):
-    context.browser.find_by_id('allowEmailTemplateDialogBtn').click()
+    context.browser.find_by_id('allowEmailTemplateDialogBtn', wait_time=20).click()
     context.browser.find_by_id('selectEmailTemplate').click()
     context.browser.find_by_id(context.pack_code).click()
     context.browser.find_by_id("allowEmailTemplateOnActionRule").click()
