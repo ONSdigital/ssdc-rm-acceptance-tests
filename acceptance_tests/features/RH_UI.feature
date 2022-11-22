@@ -10,7 +10,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     Examples:
       | language code | expected error text                           | error section header                               | expected link test                            |
       | en            | Enter a valid access code                     | There is a problem with this page                  | Enter a valid access code                     |
-      | cy            | PLACEHOLDER WELSH Rhowch god mynediad dilys   | PLACEHOLDER WELSH Mae problem gyda'r dudalen hon   | PLACEHOLDER WELSH Rhowch god mynediad dilys   |
+      | cy            | PLACEHOLDER WELSH Enter a valid access code   | PLACEHOLDER WELSH There is a problem with this page| PLACEHOLDER WELSH Enter a valid access code   |
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
