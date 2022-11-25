@@ -85,7 +85,7 @@ def enter_inactive_uac(context):
 
 @step("they are redirected to the inactive uac page")
 def check_on_inactive_uac_page(context):
-    test_helper.assertIn('This access code has been marked inactive', context.browser.find_by_css('h1').text)
+    test_helper.assertIn('This questionnaire has now closed', context.browser.find_by_css('h1').text)
 
 
 @step("the user clicks Access Survey without entering a UAC")
