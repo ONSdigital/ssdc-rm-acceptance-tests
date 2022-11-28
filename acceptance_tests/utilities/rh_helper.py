@@ -6,7 +6,7 @@ from urllib.parse import parse_qs, urlparse
 
 
 def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response, rh_launch_qid, case_id, collex_id,
-                                            language_code):
+                                            language_code, expected_launch_data_list=None):
     response: Response = rh_launch_endpoint_response
     test_helper.assertTrue(response.is_redirect, 'Expected RH response to redirect to EQ launch')
 
@@ -23,4 +23,5 @@ def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response, rh_laun
                                                    case_id,
                                                    collex_id,
                                                    query_strings['token'][0],
-                                                   language_code)
+                                                   language_code,
+                                                   expected_launch_data_list)

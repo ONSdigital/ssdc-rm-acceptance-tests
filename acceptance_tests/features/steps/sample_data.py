@@ -9,11 +9,18 @@ from datetime import datetime
 from behave import step
 from tenacity import retry, stop_after_delay, wait_fixed
 
+from acceptance_tests.features.steps.sample_loading import VALIDATION_RULES_PATH, \
+    get_emitted_cases_and_check_against_sample
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
+from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
+from acceptance_tests.utilities.sample_helper import read_sample
+from acceptance_tests.utilities.survey_helper import add_survey
 from acceptance_tests.utilities.test_case_helper import test_helper
+from acceptance_tests.utilities.validation_rule_helper import get_sample_header_and_rows, get_validation_rules, \
+    get_sample_sensitive_columns
 from config import Config
 
 
@@ -105,3 +112,33 @@ def create_and_upload_sample_update_file(context):
 
     upload_file_via_api(context.collex_id, bulk_sample_update_filename, job_type='BULK_UPDATE_SAMPLE',
                         delete_after_upload=True)
+
+
+@step('sample file "{sample_file_name}" is loaded with rules "{validation_rules_file_name}" '
+      'and survey metadata set to "{survey_metadata_filename}"')
+def load_sample_with_rules_and_survey_metadata(context, sample_file_name, validation_rules_file_name,
+                                               survey_metadata_filename):
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    validation_rules_path = VALIDATION_RULES_PATH.joinpath(validation_rules_file_name)
+    _, sample_rows = get_sample_header_and_rows(sample_file_path)
+    sample_validation_rules = get_validation_rules(validation_rules_path)
+    sensitive_columns = get_sample_sensitive_columns(sample_validation_rules)
+
+    survey_metadata_file_path = Config.SURVEY_METADATA_PATH.joinpath(survey_metadata_filename)
+    context.survey_metadata = json.loads(survey_metadata_file_path.read_text())
+
+    context.survey_id = add_survey(sample_validation_rules, metadata=context.survey_metadata)
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+
+    context.sample = read_sample(sample_file_path, sample_validation_rules)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
