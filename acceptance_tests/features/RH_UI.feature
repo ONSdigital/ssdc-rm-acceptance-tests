@@ -76,7 +76,4 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And UAC_UPDATE messages are emitted with active set to true
     And an export file is created and we store the 1st UAC
     And check UAC is in firestore via eqLaunched endpoint for the correct "en" hack
-#    When the UAC entry page is titled "Start study - ONS Surveys" and is displayed for "en"
-#    And the user enters a valid UAC
-#    Then they are redirected to EQ with the correct token and language set to "en"
-#    And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
+
