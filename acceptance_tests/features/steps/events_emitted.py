@@ -116,6 +116,19 @@ def cases_emitted_for_bulk_invalid_with_correct_reason(context):
         check_invalid_case_reason_matches_on_event(logged_invalid_events[0]['id'], expected_reason)
 
 
+@step("a CASE_UPDATE message is emitted for each bulk PHM updated sample row")
+def case_updated_messages_for_bulk_PHM_update_sample(context):
+    emitted_updated_cases = get_emitted_cases(len(context.bulk_sample_update))
+
+    for emitted_case in emitted_updated_cases:
+        actual_batch_number = emitted_case['sample']["BATCH_NUMBER"]
+        actual_longitudinal_questions = emitted_case['sample']["LONGITUDINAL_QUESTIONS"]
+
+        test_helper.assertNotEqual(context.emitted_cases[0]['sample']['BATCH_NUMBER'], actual_batch_number)
+        test_helper.assertNotEqual(context.emitted_cases[0]['sample']['LONGITUDINAL_QUESTIONS'],
+                                   actual_longitudinal_questions)
+
+
 @step("a CASE_UPDATE message is emitted for each bulk updated sample row")
 def case_updated_messages_for_bulk_update_sample(context):
     emitted_updated_cases = get_emitted_cases(len(context.bulk_sample_update))

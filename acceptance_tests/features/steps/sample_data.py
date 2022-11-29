@@ -76,6 +76,45 @@ def _send_update_sample_msg(correlation_id, originating_user, case_id, update_js
     return message
 
 
+@step("a bulk PHM sample update file is created for every case created and uploaded")
+def create_and_upload_phm_sample_update_file(context):
+    bulk_sample_update_filename = f'/tmp/bulk_phm_sample_update_{str(uuid.uuid4())}.csv'
+    context.bulk_sample_update = []
+    for emitted_case in context.emitted_cases:
+        context.bulk_sample_update.append({
+            'PARTICIPANT_ID': emitted_case["sample"]['PARTICIPANT_ID'],
+            'BATCH_NUMBER': "100",
+            'SWAB_TEST_BARCODE': "1",
+            'BLOOD_TEST_BARCODE': "1",
+            'NO_TEST_BARCODE': "1",
+            'LONGITUDINAL_QUESTIONS': "T",
+            'COHORT_TYPE': "S",
+            'BATCH_OPEN_DATE': "10",
+            'BATCH_CLOSE_DATE': "10",
+        })
+
+    test_helper.assertGreater(len(context.bulk_sample_update), 0,
+                              'Must have at least one sample update case for this test to be valid')
+
+    with open(bulk_sample_update_filename, 'w') as bulk_file_name_write:
+        writer = csv.DictWriter(bulk_file_name_write,
+                                fieldnames=['PARTICIPANT_ID', 'BATCH_NUMBER', 'SWAB_TEST_BARCODE', "BLOOD_TEST_BARCODE",
+                                            "NO_TEST_BARCODE", "LONGITUDINAL_QUESTIONS", "COHORT_TYPE",
+                                            "BATCH_OPEN_DATE", "BATCH_CLOSE_DATE"])
+        writer.writeheader()
+        for case_row in context.bulk_sample_update:
+            writer.writerow({'PARTICIPANT_ID': case_row['PARTICIPANT_ID'], 'BATCH_NUMBER': case_row['BATCH_NUMBER'],
+                             'SWAB_TEST_BARCODE': case_row['SWAB_TEST_BARCODE'],
+                             'BLOOD_TEST_BARCODE': case_row['BLOOD_TEST_BARCODE'],
+                             'NO_TEST_BARCODE': case_row['NO_TEST_BARCODE'],
+                             'LONGITUDINAL_QUESTIONS': case_row['LONGITUDINAL_QUESTIONS'],
+                             'COHORT_TYPE': case_row['COHORT_TYPE'], 'BATCH_OPEN_DATE': case_row['BATCH_OPEN_DATE'],
+                             'BATCH_CLOSE_DATE': case_row['BATCH_CLOSE_DATE']})
+
+    upload_file_via_api(context.collex_id, bulk_sample_update_filename, job_type='BULK_PHM_UPDATE_SAMPLE',
+                        delete_after_upload=True)
+
+
 @step("a bulk sample update file is created for every case created and uploaded")
 def create_and_upload_sample_update_file(context):
     bulk_sample_update_filename = f'/tmp/bulk_sample_update_{str(uuid.uuid4())}.csv'

@@ -17,6 +17,13 @@ Feature: bulk file processed
     When a bulk sample update file is created for every case created and uploaded
     Then a CASE_UPDATE message is emitted for each bulk updated sample row
 
+
+  @regression
+  Scenario: After a PHM sample is loaded the PHM sample data can be updated
+    Given the sample file "PHM_sample_for_bulk_processing.csv" with validation rules "PHM_bulk_processing_validation_rules.json" is loaded successfully
+    When a bulk PHM sample update file is created for every case created and uploaded
+    Then a CASE_UPDATE message is emitted for each bulk PHM updated sample row
+
   @regression
   Scenario: After a sample is loaded the sensitive data can be updated
     Given the sample file "SIS2_random_20.csv" with validation rules "SIS2_validation_rules.json" is loaded successfully
