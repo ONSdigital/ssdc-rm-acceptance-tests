@@ -1,0 +1,9 @@
+PARTICIPANT_ID,ADDRESS_LINE_1,ADDRESS_LINE_2,ADDRESS_LINE_3,TOWN_NAME,POSTCODE,EMAIL,TELEPHONE,LAST_NAME,MIDDLE_NAME,FIRST_NAME,LANGUAGE_PREFERENCE,CONTACT_PREFERENCE,LONGITUDINAL_QUESTIONS,COHORT_TYPE,BLOOD_BARCODE,SWAB_BARCODE,BATCH_NUMBER
+1,English swab and questions post,A Street,An Area,A Town,P05 C0D3,,0123456789,Smith,Tests and Questions,Fred,E,Post,L,S,0,0,99
+2,Welsh swab and questions post,A Street,An Area,A Town,P05 C0D3,,0123456789,Smith,Tests and Questions,Ernie,W,Post,L,S,0,0,99
+3,English questions only post,A Street,An Area,A Town,P05 C0D3,,0123456789,Jones,Questions Only,Dave,E,Post,L,Q,0,0,99
+4,Welsh questions only post,A Street,An Area,A Town,P05 C0D3,,0123456789,Jones,Questions Only,Hugh,W,Post,L,Q,0,0,99
+5,English swab and questions email,A Street,An Area,A Town,P05 C0D3,swab@english.com,0123456789,Smith, Tests and Questions,Grant,E,Email,L,S,0,0,99
+6,Welsh swab and questions email,A Street,An Area,A Town,P05 C0D3,swab@welsh.com,0123456789,Smith, Tests and Questions,Gav,W,Email,L,S,0,0,99
+7,English questions only email,A Street,An Area,A Town,P05 C0D3,questionnaire@english.com,0123456789,Jones,Questions Only,Jenny,E,Email,L,Q,0,0,99
+8,Welsh questions only email,A Street,An Area,A Town,P05 C0D3,questionnaire@welsh.com,0123456789,Jones,Questions Only,Vicki,W,Email,L,Q,0,0,99

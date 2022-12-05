@@ -11,7 +11,7 @@ def create_export_file_action_rule_with_classifiers(context, classifiers):
 
 @step('an export file action rule has been created')
 def create_export_file_action_rule_no_classifiers(context):
-    create_export_file_action_rule(context.collex_id, '', context.pack_code)
+    _, context.action_rule_id = create_export_file_action_rule(context.collex_id, '', context.pack_code)
 
 
 @step('a deactivate uac action rule has been created')

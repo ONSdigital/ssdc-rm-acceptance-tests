@@ -17,7 +17,10 @@ def create_export_file_action_rule(collex_id, classifiers, pack_code):
 
     response = requests.post(url, json=body)
     response.raise_for_status()
-    return pack_code
+
+    action_rule_id = response.text
+
+    return pack_code, action_rule_id
 
 
 def setup_deactivate_uac_action_rule(collex_id):

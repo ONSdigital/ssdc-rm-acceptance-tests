@@ -93,6 +93,25 @@ def enter_no_uac(context):
     context.browser.find_by_id('uac').fill(RETURN)
 
 
+@step('check UAC is in firestore via eqLaunched endpoint for the correct "{language_code}" hack')
+def check_uac_in_firestore_hack(context, language_code):
+    context.rh_launch_endpoint_response = rh_endpoint_client.post_to_launch_endpoint(language_code,
+                                                                                     context.rh_launch_uac)
+
+    expected_launch_data_list = []
+
+    for launchData in context.survey_metadata['launchDataSettings']:
+        expected_launch_data_list.append({'field': launchData['launchDataFieldName'],
+                                          'value': context.sample[0]['sample'][launchData['sampleField']]})
+
+    eq_claims = check_launch_redirect_and_get_eq_claims(context.rh_launch_endpoint_response,
+                                                        context.rh_launch_qid,
+                                                        context.emitted_cases[0]['caseId'],
+                                                        context.collex_id,
+                                                        language_code,
+                                                        expected_launch_data_list)
+
+
 @step('check UAC is in firestore via eqLaunched endpoint for the correct "{language_code}"')
 def check_uac_in_firestore(context, language_code):
     context.rh_launch_endpoint_response = rh_endpoint_client.post_to_launch_endpoint(language_code,
