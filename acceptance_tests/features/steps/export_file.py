@@ -196,3 +196,30 @@ def decrypt_message(message: str) -> str:
         message_text = our_key.decrypt(encrypted_text_message)
 
         return message_text.message
+
+
+@step("an export file is created and we store the 1st UAC")
+def check_export_file_and_stored_first_uac(context):
+    template = context.template
+    emitted_uacs = context.emitted_uacs if hasattr(context, 'emitted_uacs') else None
+
+    test_helper.assertFalse(('__uac__' in template or '__qid__' in template) and not emitted_uacs,
+                            'Export file template expects UACs or QIDs but no corresponding emitted_uacs found in '
+                            f'the scenario context, emitted_uacs {emitted_uacs}')
+
+    actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, context.pack_code)
+
+    uacs_from_actual_export_file = _get_unhashed_uacs_from_actual_export_file(
+        actual_export_file_rows, template
+    ) if '__uac__' in template else []
+
+    context.rh_launch_uac = uacs_from_actual_export_file[0]
+
+    uac_hash = hashlib.sha256(context.rh_launch_uac.encode('utf-8')).hexdigest()
+
+    for emitted_uac in emitted_uacs:
+        if uac_hash == emitted_uac['uacHash']:
+            context.rh_launch_qid = emitted_uac['qid']
+            return
+
+    test_helper.fail(f"Couldn't match a UAC {context.rh_launch_uac} hash to get the QID from emitted uacs")

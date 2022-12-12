@@ -67,3 +67,14 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     Given the UAC entry page is displayed
     When the user clicks Access Survey without entering a UAC
     Then an error section is headed "There is a problem with this page" and href "#uac_empty" is "Enter an access code"
+
+  @reset_notify_stub
+  Scenario: Launching with survey metadata
+    Given sample file "PHM_for_action_rules_v1.csv" is loaded with rules "PHM_made_up_settings_2.json" and survey metadata set to "launchData.json"
+    And an export file template has been created with template ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE","__uac__"]
+    And an export file action rule has been created
+    And UAC_UPDATE messages are emitted with active set to true
+    And an export file is created and we store the 1st UAC
+    When the UAC entry page is displayed
+    And the user enters a valid UAC
+    Then they are redirected to EQ with the language "en" and the survey metadata "launchData.json"

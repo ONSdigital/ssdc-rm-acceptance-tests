@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 from typing import List
 
@@ -272,4 +273,35 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
+
+
+@step('sample file "{sample_file_name}" is loaded with rules "{validation_rules_file_name}" '
+      'and survey metadata set to "{survey_metadata_filename}"')
+def load_sample_with_rules_and_survey_metadata(context, sample_file_name, validation_rules_file_name,
+                                               survey_metadata_filename):
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
+    validation_rules_path = VALIDATION_RULES_PATH.joinpath(validation_rules_file_name)
+    _, sample_rows = get_sample_header_and_rows(sample_file_path)
+    sample_validation_rules = get_validation_rules(validation_rules_path)
+    sensitive_columns = get_sample_sensitive_columns(sample_validation_rules)
+
+    survey_metadata_file_path = Config.SURVEY_METADATA_PATH.joinpath(survey_metadata_filename)
+    context.survey_metadata = json.loads(survey_metadata_file_path.read_text())
+
+    context.survey_id = add_survey(sample_validation_rules)
+    context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
+    collection_instrument_selection_rules = [
+        {
+            "priority": 0,
+            "spelExpression": None,
+            "collectionInstrumentUrl": context.expected_collection_instrument_url
+        }
+    ]
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   metadata=context.survey_metadata)
+
+    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+
+    context.sample = read_sample(sample_file_path, sample_validation_rules)
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
