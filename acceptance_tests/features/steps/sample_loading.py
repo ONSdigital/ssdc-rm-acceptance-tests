@@ -297,11 +297,10 @@ def load_sample_with_rules_and_eq_launch_settings(context, sample_file_name, val
             "priority": 0,
             "spelExpression": None,
             "collectionInstrumentUrl": context.expected_collection_instrument_url,
-
+            "eqLaunchSettings": context.eq_launch_settings
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
-                                   metadata=context.eq_launch_settings)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 

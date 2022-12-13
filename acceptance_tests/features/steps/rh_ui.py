@@ -54,7 +54,8 @@ def is_redirected_to_EQ(context, language_code):
     context.correlation_id = eq_claims['tx_id']
 
 
-@step('they are redirected to EQ with the language "{language_code}" and the EQ launch settings file "{eq_launch_settings_file}"')
+@step(
+    'they are redirected to EQ with the language "{language_code}" and the EQ launch settings file "{eq_launch_settings_file}"')
 def is_redirected_to_EQ_with_EQ_launch_settings(context, language_code, eq_launch_settings_file=None):
     eq_claims = _redirect_to_EQ(context, language_code)
 
