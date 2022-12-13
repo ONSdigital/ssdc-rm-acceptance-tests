@@ -277,29 +277,31 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
 
 
 @step('sample file "{sample_file_name}" is loaded with rules "{validation_rules_file_name}" '
-      'and survey metadata set to "{survey_metadata_filename}"')
-def load_sample_with_rules_and_survey_metadata(context, sample_file_name, validation_rules_file_name,
-                                               survey_metadata_filename):
+      'and EQ launch settings set to "{eq_launch_settings_file}"')
+def load_sample_with_rules_and_eq_launch_settings(context, sample_file_name, validation_rules_file_name,
+                                                  eq_launch_settings_file):
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     validation_rules_path = VALIDATION_RULES_PATH.joinpath(validation_rules_file_name)
     _, sample_rows = get_sample_header_and_rows(sample_file_path)
     sample_validation_rules = get_validation_rules(validation_rules_path)
     sensitive_columns = get_sample_sensitive_columns(sample_validation_rules)
 
-    survey_metadata_file_path = Config.SURVEY_METADATA_PATH.joinpath(survey_metadata_filename)
-    context.survey_metadata = json.loads(survey_metadata_file_path.read_text())
-
     context.survey_id = add_survey(sample_validation_rules)
+
+    eq_launch_settings_file_path = Config.EQ_LAUNCH_SETTINGS_FILE_PATH.joinpath(eq_launch_settings_file)
+    context.eq_launch_settings = json.loads(eq_launch_settings_file_path.read_text())
+
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
         {
             "priority": 0,
             "spelExpression": None,
-            "collectionInstrumentUrl": context.expected_collection_instrument_url
+            "collectionInstrumentUrl": context.expected_collection_instrument_url,
+
         }
     ]
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
-                                   metadata=context.survey_metadata)
+                                   metadata=context.eq_launch_settings)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 

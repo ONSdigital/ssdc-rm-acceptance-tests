@@ -96,4 +96,4 @@ class Config:
 
     HEADLESS = strtobool(os.getenv('HEADLESS', 'True'))
     SAMPLE_FILES_PATH = RESOURCE_FILE_PATH.joinpath('sample_files')
-    SURVEY_METADATA_PATH = RESOURCE_FILE_PATH.joinpath('survey_metadata')
+    EQ_LAUNCH_SETTINGS_FILE_PATH = RESOURCE_FILE_PATH.joinpath('eq_launch_settings')

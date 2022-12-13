@@ -47,55 +47,24 @@ def enter_a_valid_uac(context):
     context.browser.find_by_id('uac').fill(context.rh_launch_uac + RETURN)
 
 
-# @step('they are redirected to EQ with the correct token and language set to "{language_code}"')
-# def is_redirected_to_EQ(context, language_code):
-#     expected_url_start = 'session?token='
-#     test_helper.assertIn(expected_url_start, context.browser.url)
-#     query_strings = parse_qs(urlparse(context.browser.url).query)
-#
-#     test_helper.assertIn('token', query_strings,
-#                          f'Expected to find launch token in launch URL, actual launch url: {context.browser.url}')
-#     test_helper.assertEqual(
-#         len(query_strings['token']), 1,
-#         f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
-#
-#     eq_claims = decrypt_claims_token_and_check_contents(context.rh_launch_qid,
-#                                                         context.emitted_cases[0][
-#                                                             'caseId'],
-#                                                         context.collex_id,
-#                                                         query_strings['token'][
-#                                                             0], language_code)
-#
-#     context.correlation_id = eq_claims['tx_id']
-
-
-@step('they are redirected to EQ with the language "{language_code}" and the survey metadata "{survey_metadata_filename}"')
 @step('they are redirected to EQ with the correct token and language set to "{language_code}"')
-def is_redirected_to_EQ_with_survey_metadata(context, language_code, survey_metadata_filename=None):
-    expected_url_start = 'session?token='
-    test_helper.assertIn(expected_url_start, context.browser.url)
-    query_strings = parse_qs(urlparse(context.browser.url).query)
+def is_redirected_to_EQ(context, language_code):
+    eq_claims = _redirect_to_EQ(context, language_code)
 
-    test_helper.assertIn('token', query_strings,
-                         f'Expected to find launch token in launch URL, actual launch url: {context.browser.url}')
-    test_helper.assertEqual(
-        len(query_strings['token']), 1,
-        f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
+    context.correlation_id = eq_claims['tx_id']
 
-    eq_claims = decrypt_claims_token_and_check_contents(context.rh_launch_qid,
-                                                        context.emitted_cases[0][
-                                                            'caseId'],
-                                                        context.collex_id,
-                                                        query_strings['token'][
-                                                            0], language_code)
 
-    if survey_metadata_filename:
-        survey_metadata_file_path = Config.SURVEY_METADATA_PATH.joinpath(survey_metadata_filename)
-        survey_metadata = json.loads(survey_metadata_file_path.read_text())
+@step('they are redirected to EQ with the language "{language_code}" and the EQ launch settings file "{eq_launch_settings_file}"')
+def is_redirected_to_EQ_with_EQ_launch_settings(context, language_code, eq_launch_settings_file=None):
+    eq_claims = _redirect_to_EQ(context, language_code)
 
-        for launch_field in survey_metadata['launchDataSettings']:
-            test_helper.assertIn(launch_field['sampleField'].lower(), eq_claims['survey_metadata']['data'],
-                                 f'Specified metadata not present on eq_claim survey_metadata: {eq_claims}')
+    if eq_launch_settings_file:
+        eq_launch_settings_file_path = Config.EQ_LAUNCH_SETTINGS_FILE_PATH.joinpath(eq_launch_settings_file)
+        eq_launch_file = json.loads(eq_launch_settings_file_path.read_text())
+
+        for launch_field in eq_launch_file['launchDataSettings']:
+            test_helper.assertIn(launch_field['sampleField'].lower(), eq_claims['eq_launch_settings']['data'],
+                                 f'Specified metadata not present on eq_claim eq_launch_settings: {eq_claims}')
 
     context.correlation_id = eq_claims['tx_id']
 
@@ -144,3 +113,23 @@ def error_section_displayed_with_header_text(context, error_section_header, href
     test_helper.assertEqual(context.browser.find_by_id('alert').text, error_section_header)
     error_text = context.browser.links.find_by_href(href_name).text
     test_helper.assertEqual(error_text, expected_text)
+
+
+def _redirect_to_EQ(context, language_code):
+    expected_url_start = 'session?token='
+    test_helper.assertIn(expected_url_start, context.browser.url)
+    query_strings = parse_qs(urlparse(context.browser.url).query)
+
+    test_helper.assertIn('token', query_strings,
+                         f'Expected to find launch token in launch URL, actual launch url: {context.browser.url}')
+    test_helper.assertEqual(
+        len(query_strings['token']), 1,
+        f'Expected to find exactly 1 token in the launch URL query stings, actual launch url: {context.browser.url}')
+
+    eq_claims = decrypt_claims_token_and_check_contents(context.rh_launch_qid,
+                                                        context.emitted_cases[0][
+                                                            'caseId'],
+                                                        context.collex_id,
+                                                        query_strings['token'][
+                                                            0], language_code)
+    return eq_claims
