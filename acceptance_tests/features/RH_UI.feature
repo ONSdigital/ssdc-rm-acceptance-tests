@@ -8,9 +8,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And link text displays string "<expected link test>"
 
     Examples:
-      | language code | expected error text                           | error section header                               | expected link test                            |
-      | en            | Enter a valid access code                     | There is a problem with this page                  | Enter a valid access code                     |
-      | cy            | PLACEHOLDER WELSH Enter a valid access code   | PLACEHOLDER WELSH There is a problem with this page| PLACEHOLDER WELSH Enter a valid access code   |
+      | language code | expected error text                         | error section header                                | expected link test                          |
+      | en            | Enter a valid access code                   | There is a problem with this page                   | Enter a valid access code                   |
+      | cy            | PLACEHOLDER WELSH Enter a valid access code | PLACEHOLDER WELSH There is a problem with this page | PLACEHOLDER WELSH Enter a valid access code |
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
@@ -78,3 +78,4 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     When the UAC entry page is displayed
     And the user enters a valid UAC
     Then they are redirected to EQ with the language "en" and the EQ launch settings file "launchData.json"
+    And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true

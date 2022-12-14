@@ -48,24 +48,24 @@ def enter_a_valid_uac(context):
 
 
 @step('they are redirected to EQ with the correct token and language set to "{language_code}"')
-def is_redirected_to_EQ(context, language_code):
-    eq_claims = _redirect_to_EQ(context, language_code)
+def is_redirected_to_eq(context, language_code):
+    eq_claims = _redirect_to_eq(context, language_code)
 
     context.correlation_id = eq_claims['tx_id']
 
 
-@step(
-    'they are redirected to EQ with the language "{language_code}" and the EQ launch settings file "{eq_launch_settings_file}"')
-def is_redirected_to_EQ_with_EQ_launch_settings(context, language_code, eq_launch_settings_file=None):
-    eq_claims = _redirect_to_EQ(context, language_code)
+@step('they are redirected to EQ with the language "{language_code}" and the EQ launch settings file '
+      '"{eq_launch_settings_file}"')
+def is_redirected_to_eq_with_eq_launch_settings(context, language_code, eq_launch_settings_file=None):
+    eq_claims = _redirect_to_eq(context, language_code)
 
     if eq_launch_settings_file:
         eq_launch_settings_file_path = Config.EQ_LAUNCH_SETTINGS_FILE_PATH.joinpath(eq_launch_settings_file)
-        eq_launch_file = json.loads(eq_launch_settings_file_path.read_text())
+        eq_launch_settings = json.loads(eq_launch_settings_file_path.read_text())
 
-        for launch_field in eq_launch_file['launchDataSettings']:
-            test_helper.assertIn(launch_field['sampleField'].lower(), eq_claims['eq_launch_settings']['data'],
-                                 f'Specified metadata not present on eq_claim eq_launch_settings: {eq_claims}')
+        for launch_field in eq_launch_settings:
+            test_helper.assertIn(launch_field['launchDataFieldName'], eq_claims['survey_metadata']['data'],
+                                 f'Specified metadata not present on eq_claim survey_metadata: {eq_claims}')
 
     context.correlation_id = eq_claims['tx_id']
 
@@ -116,7 +116,7 @@ def error_section_displayed_with_header_text(context, error_section_header, href
     test_helper.assertEqual(error_text, expected_text)
 
 
-def _redirect_to_EQ(context, language_code):
+def _redirect_to_eq(context, language_code):
     expected_url_start = 'session?token='
     test_helper.assertIn(expected_url_start, context.browser.url)
     query_strings = parse_qs(urlparse(context.browser.url).query)
