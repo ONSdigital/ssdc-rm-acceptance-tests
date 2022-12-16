@@ -71,11 +71,14 @@ Feature: Testing the "enter a UAC" functionality of RH UI
   @reset_notify_stub
   Scenario: Launching with survey metadata
     Given sample file "PHM_for_action_rules_v1.csv" is loaded with rules "PHM_made_up_settings_2.json" and eq launch settings set to "launchData.json"
-    And an export file template has been created with template ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE","__uac__"]
-    And an export file action rule has been created
+    And an sms template has been created with template ["__uac__", "__qid__"]
+    And fulfilments are authorised on sms template
+    And a request has been made for a replacement UAC by SMS from phone number "07123456789"
     And UAC_UPDATE messages are emitted with active set to true
-    And an export file is created and we store the 1st UAC
-    When the UAC entry page is displayed
+    And the UAC_UPDATE message matches the SMS fulfilment UAC
+    And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
+    And check UAC is in firestore via eqLaunched endpoint for the correct "en"
+    When the UAC entry page is titled "Start study - ONS Surveys" and is displayed for "en"
     And the user enters a valid UAC
     Then they are redirected to EQ with the language "en" and the EQ launch settings file "launchData.json"
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
