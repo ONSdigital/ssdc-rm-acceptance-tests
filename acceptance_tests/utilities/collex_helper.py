@@ -18,6 +18,7 @@ def add_collex(survey_id, collection_instrument_selection_rules):
             'reference': "MVP012021",
             'startDate': f'{start_date.isoformat()}Z',
             'endDate': f'{end_date.isoformat()}Z',
+            'metadata': {'test': 'passed'},
             'collectionInstrumentSelectionRules': collection_instrument_selection_rules
             }
 
@@ -40,7 +41,7 @@ def add_collex(survey_id, collection_instrument_selection_rules):
     test_helper.assertEqual(parsed_start_date, start_date, 'Invalid or missing start date')
     test_helper.assertEqual(parsed_end_date, end_date, 'Invalid or missing end date')
 
-    # test_helper.assertEqual(collection_exercise_update_event['metadata'], {'test': 'passed'},
-    #                         'Unexpected metadata')
+    test_helper.assertEqual(collection_exercise_update_event['metadata'], {'test': 'passed'},
+                            'Unexpected metadata')
 
     return collex_id
