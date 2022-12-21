@@ -1,4 +1,3 @@
-
 Feature: deactivate UACs for a case
 
   @regression
@@ -9,6 +8,7 @@ Feature: deactivate UACs for a case
     And UAC_UPDATE messages are emitted with active set to true
     When a deactivate uac action rule has been created
     Then UAC_UPDATE messages are emitted with active set to false
+
 
   Scenario: A deactivate UAC event is received for a QID and the UAC is deactivated
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully

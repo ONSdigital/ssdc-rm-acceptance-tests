@@ -1,0 +1,188 @@
+[
+  {
+    "columnName": "PARTICIPANT_ID",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 16
+      }
+    ]
+  },
+  {
+    "columnName": "ADDRESS_LINE_1",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 60
+      }
+    ]
+  },
+  {
+    "columnName": "ADDRESS_LINE_2",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 60
+      }
+    ]
+  },
+  {
+    "columnName": "ADDRESS_LINE_3",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 60
+      }
+    ]
+  },
+  {
+    "columnName": "TOWN_NAME",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 30
+      }
+    ]
+  },
+  {
+    "columnName": "POSTCODE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 8
+      }
+    ]
+  },
+  {
+    "columnName": "EMAIL",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.EmailRule"
+      }
+    ],
+    "sensitive": true
+  },
+  {
+    "columnName": "TELEPHONE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+      }
+    ]
+  },
+  {
+    "columnName": "LAST_NAME",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 30
+      }
+    ]
+  },
+  {
+    "columnName": "MIDDLE_NAME",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 30
+      }
+    ]
+  },
+  {
+    "columnName": "FIRST_NAME",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 30
+      }
+    ]
+  },
+  {
+    "columnName": "LANGUAGE_PREFERENCE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
+        "set": [
+          "E",
+          "W"
+        ]
+      }
+    ]
+  },
+  {
+    "columnName": "CONTACT_PREFERENCE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
+        "set": [
+          "Post",
+          "Email"
+        ]
+      }
+    ]
+  },
+  {
+    "columnName": "LONGITUDINAL_QUESTIONS",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
+        "set": [
+          "S",
+          "L"
+        ]
+      }
+    ]
+  },
+  {
+    "columnName": "COHORT_TYPE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
+        "set": [
+          "Q",
+          "S",
+          "B"
+        ]
+      }
+    ]
+  },
+  {
+    "columnName": "BLOOD_BARCODE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+      }
+    ]
+  },
+  {
+    "columnName": "SWAB_BARCODE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+      }
+    ]
+  },
+  {
+    "columnName": "BATCH_NUMBER",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+      }
+    ]
+  }
+]
