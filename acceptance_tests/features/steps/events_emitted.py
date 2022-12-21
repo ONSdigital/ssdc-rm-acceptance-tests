@@ -40,10 +40,29 @@ def case_update_msg_sent_with_multiple_values(context, new_values):
                                 f'the expected value "{value}". emitted case: {emitted_case}')
 
 
+@step("UAC_UPDATE messages are emitted with active set to {active:boolean} for a single UAC")
+def check_uac_update_msgs_emitted_with_qid_active_for_single_uac(context, active):
+    check_uac_update_msgs_emitted_with_qid_active_for_expected_uac_count(context, active, 1)
+
+
 @step("UAC_UPDATE messages are emitted with active set to {active:boolean}")
-def check_uac_update_msgs_emitted_with_qid_active(context, active):
-    context.emitted_uacs = get_uac_update_events(len(context.emitted_cases), context.correlation_id,
+def check_uac_update_msgs_emitted_with_qid_active_for_every_case(context, active):
+    check_uac_update_msgs_emitted_with_qid_active_for_expected_uac_count(context, active, len(context.emitted_cases))
+
+
+def check_uac_update_msgs_emitted_with_qid_active_for_expected_uac_count(context, active, expected_uac_count):
+    context.emitted_uacs = get_uac_update_events(expected_uac_count, context.correlation_id,
                                                  context.originating_user)
+
+    if expected_uac_count != len(context.emitted_cases):
+        uac_case_ids = set(uac['caseId'] for uac in context.emitted_cases)
+        cases = [case for case in context.emitted_cases if case['caseId'] in uac_case_ids]
+
+        #
+        # cases_to_match =
+
+
+
     _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
 
     _check_new_uacs_are_as_expected(emitted_uacs=context.emitted_uacs, active=active,

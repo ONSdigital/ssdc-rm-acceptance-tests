@@ -14,11 +14,11 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
-    Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
+    Given sample file "PHM_all_types_v1.csv" is loaded successfully
     And an sms template has been created with template ["__uac__", "__qid__"]
     And fulfilments are authorised on sms template
     And a request has been made for a replacement UAC by SMS from phone number "07123456789"
-    And UAC_UPDATE messages are emitted with active set to true
+    And UAC_UPDATE messages are emitted with active set to true for a single UAC
     And the UAC_UPDATE message matches the SMS fulfilment UAC
     And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
     And check UAC is in firestore via eqLaunched endpoint for the correct "<language code>"
