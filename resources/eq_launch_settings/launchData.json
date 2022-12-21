@@ -1,0 +1,12 @@
+[
+  {
+    "sampleField": "PARTICIPANT_ID",
+    "launchDataFieldName": "participant_id",
+    "mandatory": true
+  },
+  {
+    "sampleField": "FIRST_NAME",
+    "launchDataFieldName": "firstName",
+    "mandatory": true
+  }
+]

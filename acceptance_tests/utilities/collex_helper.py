@@ -21,6 +21,7 @@ def add_collex(survey_id, collection_instrument_selection_rules):
             'metadata': {'test': 'passed'},
             'collectionInstrumentSelectionRules': collection_instrument_selection_rules
             }
+
     response = requests.post(url, json=body)
     response.raise_for_status()
 

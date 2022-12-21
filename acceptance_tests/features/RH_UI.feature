@@ -8,9 +8,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And link text displays string "<expected link test>"
 
     Examples:
-      | language code | expected error text                           | error section header                               | expected link test                            |
-      | en            | Enter a valid access code                     | There is a problem with this page                  | Enter a valid access code                     |
-      | cy            | PLACEHOLDER WELSH Enter a valid access code   | PLACEHOLDER WELSH There is a problem with this page| PLACEHOLDER WELSH Enter a valid access code   |
+      | language code | expected error text                         | error section header                                | expected link test                          |
+      | en            | Enter a valid access code                   | There is a problem with this page                   | Enter a valid access code                   |
+      | cy            | PLACEHOLDER WELSH Enter a valid access code | PLACEHOLDER WELSH There is a problem with this page | PLACEHOLDER WELSH Enter a valid access code |
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
@@ -67,3 +67,18 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     Given the UAC entry page is displayed
     When the user clicks Access Survey without entering a UAC
     Then an error section is headed "There is a problem with this page" and href "#uac_empty" is "Enter an access code"
+
+  @reset_notify_stub
+  Scenario: Launching with survey metadata
+    Given sample file "PHM_for_action_rules_v1.csv" is loaded with rules "PHM_made_up_settings_2.json" and eq launch settings set to "launchData.json"
+    And an sms template has been created with template ["__uac__", "__qid__"]
+    And fulfilments are authorised on sms template
+    And a request has been made for a replacement UAC by SMS from phone number "07123456789"
+    And UAC_UPDATE messages are emitted with active set to true
+    And the UAC_UPDATE message matches the SMS fulfilment UAC
+    And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
+    And check UAC is in firestore via eqLaunched endpoint for the correct "en"
+    When the UAC entry page is titled "Start study - ONS Surveys" and is displayed for "en"
+    And the user enters a valid UAC
+    Then they are redirected to EQ with the language "en" and the EQ launch settings file "launchData.json"
+    And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
