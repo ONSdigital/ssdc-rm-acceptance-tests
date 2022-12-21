@@ -14,7 +14,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
-    Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
+    Given sample file "PHM_single_row_v1.csv" is loaded successfully
     And an sms template has been created with template ["__uac__", "__qid__"]
     And fulfilments are authorised on sms template
     And a request has been made for a replacement UAC by SMS from phone number "07123456789"
@@ -34,7 +34,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page
-    Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
+    Given sample file "PHM_single_row_v1.csv" is loaded successfully
     And an sms template has been created with template ["__uac__", "__qid__"]
     And fulfilments are authorised on sms template
     And a request has been made for a replacement UAC by SMS from phone number "07123456789"
@@ -50,7 +50,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario: A deactivated UAC redirects to informative page
-    Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
+    Given sample file "PHM_single_row_v1.csv" is loaded successfully
     And an sms template has been created with template ["__uac__", "__qid__"]
     And fulfilments are authorised on sms template
     And a request has been made for a replacement UAC by SMS from phone number "07123456789"
