@@ -2,4 +2,4 @@ Feature: SRM supports PHM shape surveys
 
   @regression
   Scenario: A (prototype) PHM shape sample can be loaded
-    Given the sample file "PHM_prototype_dummy_sample.csv" with validation rules "PHM_prototype_validation_rules.json" is loaded successfully
+    Given the sample file "PHM_single_row_v1.csv" with validation rules "PHM_validation_rules_v1.json" is loaded successfully

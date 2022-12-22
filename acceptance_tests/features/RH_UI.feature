@@ -69,9 +69,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     Then an error section is headed "There is a problem with this page" and href "#uac_empty" is "Enter an access code"
 
   @reset_notify_stub
-  Scenario: Launching with survey metadata
-    Given sample file "PHM_for_action_rules_v1.csv" is loaded with rules "PHM_made_up_settings_2.json" and eq launch settings set to "launchData.json"
-    And an sms template has been created with template ["__uac__", "__qid__"]
+  Scenario: Load PHM email fulfilment and launch data set
+    Given sample file "PHM_single_row_v1.csv" is loaded with rules "PHM_validation_rules_v1.json" and eq launch settings set to "launchData.json"
+    And an sms template has been created with template ["PARTICIPANT_ID", "LAST_NAME", "MIDDLE_NAME", "FIRST_NAME", "__uac__", "COLLEX_OPEN_DATE", "COLLEX_CLOSE_DATE", "__qid__"]
     And fulfilments are authorised on sms template
     And a request has been made for a replacement UAC by SMS from phone number "07123456789"
     And UAC_UPDATE messages are emitted with active set to true
