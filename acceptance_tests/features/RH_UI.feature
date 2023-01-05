@@ -15,14 +15,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
     Given sample file "PHM_single_row_v1.csv" is loaded successfully
-    And an sms template has been created with template ["__uac__", "__qid__"]
-    And fulfilments are authorised on sms template
-    And a request has been made for a replacement UAC by SMS from phone number "07123456789"
-    And UAC_UPDATE messages are emitted with active set to true
-    And the UAC_UPDATE message matches the SMS fulfilment UAC
-    And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
-    And check UAC is in firestore via eqLaunched endpoint for the correct "<language code>"
-    When the UAC entry page is titled "<expected text>" and is displayed for "<language code>"
+    And and we request a UAC by SMS and the UAC is ready and RH page has "<expected text>" for "<language code>"
     And the user enters a valid UAC
     Then they are redirected to EQ with the correct token and language set to "<language code>"
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
@@ -35,31 +28,19 @@ Feature: Testing the "enter a UAC" functionality of RH UI
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page
     Given sample file "PHM_single_row_v1.csv" is loaded successfully
-    And an sms template has been created with template ["__uac__", "__qid__"]
-    And fulfilments are authorised on sms template
-    And a request has been made for a replacement UAC by SMS from phone number "07123456789"
-    And UAC_UPDATE messages are emitted with active set to true
-    And the UAC_UPDATE message matches the SMS fulfilment UAC
-    And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
+    And and we request a UAC by SMS and the UAC is ready and RH page has "Start study - ONS Surveys" for "en"
     And a receipt message is published to the pubsub receipting topic
     And UAC_UPDATE message is emitted with active set to false and "receiptReceived" is true
-    And the events logged against the case are ["NEW_CASE","SMS_FULFILMENT","RECEIPT"]
-    When the UAC entry page is displayed
+    And the events logged against the case are ["NEW_CASE", "EQ_LAUNCH", "SMS_FULFILMENT","RECEIPT"]
     And the user enters a receipted UAC
     Then they are redirected to the receipted page
 
   @reset_notify_stub
   Scenario: A deactivated UAC redirects to informative page
     Given sample file "PHM_single_row_v1.csv" is loaded successfully
-    And an sms template has been created with template ["__uac__", "__qid__"]
-    And fulfilments are authorised on sms template
-    And a request has been made for a replacement UAC by SMS from phone number "07123456789"
-    And UAC_UPDATE messages are emitted with active set to true
-    And the UAC_UPDATE message matches the SMS fulfilment UAC
-    And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
+    And and we request a UAC by SMS and the UAC is ready and RH page has "Start study - ONS Surveys" for "en"
     And a deactivate uac message is put on the queue
     And UAC_UPDATE messages are emitted with active set to false
-    When the UAC entry page is displayed
     And the user enters an inactive UAC
     Then they are redirected to the inactive uac page
 
@@ -69,16 +50,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     Then an error section is headed "There is a problem with this page" and href "#uac_empty" is "Enter an access code"
 
   @reset_notify_stub
-  Scenario: Load PHM email fulfilment and launch data set
-    Given sample file "PHM_single_row_v1.csv" is loaded with rules "PHM_validation_rules_v1.json" and eq launch settings set to "launchData.json"
-    And an sms template has been created with template ["PARTICIPANT_ID", "LAST_NAME", "MIDDLE_NAME", "FIRST_NAME", "__uac__", "COLLEX_OPEN_DATE", "COLLEX_CLOSE_DATE", "__qid__"]
-    And fulfilments are authorised on sms template
-    And a request has been made for a replacement UAC by SMS from phone number "07123456789"
-    And UAC_UPDATE messages are emitted with active set to true
-    And the UAC_UPDATE message matches the SMS fulfilment UAC
-    And we retrieve the UAC and QID from the SMS fulfilment to use for launching in RH
-    And check UAC is in firestore via eqLaunched endpoint for the correct "en"
-    When the UAC entry page is titled "Start study - ONS Surveys" and is displayed for "en"
+  Scenario: Launching with survey metadata
+    Given sample file "PHM_single_row_v1.csv" is loaded with rules "PHM_made_up_settings_2.json" and eq launch settings set to "launchData.json"
+    And and we request a UAC by SMS and the UAC is ready and RH page has "Start study - ONS Surveys" for "en"
     And the user enters a valid UAC
     Then they are redirected to EQ with the language "en" and the EQ launch settings file "launchData.json"
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true

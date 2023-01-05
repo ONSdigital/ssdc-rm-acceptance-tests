@@ -3,6 +3,10 @@ from urllib.parse import urlparse, parse_qs
 
 from behave import step
 
+from acceptance_tests.features.steps.events_emitted import check_uac_update_msgs_emitted_with_qid_active
+from acceptance_tests.features.steps.notify_api import get_uac_from_sms_fulfilment
+from acceptance_tests.features.steps.sms_fulfilment import create_sms_template, authorise_sms_pack_code, \
+    request_replacement_uac_by_sms, check_uac_message_matches_sms_uac
 from acceptance_tests.utilities import rh_endpoint_client
 from acceptance_tests.utilities.event_helper import check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value
 from acceptance_tests.utilities.jwe_helper import decrypt_claims_token_and_check_contents
@@ -134,3 +138,15 @@ def _redirect_to_eq(context, language_code):
                                                         query_strings['token'][
                                                             0], language_code)
     return eq_claims
+
+
+@step('and we request a UAC by SMS and the UAC is ready and RH page has "{expected_text}" for "{language_code}"')
+def we_request_a_UAC_via_SMS_and_check_the_UAC_in_firestore_and_page_is_ready(context, expected_text, language_code):
+    create_sms_template(context, ["__uac__", "__qid__"])
+    authorise_sms_pack_code(context)
+    request_replacement_uac_by_sms(context, "07123456789")
+    check_uac_update_msgs_emitted_with_qid_active(context, True)
+    check_uac_message_matches_sms_uac(context)
+    get_uac_from_sms_fulfilment(context)
+    check_uac_in_firestore(context, language_code)
+    display_uac_entry_page_for_language_and_contains_heading(context, language_code, expected_text)
