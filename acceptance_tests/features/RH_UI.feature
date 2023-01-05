@@ -51,7 +51,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario: Launching with survey metadata
-    Given sample file "PHM_single_row_v1.csv" is loaded with rules "PHM_made_up_settings_2.json" and eq launch settings set to "launchData.json"
+    Given sample file "PHM_single_row_v1.csv" is loaded with rules "PHM_validation_rules_v1.json" and eq launch settings set to "launchData.json"
     And and we request a UAC by SMS and the UAC is ready and RH page has "Start study - ONS Surveys" for "en"
     And the user enters a valid UAC
     Then they are redirected to EQ with the language "en" and the EQ launch settings file "launchData.json"
