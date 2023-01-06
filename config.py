@@ -11,7 +11,8 @@ class Config:
 
     RESOURCE_FILE_PATH = Path(os.getenv('RESOURCE_FILE_PATH') or Path(__file__).parent.joinpath('resources'))
 
-    PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'shared-project')
+    PUBSUB_PROJECT = os.getenv('PUBSUB_PROJECT', 'our-project')
+
     PUBSUB_RECEIPT_TOPIC = os.getenv('PUBSUB_RECEIPT_TOPIC', 'event_receipt')
     PUBSUB_REFUSAL_TOPIC = os.getenv('PUBSUB_REFUSAL_TOPIC', 'event_refusal')
     PUBSUB_INVALID_CASE_TOPIC = os.getenv('PUBSUB_INVALID_CASE_TOPIC',
@@ -31,6 +32,8 @@ class Config:
     PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION = os.getenv('PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION',
                                                                  'event_collection-exercise-update_rh_at')
     PUBSUB_NEW_CASE_TOPIC = os.getenv('PUBSUB_NEW_CASE_TOPIC', 'event_new-case')
+    PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION = os.getenv('PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION',
+                                                        'cloud_task_queue_at')
     PUBSUB_DEFAULT_PULL_TIMEOUT = int(os.getenv('PUBSUB_DEFAULT_PULL_TIMEOUT', 120))
 
     DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')
