@@ -28,6 +28,7 @@ def create_sms_action_rule(context):
 def create_email_action_rule(context):
     setup_email_action_rule(context.collex_id, context.pack_code)
 
+
 @step("an EQ flush action rule has been created")
 def create_eq_flush_action_rule(context):
     set_eq_flush_action_rule(context.collex_id)

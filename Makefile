@@ -19,10 +19,10 @@ test_core: package_vulnerability lint run_tests_core
 test: package_vulnerability lint run_tests
 
 run_tests:
-	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features
+	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@cloud_only"
 
 run_tests_core:
-	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@regression"
+	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@regression" --tags="~@cloud_only"
 
 build:
 	docker build -t europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests .

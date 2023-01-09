@@ -10,6 +10,7 @@ from splinter import Browser
 from structlog import wrap_logger
 
 from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values, parse_markdown_context_table
+from acceptance_tests.utilities.eq_stub_helper import reset_eq_stub
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages, \
     quarantine_bad_messages_check_and_reset
 from acceptance_tests.utilities.notify_helper import reset_notify_stub
@@ -52,6 +53,12 @@ def before_scenario(context, scenario):
     if "reset_notify_stub" in scenario.tags:
         reset_notify_stub()
 
+    if "reset_eq_stub" in scenario.tags:
+        if "cloud_only" not in scenario.tags:
+            logger.warning(
+                'WARNING: Attempting to reset EQ stub on a scenario not tagged as "cloud_only", will likely fail')
+        reset_eq_stub()
+
     if 'UI' in context.tags:
         dc = DesiredCapabilities.CHROME
         dc['goog:loggingPrefs'] = {'browser': 'ALL'}
@@ -75,9 +82,12 @@ def after_scenario(context, scenario):
     if 'UI' in context.tags:
         context.browser.quit()
 
-    leftover_mmessages = purge_outbound_topics()
-    if leftover_mmessages:
-        test_helper.fail(f'There are left over messages on the following subscriptions: {leftover_mmessages}, see logs '
+    if "reset_eq_stub" in scenario.tags:
+        reset_eq_stub()
+
+    leftover_messages = purge_outbound_topics()
+    if leftover_messages:
+        test_helper.fail(f'There are left over messages on the following subscriptions: {leftover_messages}, see logs '
                          f'above for details.')
 
 

@@ -6,6 +6,7 @@ from config import Config
 
 ACTION_RULES_URL = f'{Config.SUPPORT_TOOL_API}/actionRules'
 
+
 def create_export_file_action_rule(collex_id, classifiers, pack_code):
     body = {
         'type': 'EXPORT_FILE',
@@ -61,6 +62,7 @@ def setup_email_action_rule(collex_id, pack_code):
 
     response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
+
 
 def set_eq_flush_action_rule(collex_id):
     body = {

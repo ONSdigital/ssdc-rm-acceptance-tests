@@ -100,3 +100,5 @@ class Config:
     HEADLESS = strtobool(os.getenv('HEADLESS', 'True'))
     SAMPLE_FILES_PATH = RESOURCE_FILE_PATH.joinpath('sample_files')
     EQ_LAUNCH_SETTINGS_FILE_PATH = RESOURCE_FILE_PATH.joinpath('eq_launch_settings')
+
+    EQ_FLUSH_STUB_URL = os.getenv('EQ_FLUSH_STUB_URL', 'http://eq-stub')
