@@ -1,4 +1,3 @@
-import time
 from typing import Mapping
 
 import requests
@@ -27,16 +26,17 @@ def check_eq_flush_cloud_task_message(context):
                                 'Expected EQ flush cloud task payload to have a transaction ID')
 
 
-@step('the eQ flush endpoint is called with the token for flushing the correct QIDs partial')
+@step('the EQ flush endpoint is called with the token for flushing the correct QIDs partial')
 def check_eq_stub_flush_call_log(context):
     flush_call = poll_for_one_eq_stub_flush_call()
 
-    token_contents = decrypt_signed_jwe(flush_call['token'])
+    context.eq_flush_claims = decrypt_signed_jwe(flush_call['token'])
 
-    test_helper.assertTrue(token_contents['response_id'].startswith(context.emitted_uacs[0]['qid']),
+    test_helper.assertTrue(context.eq_flush_claims['response_id'].startswith(context.emitted_uacs[0]['qid']),
                            'Flush response ID should start with the correct QID')
-    test_helper.assertIsNotNone(token_contents['tx_id'], 'tx_id must be set in the flushing claims')
-    test_helper.assertEqual(token_contents['roles'], ['flusher'], 'The roles must be "flusher" in flushing claims')
+    test_helper.assertIsNotNone(context.eq_flush_claims['tx_id'], 'tx_id must be set in the flushing claims')
+    test_helper.assertEqual(context.eq_flush_claims['roles'], ['flusher'],
+                            'The roles must be "flusher" in flushing claims')
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
@@ -49,3 +49,9 @@ def poll_for_one_eq_stub_flush_call() -> Mapping:
                             f'Expected exactly one EQ flush call to be logged, log: {eq_stub_log}')
 
     return eq_stub_log[0]
+
+
+@step('the EQ flush claims response ID matches the EQ launch claims response ID')
+def check_flush_and_launch_response_id_match(context):
+    test_helper.assertEqual(context.eq_flush_claims['response_id'], context.eq_launch_claims['response_id'],
+                            'The flush response ID must match the launch response ID ')
