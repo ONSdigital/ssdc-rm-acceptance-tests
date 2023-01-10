@@ -17,6 +17,7 @@ Feature: Un-submitted eQ partials can be flushed automatically by action rule
     And an email template has been created with template ["__uac__"]
     And an email action rule has been created
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is false
+    And we retrieve the emitted UAC and QID to use for launching in RH
     And the respondent home UI launch endpoint is called with the UAC
     And it redirects to a launch URL with a launch claims token
     And an EQ_LAUNCH event is received

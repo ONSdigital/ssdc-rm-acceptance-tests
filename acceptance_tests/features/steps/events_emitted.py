@@ -161,3 +161,8 @@ def case_updated_emitted_with_correct_sensitve_data(context):
                             f'The emitted case, {emitted_case} does not match the case {context.case_id}')
     test_helper.assertEqual(emitted_case["sampleSensitive"]['PHONE_NUMBER'], "REDACTED",
                             "Expected emitted_case['sampleSensitive']['PHONE_NUMBER'] to equal 'REDACTED'")
+
+@step('we retrieve the emitted UAC and QID to use for launching in RH')
+def get_uac_from_sms_fulfilment(context):
+    context.rh_launch_uac = context.emitted_uacs[0]['uac']
+    context.rh_launch_qid = context.emitted_uacs[0]['qid']
