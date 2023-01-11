@@ -75,14 +75,6 @@
     "sensitive": true
   },
   {
-    "columnName": "TELEPHONE",
-    "rules": [
-      {
-        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
-      }
-    ]
-  },
-  {
     "columnName": "LAST_NAME",
     "rules": [
       {
@@ -113,19 +105,19 @@
     ]
   },
   {
-    "columnName": "LANGUAGE_PREFERENCE",
+    "columnName": "PREFERENCE_LANGUAGE",
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
         "set": [
-          "E",
-          "W"
+          "EN",
+          "CY"
         ]
       }
     ]
   },
   {
-    "columnName": "CONTACT_PREFERENCE",
+    "columnName": "PREFERENCE_CONTACT",
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
@@ -137,13 +129,25 @@
     ]
   },
   {
-    "columnName": "LONGITUDINAL_QUESTIONS",
+    "columnName": "PRINT_OPTION",
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
         "set": [
-          "S",
-          "L"
+          "Standard",
+          "Large Print"
+        ]
+      }
+    ]
+  },
+  {
+    "columnName": "TEST_QUESTIONS",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
+        "set": [
+          "T",
+          "F"
         ]
       }
     ]
@@ -155,33 +159,51 @@
         "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
         "set": [
           "Q",
-          "S",
-          "B"
+          "QS",
+          "QSB"
         ]
       }
     ]
   },
   {
-    "columnName": "BLOOD_BARCODE",
+    "columnName": "SWAB_TEST_BARCODE",
     "rules": [
       {
-        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 11
       }
     ]
   },
   {
-    "columnName": "SWAB_BARCODE",
+    "columnName": "BLOOD_TEST_BARCODE",
     "rules": [
       {
-        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 11
       }
     ]
   },
   {
-    "columnName": "BATCH_NUMBER",
+    "columnName": "COLLEX_OPEN_DATE",
     "rules": [
       {
-        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 11
+      }
+    ]
+  },
+  {
+    "columnName": "COLLEX_CLOSE_DATE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 11
       }
     ]
   }
