@@ -22,7 +22,6 @@ Feature: Un-submitted eQ partials can be flushed automatically by action rule
     And we retrieve the UAC and QID from the email log to use for launching in RH
     And the respondent home UI launch endpoint is called with the UAC
     And it redirects to a launch URL with a launch claims token
-    And an EQ_LAUNCH event is received
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
     When an EQ flush action rule has been created
     Then an EQ_FLUSH cloud task queue message is sent for the correct QID
