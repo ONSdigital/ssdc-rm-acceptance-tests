@@ -62,6 +62,7 @@ def check_notify_api_called_with_correct_email_and_template_id(email, notify_tem
 
     return response_json[0]
 
+
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def retrieve_one_expected_notify_api_email_call():
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log/email')

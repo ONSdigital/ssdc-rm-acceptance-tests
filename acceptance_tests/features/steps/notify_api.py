@@ -57,6 +57,7 @@ def get_uac_from_sms_fulfilment(context):
     context.rh_launch_uac = notify_api_call['personalisation']['__uac__']
     context.rh_launch_qid = notify_api_call['personalisation']['__qid__']
 
+
 @step('we retrieve the UAC and QID from the email log to use for launching in RH')
 def get_uac_from_email_call_log(context):
     notify_api_call = retrieve_one_expected_notify_api_email_call()
