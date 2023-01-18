@@ -110,6 +110,8 @@ spec:
           name: project-config
     - name: FILE_UPLOAD_MODE
       value: "BUCKET"
+    - name: EQ_FLUSH_STUB_URL
+      value: "http://eq-stub"
   volumes:
   - name: case-cloud-sql-certs
     secret:

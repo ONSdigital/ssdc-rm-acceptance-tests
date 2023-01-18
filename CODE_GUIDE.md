@@ -69,6 +69,8 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | rh_launch_uac                      | Stores a plain text UAC for launching in RH                                    | str      |
 | rh_launch_qid                      | Stores a qid paired with the UAC used for launching in RH                      | str      |
 | rh_launch_endpoint_response        | Stores the response from the API call RH launch                                | str      |
+| eq_launch_claims                   | Stores the decrypted EQ launch claims json                                     | Mapping  | 
+| eq_flush_claims                    | Stores the decrypted EQ flush claims json                                      | Mapping  | 
 
 </div>
 

@@ -16,3 +16,4 @@ def check_launch_redirect_and_token(context):
                                                         context.collex_id,
                                                         'en')
     context.correlation_id = eq_claims['tx_id']
+    context.eq_launch_claims = eq_claims

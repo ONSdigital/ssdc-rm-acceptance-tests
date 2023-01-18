@@ -15,7 +15,8 @@ logger = wrap_logger(logging.getLogger(__name__))
 subscriptions = [Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
-                 Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION]
+                 Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
+                 Config.PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION,]
 
 
 def publish_to_pubsub(message, project, topic, **kwargs):

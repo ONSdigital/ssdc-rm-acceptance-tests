@@ -64,6 +64,16 @@ def check_notify_api_called_with_correct_email_and_template_id(email, notify_tem
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+def retrieve_one_expected_notify_api_email_call():
+    response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log/email')
+    test_helper.assertEqual(response.status_code, 200, "Unexpected status code")
+    response_json = response.json()
+    test_helper.assertEqual(len(response_json), 1, f"Incorrect number of responses, response json {response_json}")
+
+    return response_json[0]
+
+
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def check_notify_api_email_request_calls(email_addresses: List, notify_template_id):
     expected_number_of_calls = len(email_addresses)
     response = requests.get(f'{Config.NOTIFY_STUB_SERVICE}/log/email')

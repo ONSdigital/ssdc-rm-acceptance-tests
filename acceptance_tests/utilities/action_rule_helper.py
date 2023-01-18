@@ -4,9 +4,10 @@ import requests
 
 from config import Config
 
+ACTION_RULES_URL = f'{Config.SUPPORT_TOOL_API}/actionRules'
+
 
 def create_export_file_action_rule(collex_id, classifiers, pack_code):
-    url = f'{Config.SUPPORT_TOOL_API}/actionRules'
     body = {
         'type': 'EXPORT_FILE',
         'packCode': pack_code,
@@ -15,13 +16,12 @@ def create_export_file_action_rule(collex_id, classifiers, pack_code):
         'collectionExerciseId': collex_id
     }
 
-    response = requests.post(url, json=body)
+    response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
     return pack_code
 
 
 def setup_deactivate_uac_action_rule(collex_id):
-    url = f'{Config.SUPPORT_TOOL_API}/actionRules'
     body = {
         'type': 'DEACTIVATE_UAC',
         'packCode': None,
@@ -30,13 +30,11 @@ def setup_deactivate_uac_action_rule(collex_id):
         'collectionExerciseId': collex_id
     }
 
-    response = requests.post(url, json=body)
+    response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
 
 
 def setup_sms_action_rule(collex_id, pack_code):
-    url = f'{Config.SUPPORT_TOOL_API}/actionRules'
-
     body = {
         'type': 'SMS',
         'packCode': pack_code,
@@ -47,13 +45,11 @@ def setup_sms_action_rule(collex_id, pack_code):
         'uacMetadata': {"waveOfContact": "1"}
     }
 
-    response = requests.post(url, json=body)
+    response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
 
 
 def setup_email_action_rule(collex_id, pack_code):
-    url = f'{Config.SUPPORT_TOOL_API}/actionRules'
-
     body = {
         'type': 'EMAIL',
         'packCode': pack_code,
@@ -64,5 +60,18 @@ def setup_email_action_rule(collex_id, pack_code):
         'uacMetadata': {"waveOfContact": "1"}
     }
 
-    response = requests.post(url, json=body)
+    response = requests.post(ACTION_RULES_URL, json=body)
+    response.raise_for_status()
+
+
+def set_eq_flush_action_rule(collex_id):
+    body = {
+        'type': 'EQ_FLUSH',
+        'packCode': None,
+        'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
+        'classifiers': '',
+        'collectionExerciseId': collex_id,
+    }
+
+    response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
