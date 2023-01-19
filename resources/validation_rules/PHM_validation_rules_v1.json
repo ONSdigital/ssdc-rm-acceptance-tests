@@ -84,7 +84,8 @@
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
         "maxLength": 30
       }
-    ]
+    ],
+    "sensitive": true
   },
   {
     "columnName": "MIDDLE_NAME",
@@ -93,7 +94,8 @@
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
         "maxLength": 30
       }
-    ]
+    ],
+    "sensitive": true
   },
   {
     "columnName": "FIRST_NAME",
