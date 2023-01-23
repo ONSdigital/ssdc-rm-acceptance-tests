@@ -13,14 +13,13 @@ before_install:
   - python -m pip install --upgrade setuptools
   - python -m pip install --upgrade wheel
   - pip uninstall -y numpy  # Remove the vulnerable Numpy which Travis provides
+  - rm -rf venv  # Remove the venv which Travis creates containing old/vulnerable packages
 
 install:
   - pip install -U pipenv
   - pipenv install --dev --deploy
 
 script:
-  - pip inspect
-  - pipenv run pip inspect
   - make package_vulnerability
   - make flake
   - make vulture
