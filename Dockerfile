@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # install google chrome, chromedriver and add acceptancetest user
 RUN apt-get -y update && apt-get install -y curl git wget gnupg && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - &&  \

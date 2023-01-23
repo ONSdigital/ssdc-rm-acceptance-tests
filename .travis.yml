@@ -5,8 +5,10 @@ services:
 
 language: python
 
+dist: bionic  # Required for Travis to support python version >3.9
+
 python:
-  - "3.9"
+  - "3.11"
 
 before_install:
   - pip install --upgrade pip pipenv setuptools wheel
@@ -16,7 +18,7 @@ install:
   - pipenv install --dev --deploy
 
 script:
-  - pipenv check -i 52495 -i 51499  # Ignore vulnerabilities in wheel and setuptools, which Travis flatly refuses to update properly (but should not be present in any properly updated environment)
+  - make check
   - make flake
   - make vulture
   - make build

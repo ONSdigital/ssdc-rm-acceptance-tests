@@ -1,7 +1,7 @@
 install:
 	pipenv install --dev
 
-package_vulnerability:
+check_safety:
 	PIPENV_PYUP_API_KEY="" pipenv check
 
 flake:
@@ -12,11 +12,11 @@ vulture:
 
 lint: flake vulture
 
-check: package_vulnerability lint
+check: check_safety lint
 
-test_core: package_vulnerability lint run_tests_core
+test_core: check lint run_tests_core
 
-test: package_vulnerability lint run_tests
+test: check lint run_tests
 
 run_tests:
 	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@cloud_only"
