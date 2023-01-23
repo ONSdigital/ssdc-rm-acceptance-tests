@@ -19,6 +19,8 @@ install:
   - pipenv install --dev --deploy
 
 script:
+  - pip inspect
+  - pipenv run pip inspect
   - make package_vulnerability
   - make flake
   - make vulture
