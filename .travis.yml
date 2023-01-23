@@ -12,8 +12,7 @@ python:
 
 before_install:
   - deactivate # Try exiting the virtualenv Travis dumps us in, so that we can fix it's out of date global dependencies
-  - pip install --upgrade pip pipenv setuptools wheel
-  - pip uninstall -y numpy  # Remove the vulnerable Numpy which Travis provides
+  - python3 -m pip install --upgrade pip pipenv setuptools wheel
 
 install:
   - pipenv install --dev --deploy
