@@ -12,7 +12,8 @@ python:
 
 before_install:
   - deactivate # Try exiting the virtualenv Travis dumps us in, so that we can fix it's out of date global dependencies
-  - pip3 install --upgrade pip pipenv setuptools wheel
+  - pyenv global 3.11 # Travis defaults to python 2 outside the venv, set it to the desired 3.11 instead
+  - pip install --upgrade pip pipenv setuptools wheel
 
 install:
   - pipenv install --dev --deploy
