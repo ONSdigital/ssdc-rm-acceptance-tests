@@ -9,16 +9,14 @@ python:
   - "3.9"
 
 before_install:
-  - rm -rf venv  # Remove the venv which Travis creates containing old/vulnerable packages
   - pip install --upgrade pip pipenv setuptools wheel
   - pip uninstall -y numpy  # Remove the vulnerable Numpy which Travis provides
 
 install:
-  - pip list
   - pipenv install --dev --deploy
 
 script:
-  - make package_vulnerability
+  - pipenv check -i 52495 -i 51499  # Ignore vulnerabilities in wheel and setuptools, which Travis flatly refuses to update properly (but should not be present in any properly updated environment)
   - make flake
   - make vulture
   - make build
