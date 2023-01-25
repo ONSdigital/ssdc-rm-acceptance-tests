@@ -39,10 +39,18 @@ Feature: Export files can be created and sent with correct data
     Then an export file is created with correct rows
 
     Examples:
-      | sample file                 | classifiers                                                                             | expected row count |
-      | business_sample_6_lines.csv | sample ->> 'ORG_SIZE' = 'HUGE'                                                          | 2                  |
+      | sample file                 | classifiers                    | expected row count |
+      | business_sample_6_lines.csv | sample ->> 'ORG_SIZE' = 'HUGE' | 2                  |
 
     @regression
     Examples:
       | sample file                 | classifiers                                                                             | expected row count |
       | business_sample_6_lines.csv | sample ->> 'INDUSTRY' IN ('MARKETING','FRUIT') AND (sample ->>'EMPLOYEES')::INT > 10000 | 3                  |
+
+  @cloud_only
+  Scenario: Notification messages are sent to a pubsub subscription to notify NIFI of export files in the configured supplier location
+    Given sample file "PHM_single_row_v1.csv" is loaded successfully
+    And an export file template has been created with template ["FIRST_NAME", "POSTCODE"]
+    And an export file action rule has been created
+    When an export file is created with correct rows
+    Then a notification PubSub message is sent to NIFI with the correct export file details

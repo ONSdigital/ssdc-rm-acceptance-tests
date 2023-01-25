@@ -34,6 +34,8 @@ class Config:
     PUBSUB_NEW_CASE_TOPIC = os.getenv('PUBSUB_NEW_CASE_TOPIC', 'event_new-case')
     PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION = os.getenv('PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION',
                                                         'cloud_task_queue_at')
+    PUBSUB_NIFI_INTERNAL_PRINT_NOTIFICATION_SUBSCRIPTION = os.getenv(
+        'PUBSUB_NIFI_INTERNAL_PRINT_NOTIFICATION_SUBSCRIPTION', 'export_file_nifi_notification')
     PUBSUB_DEFAULT_PULL_TIMEOUT = int(os.getenv('PUBSUB_DEFAULT_PULL_TIMEOUT', 120))
 
     DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')

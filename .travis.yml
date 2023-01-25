@@ -5,20 +5,21 @@ services:
 
 language: python
 
+dist: bionic  # Required for Travis to support python version >3.9
+
 python:
-  - "3.9"
+  - "3.11"
 
 before_install:
-  - python -m pip install --upgrade pip
-  - python -m pip install --upgrade py
-  - pip uninstall -y numpy  # Remove the vulnerable Numpy which Travis provides
+  - deactivate # Deactivate the virtualenv Travis dumps us in, so that we can fix out of date global dependencies
+  - pyenv global 3.11 # Ensure the right global python version is being used
+  - pip install --upgrade pip pipenv setuptools wheel
 
 install:
-  - pip install -U pipenv
   - pipenv install --dev --deploy
 
 script:
-  - make package_vulnerability
+  - make check
   - make flake
   - make vulture
   - make build
