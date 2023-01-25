@@ -38,7 +38,7 @@ spec:
       mountPath: "/home/acceptancetests/postgresql"
       readOnly: true
     - name: export-file-destinations
-      mountPath: "/home/export-file-service/config"
+      mountPath: "/home/acceptancetests/destination_config"
       readOnly: true
     env:
     - name: DB_USERNAME
@@ -79,7 +79,7 @@ spec:
           name: project-config
           key: project-name
     - name: SUPPLIER_CONFIG_JSON_PATH
-      value: "/home/export-file-service/config/export-file-destination-config.json"
+      value: "/home/acceptancetests/destination_config/export-file-destination-config.json"
     - name: SUPPORT_TOOL_HOST
       value: "support-tool"
     - name: SUPPORT_TOOL_PORT
