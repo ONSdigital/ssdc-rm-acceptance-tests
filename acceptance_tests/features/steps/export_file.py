@@ -10,6 +10,7 @@ from google.cloud import storage
 from tenacity import retry, retry_if_exception_type, stop_after_delay, wait_fixed
 
 from acceptance_tests.utilities import template_helper
+from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -80,6 +81,12 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
         for uac in expected_uacs
     }
 
+    if any(field.startswith('__sensitive__.') for field in template):
+        with open_cursor() as cur:
+            for case in cases:
+                cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (case['caseId'],))
+                case['sample_sensitive_values'] = cur.fetchone()[0]
+
     export_file_rows = []
     for case in cases:
         export_row_components = []
@@ -92,6 +99,8 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
                 export_row_components.append(qid)
             elif field.startswith('__request__.'):
                 export_row_components.append(fulfilment_personalisation[field.split('.')[1]])
+            elif field.startswith('__sensitive__.'):
+                export_row_components.append(case["sample_sensitive_values"][field.split('.')[1]])
             else:
                 export_row_components.append(case["sample"][field])
         export_file_rows.append(format_expected_export_file_row(export_row_components))

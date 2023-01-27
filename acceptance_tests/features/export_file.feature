@@ -16,6 +16,12 @@ Feature: Export files can be created and sent with correct data
       | sample file                 | template                                                     |
       | business_sample_6_lines.csv | ["BUSINESS_NAME","TOWN_NAME","__uac__","__qid__","INDUSTRY"] |
 
+  Scenario: Export file containing sensitive case fields
+    Given the sample file "PHM_single_row_v1.csv" with validation rules "PHM_validation_rules_v1.json" is loaded successfully
+    And an export file template has been created with template ["__sensitive__.MIDDLE_NAME","__sensitive__.LAST_NAME"]
+    When an export file action rule has been created
+    And an export file is created with correct rows
+
   Scenario Outline: A case is loaded, action rule triggered and export file created with differing templates no UACs
     Given sample file "<sample file>" is loaded successfully
     And an export file template has been created with template <template>
