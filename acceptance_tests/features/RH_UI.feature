@@ -8,9 +8,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And link text displays string "<expected link test>"
 
     Examples:
-      | language code | expected error text                         | error section header                                | expected link test                          |
-      | en            | Enter a valid access code                   | There is a problem with this page                   | Enter a valid access code                   |
-      | cy            | PLACEHOLDER WELSH Enter a valid access code | PLACEHOLDER WELSH There is a problem with this page | PLACEHOLDER WELSH Enter a valid access code |
+      | language code | expected error text                                          | error section header                                | expected link test                                           |
+      | en            | Access code not recognised. Enter the code again.            | There is a problem with this page                   | Access code not recognised. Enter the code again.            |
+      | cy            | Nid yw'r cod mynediad yn cael ei gydnabod. Rhowch y cod eto. | PLACEHOLDER WELSH There is a problem with this page | Nid yw'r cod mynediad yn cael ei gydnabod. Rhowch y cod eto. |
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
