@@ -37,6 +37,9 @@ spec:
     - name: case-cloud-sql-certs
       mountPath: "/home/acceptancetests/postgresql"
       readOnly: true
+    - name: export-file-destinations
+      mountPath: "/home/acceptancetests/destination_config"
+      readOnly: true
     env:
     - name: DB_USERNAME
       valueFrom:
@@ -76,7 +79,7 @@ spec:
           name: project-config
           key: project-name
     - name: SUPPLIER_CONFIG_JSON_PATH
-      value: "/home/acceptancetests/dummy_export_file_destination_config.json"
+      value: "/home/acceptancetests/destination_config/export-file-destination-config.json"
     - name: SUPPORT_TOOL_HOST
       value: "support-tool"
     - name: SUPPORT_TOOL_PORT
@@ -113,6 +116,13 @@ spec:
     - name: EQ_FLUSH_STUB_URL
       value: "http://eq-stub"
   volumes:
+  - name: export-file-destinations
+    secret:
+      secretName: export-file-destinations
+      defaultMode: 0400
+      items:
+        - key: config
+          path: "export-file-destination-config.json"
   - name: case-cloud-sql-certs
     secret:
       secretName: cloud-sql-certs
