@@ -38,11 +38,11 @@ class Config:
         'PUBSUB_NIFI_INTERNAL_PRINT_NOTIFICATION_SUBSCRIPTION', 'export_file_nifi_notification')
     PUBSUB_DEFAULT_PULL_TIMEOUT = int(os.getenv('PUBSUB_DEFAULT_PULL_TIMEOUT', 120))
 
-    DB_USERNAME = os.getenv('DB_USERNAME', 'postgres')
+    DB_USERNAME = os.getenv('DB_USERNAME', 'appuser')
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'postgres')
     DB_HOST_CASE = os.getenv('DB_HOST', 'localhost')
     DB_PORT = os.getenv('DB_PORT', '6432')
-    DB_NAME = os.getenv('DB_NAME', 'postgres')
+    DB_NAME = os.getenv('DB_NAME', 'rm')
     DB_CASE_CERTIFICATES = os.getenv('DB_CASE_CERTIFICATES', '')
 
     EXCEPTIONMANAGER_CONNECTION_HOST = os.getenv('EXCEPTIONMANAGER_CONNECTION_HOST', 'localhost')
