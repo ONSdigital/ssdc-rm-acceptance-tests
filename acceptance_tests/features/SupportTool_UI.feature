@@ -29,7 +29,7 @@ Feature: Test basic Support Tool Functionality
     And the collection exercise is clicked on, navigating to the selected exercise details page
     And I click the upload sample file button with file "social_sample_3_lines_fields.csv"
     When I create an action rule
-    Then I can see the Action Rule has been triggered and export files been created
+    Then I can see the Action Rule has been triggered and export files have been created
 
   @reset_notify_stub
   Scenario: Create an Email Action Rule
