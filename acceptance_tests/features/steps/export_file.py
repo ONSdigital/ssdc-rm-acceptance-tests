@@ -70,7 +70,7 @@ def get_qid_by_case_id(uac_update_events, case_id):
 
 
 def _get_unhashed_uacs_from_actual_export_file(actual_export_file_rows, template):
-    export_file_reader = csv.DictReader(actual_export_file_rows, fieldnames=template, delimiter='|')
+    export_file_reader = csv.DictReader(actual_export_file_rows, fieldnames=template, delimiter=',')
     next(export_file_reader, None)   # Exclude header row
     return tuple(export_file_row["__uac__"] for export_file_row in export_file_reader)
 
@@ -88,7 +88,7 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
                 cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (case['caseId'],))
                 case['sample_sensitive_values'] = cur.fetchone()[0]
 
-    export_file_rows = [format_expected_export_file_row(template, delimiter=',')]  # expected header
+    export_file_rows = []
     for case in cases:
         export_row_components = []
         for field in template:
@@ -108,11 +108,9 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
     return export_file_rows
 
 
-def format_expected_export_file_row(export_row_components: Iterable[str], delimiter='|'):
-    # TODO: Currently only the header row is comma delimited. Update this function to hardcode comma when ALL rows
-    #       use this
+def format_expected_export_file_row(export_row_components: Iterable[str]):
     # The export file format is pipe separated and always double quote wrapped CSV
-    return delimiter.join(f'"{component}"' for component in export_row_components)
+    return ','.join(f'"{component}"' for component in export_row_components)
 
 
 def check_export_file_matches_expected(actual_export_file, expected_export_file):
