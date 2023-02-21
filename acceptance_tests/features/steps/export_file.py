@@ -88,7 +88,7 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
                 cur.execute("SELECT sample_sensitive FROM casev3.cases WHERE id = %s", (case['caseId'],))
                 case['sample_sensitive_values'] = cur.fetchone()[0]
 
-    export_file_rows = []
+    export_file_rows = [format_expected_export_file_row(template)]  # expected header
     for case in cases:
         export_row_components = []
         for field in template:
@@ -109,7 +109,7 @@ def generate_expected_export_file_rows(template: List, cases: List, uac_update_e
 
 
 def format_expected_export_file_row(export_row_components: Iterable[str]):
-    # The export file format is pipe separated and always double quote wrapped CSV
+    # The export file format is comma separated and always double quote wrapped CSV
     return ','.join(f'"{component}"' for component in export_row_components)
 
 
