@@ -154,7 +154,7 @@ def click_action_rule_button(context):
     context.browser.find_by_id('createActionRuleBtn').click()
 
 
-@step('I can see the Action Rule has been triggered and export files been created')
+@step('I can see the Action Rule has been triggered and export files have been created')
 def check_for_action_rule_triggered(context):
     poll_action_rule_trigger(context.browser, context.pack_code)
     context.emitted_uacs = get_uac_update_events(context.sample_count, None, None)
