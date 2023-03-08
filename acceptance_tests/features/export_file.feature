@@ -6,6 +6,7 @@ Feature: Export files can be created and sent with correct data
     When an export file action rule has been created
     Then UAC_UPDATE messages are emitted with active set to true
     And an export file is created with correct rows
+    And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
     Examples:
       | sample file                      | template                                               |
@@ -21,12 +22,14 @@ Feature: Export files can be created and sent with correct data
     And an export file template has been created with template ["__sensitive__.MIDDLE_NAME","__sensitive__.LAST_NAME"]
     When an export file action rule has been created
     And an export file is created with correct rows
+    And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
   Scenario Outline: A case is loaded, action rule triggered and export file created with differing templates no UACs
     Given sample file "<sample file>" is loaded successfully
     And an export file template has been created with template <template>
     When an export file action rule has been created
     And an export file is created with correct rows
+    And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
     Examples:
       | sample file                      | template                                     |
@@ -43,6 +46,7 @@ Feature: Export files can be created and sent with correct data
     When an export file action rule has been created with classifiers "<classifiers>"
     Then <expected row count> UAC_UPDATE messages are emitted with active set to true
     Then an export file is created with correct rows
+    And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
     Examples:
       | sample file                 | classifiers                    | expected row count |
