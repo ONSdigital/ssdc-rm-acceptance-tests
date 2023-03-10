@@ -26,7 +26,8 @@ def check_export_file(context):
                             'Export file template expects UACs or QIDs but no corresponding emitted_uacs found in '
                             f'the scenario context, emitted_uacs {emitted_uacs}')
 
-    actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, context.pack_code)
+    actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, context.pack_code,
+                                                   supplier=context.export_supplier)
 
     uacs_from_actual_export_file = _get_unhashed_uacs_from_actual_export_file(
         actual_export_file_rows, template
@@ -44,6 +45,16 @@ def check_export_file(context):
 def create_export_file_template(context, template: List):
     context.template = template
     context.pack_code = template_helper.create_export_file_template(template)
+    context.export_supplier = Config.SUPPLIER_DEFAULT_TEST
+
+
+@step('an export file template has been created for the internal reprographics supplier with template {template:array}')
+def create_export_file_template(context, template: List):
+    context.template = template
+    context.pack_code = template_helper.create_export_file_template(
+        template,
+        export_file_destination=Config.SUPPLIER_INTERNAL_REPROGRAPHICS)
+    context.export_supplier = Config.SUPPLIER_INTERNAL_REPROGRAPHICS
 
 
 def _get_uac_matching_case_id(uac_update_events, case_id):
@@ -71,7 +82,7 @@ def get_qid_by_case_id(uac_update_events, case_id):
 
 def _get_unhashed_uacs_from_actual_export_file(actual_export_file_rows, template):
     export_file_reader = csv.DictReader(actual_export_file_rows, fieldnames=template, delimiter=',')
-    next(export_file_reader, None)   # Exclude header row
+    next(export_file_reader, None)  # Exclude header row
     return tuple(export_file_row["__uac__"] for export_file_row in export_file_reader)
 
 
@@ -190,7 +201,7 @@ def decrypt_export_file_contents(export_file_contents: str) -> List[str]:
 
 
 @retry(retry=retry_if_exception_type(FileNotFoundError), wait=wait_fixed(1), stop=stop_after_delay(120))
-def get_export_file_rows(after_datetime: datetime, pack_code: str, supplier='SUPPLIER_A') -> List[str]:
+def get_export_file_rows(after_datetime: datetime, pack_code: str, supplier=Config.SUPPLIER_DEFAULT_TEST) -> List[str]:
     export_file_destination = Config.EXPORT_FILE_DESTINATIONS_CONFIG[supplier].get('exportDirectory')
     encrypted_export_file_contents = get_export_file_contents(after_datetime, pack_code,
                                                               export_file_destination)

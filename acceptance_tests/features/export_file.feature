@@ -60,7 +60,7 @@ Feature: Export files can be created and sent with correct data
   @cloud_only
   Scenario: Notification messages are sent to a pubsub subscription to notify NIFI of export files in the configured supplier location
     Given sample file "PHM_single_row_v1.csv" is loaded successfully
-    And an export file template has been created with template ["FIRST_NAME", "POSTCODE"]
+    And an export file template has been created for the internal reprographics supplier with template ["FIRST_NAME", "POSTCODE"]
     And an export file action rule has been created
     When an export file is created with correct rows
     Then a notification PubSub message is sent to NIFI with the correct export file details

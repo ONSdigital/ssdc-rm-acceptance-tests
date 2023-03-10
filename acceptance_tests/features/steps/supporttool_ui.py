@@ -124,7 +124,7 @@ def create_export_file_template(context, packcode, template: List):
     context.browser.find_by_id('packCodeTextField').fill(context.pack_code)
     context.browser.find_by_id('descriptionTextField').fill('export-file description')
     context.browser.find_by_id('exportFileDestinationSelectField').click()
-    context.browser.find_by_id('SUPPLIER_A').click()
+    context.browser.find_by_id(Config.SUPPLIER_DEFAULT_TEST).click()
     context.browser.find_by_id('templateTextField').fill(str(context.template).replace('\'', '\"'))
     context.browser.find_by_id('createExportFileTemplateInnerBtn').click()
 
