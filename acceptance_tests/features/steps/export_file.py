@@ -26,8 +26,10 @@ def check_export_file(context):
                             'Export file template expects UACs or QIDs but no corresponding emitted_uacs found in '
                             f'the scenario context, emitted_uacs {emitted_uacs}')
 
+    supplier = _get_context_export_supplier_or_default(context)
+
     actual_export_file_rows = get_export_file_rows(context.test_start_utc_datetime, context.pack_code,
-                                                   supplier=context.export_supplier)
+                                                   supplier=supplier)
 
     uacs_from_actual_export_file = _get_unhashed_uacs_from_actual_export_file(
         actual_export_file_rows, template
@@ -45,16 +47,22 @@ def check_export_file(context):
 def create_export_file_template(context, template: List):
     context.template = template
     context.pack_code = template_helper.create_export_file_template(template)
-    context.export_supplier = Config.SUPPLIER_DEFAULT_TEST
 
 
 @step('an export file template has been created for the internal reprographics supplier with template {template:array}')
-def create_export_file_template(context, template: List):
+def create_export_file_template_internal_reprographics(context, template: List):
     context.template = template
     context.pack_code = template_helper.create_export_file_template(
         template,
         export_file_destination=Config.SUPPLIER_INTERNAL_REPROGRAPHICS)
     context.export_supplier = Config.SUPPLIER_INTERNAL_REPROGRAPHICS
+
+
+def _get_context_export_supplier_or_default(context) -> str:
+    try:
+        return context.export_supplier
+    except AttributeError:
+        return Config.SUPPLIER_DEFAULT_TEST
 
 
 def _get_uac_matching_case_id(uac_update_events, case_id):
