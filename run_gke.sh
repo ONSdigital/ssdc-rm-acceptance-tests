@@ -2,29 +2,31 @@
 set -e
 
 if [ -z "$ENV" ]; then
-    echo "No ENV set. Using kubectl current context."
+  echo "No ENV set. Using kubectl current context."
 
 else
-    GCP_PROJECT=ssdc-rm-$ENV
-    gcloud config set project $GCP_PROJECT
-    gcloud container clusters get-credentials rm-k8s-cluster \
-        --region europe-west2 \
-        --project $GCP_PROJECT
+  GCP_PROJECT=ssdc-rm-$ENV
+  gcloud config set project $GCP_PROJECT
+  gcloud container clusters get-credentials rm-k8s-cluster \
+      --region europe-west2 \
+      --project $GCP_PROJECT
 fi
 
 if [ "$NAMESPACE" ]; then
-    kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
-    echo "NAMESPACE = [$NAMESPACE] Set kubectl namespace for subsequent commands [$NAMESPACE]."
+  kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
+  echo "NAMESPACE = [$NAMESPACE] Set kubectl namespace for subsequent commands [$NAMESPACE]."
 fi
 
 
-BEHAVE_TAGS=''
-
-if ! [ "$REGRESSION" = "false" ]; then
-   BEHAVE_TAGS=' --tags=~@regression '
+if [ "$REGRESSION" = "true" ]; then
+  echo "Running with the regression tests"
 else
-    echo "Running with the regression tests"
+  SKIP_REGRESSION_TAGS='--tags=~@regression'
+  echo "Skipping regression tags"
+  BEHAVE_TAGS="$BEHAVE_TAGS $SKIP_REGRESSION_TAG"
 fi
+
+echo "Running with behave tags: \"$BEHAVE_TAGS\""
 
 # Use the optional image tag argument, or default it to "latest"
 IMAGE_TAG="${1:-latest}"

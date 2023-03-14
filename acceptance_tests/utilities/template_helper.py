@@ -24,7 +24,7 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
     response.raise_for_status()
 
 
-def create_export_file_template(template, export_file_destination='SUPPLIER_A'):
+def create_export_file_template(template, export_file_destination=Config.SUPPLIER_DEFAULT_TEST):
     pack_code = generate_pack_code('PRINT_')
     url = f'{Config.SUPPORT_TOOL_API}/exportFileTemplates'
     create_template(url, pack_code, template, export_file_destination=export_file_destination)
