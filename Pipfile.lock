@@ -481,7 +481,6 @@
             "hashes": [
                 "sha256:9ff82852bcb65d139813e2a5197627a94966245c897796760a3a2a8eb66f020b"
             ],
-            "markers": "python_version >= '3.0'",
             "version": "==1.19.0"
         },
         "parse-type": {
