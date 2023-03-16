@@ -208,5 +208,72 @@
         "maxLength": 11
       }
     ]
+  },
+  {
+    "columnName": "WINDOW_START_DATE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.ISODateRule"
+      }
+    ]
+  },
+  {
+    "columnName": "WINDOW_CLOSE_DATE",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.ISODateRule"
+      }
+    ]
+  },
+  {
+    "columnName": "PARTICIPANT_WINDOW_ID",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 21
+      }
+    ]
+  },
+  {
+    "columnName": "PORTAL_ID",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.NumericRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
+        "maxLength": 7
+      }
+    ]
+  },
+  {
+    "columnName": "COUNTRY",
+    "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.InSetRule",
+        "set": [
+          "England",
+          "Wales",
+          "Scotland",
+          "NI",
+          "Unknown"
+        ]
+      }
+    ]
   }
 ]
