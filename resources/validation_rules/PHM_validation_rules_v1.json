@@ -7,7 +7,7 @@
       },
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
-        "maxLength": 16
+        "maxLength": 17
       }
     ]
   },
