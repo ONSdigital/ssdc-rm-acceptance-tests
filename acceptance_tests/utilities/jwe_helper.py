@@ -1,3 +1,4 @@
+import datetime
 import json
 from typing import Mapping
 from jwcrypto import jwe, jws
@@ -39,5 +40,9 @@ def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, co
 
     test_helper.assertEqual(eq_claims["language_code"], language_code,
                             f'Expected correct language code: actual payload: {eq_claims}')
+
+    test_helper.assertGreater(datetime.datetime.fromisoformat(eq_claims["response_expires_at"]),
+                              datetime.datetime.utcnow().astimezone(datetime.UTC),
+                              'Expected the response_expires_at to be set in the future')
 
     return eq_claims

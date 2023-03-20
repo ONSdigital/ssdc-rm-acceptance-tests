@@ -5,12 +5,14 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from urllib.parse import parse_qs, urlparse
 
 
-def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response, rh_launch_qid, case_id, collex_id,
-                                            language_code):
-    response: Response = rh_launch_endpoint_response
-    test_helper.assertTrue(response.is_redirect, 'Expected RH response to redirect to EQ launch')
+def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response: Response,
+                                            rh_launch_qid: str,
+                                            case_id: str,
+                                            collex_id: str,
+                                            language_code: str):
+    test_helper.assertTrue(rh_launch_endpoint_response.is_redirect, 'Expected RH response to redirect to EQ launch')
 
-    launch_url = response.next.url
+    launch_url = rh_launch_endpoint_response.next.url
     query_strings = parse_qs(urlparse(launch_url).query)
 
     test_helper.assertIn('token', query_strings,
