@@ -23,7 +23,7 @@ if [ "$REGRESSION" = "true" ]; then
 else
   SKIP_REGRESSION_TAGS='--tags=~@regression'
   echo "Skipping regression tags"
-  BEHAVE_TAGS="$BEHAVE_TAGS $SKIP_REGRESSION_TAG"
+  BEHAVE_TAGS="$BEHAVE_TAGS $SKIP_REGRESSION_TAGS"
 fi
 
 echo "Running with behave tags: \"$BEHAVE_TAGS\""
