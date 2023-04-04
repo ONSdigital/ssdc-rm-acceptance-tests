@@ -13,6 +13,7 @@
   },
   {
     "columnName": "ADDRESS_LINE_1",
+    "sensitive": true,
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
@@ -26,6 +27,9 @@
   {
     "columnName": "ADDRESS_LINE_2",
     "rules": [
+      {
+        "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
+      },
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
         "maxLength": 60
@@ -64,15 +68,16 @@
   },
   {
     "columnName": "EMAIL",
+    "sensitive": true,
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.EmailRule"
       }
-    ],
-    "sensitive": true
+    ]
   },
   {
     "columnName": "LAST_NAME",
+    "sensitive": true,
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.MandatoryRule"
@@ -81,18 +86,17 @@
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
         "maxLength": 30
       }
-    ],
-    "sensitive": true
+    ]
   },
   {
     "columnName": "MIDDLE_NAME",
+    "sensitive": true,
     "rules": [
       {
         "className": "uk.gov.ons.ssdc.common.validation.LengthRule",
         "maxLength": 30
       }
-    ],
-    "sensitive": true
+    ]
   },
   {
     "columnName": "FIRST_NAME",
