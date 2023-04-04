@@ -18,7 +18,7 @@ Feature: Export files can be created and sent with correct data
       | business_sample_6_lines.csv | ["BUSINESS_NAME","TOWN_NAME","__uac__","__qid__","INDUSTRY"] |
 
   Scenario: Export file containing sensitive case fields
-    Given the sample file "PHM_single_row_v1.csv" with validation rules "PHM_validation_rules_v1.json" is loaded successfully
+    Given the sample file "CRIS_dummy_1_row.csv" with validation rules "CRIS_validation_rules_v1.json" is loaded successfully
     And an export file template has been created with template ["__sensitive__.MIDDLE_NAME","__sensitive__.LAST_NAME"]
     When an export file action rule has been created
     And an export file is created with correct rows
@@ -59,7 +59,7 @@ Feature: Export files can be created and sent with correct data
 
   @cloud_only
   Scenario: Notification messages are sent to a pubsub subscription to notify NIFI of export files in the configured supplier location
-    Given sample file "PHM_single_row_v1.csv" is loaded successfully
+    Given sample file "CRIS_dummy_1_row.csv" is loaded successfully
     And an export file template has been created for the internal reprographics supplier with template ["FIRST_NAME", "POSTCODE"]
     And an export file action rule has been created
     When an export file is created with correct rows

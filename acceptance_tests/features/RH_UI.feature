@@ -14,7 +14,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
-    Given sample file "PHM_single_row_v1.csv" is loaded successfully
+    Given sample file "CRIS_dummy_1_row.csv" is loaded successfully
     And and we request a UAC by SMS and the UAC is ready and RH page has "<expected text>" for "<language code>"
     And the user enters a valid UAC
     Then they are redirected to EQ with the correct token and language set to "<language code>"
@@ -27,7 +27,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page
-    Given sample file "PHM_single_row_v1.csv" is loaded successfully
+    Given sample file "CRIS_dummy_1_row.csv" is loaded successfully
     And and we request a UAC by SMS and the UAC is ready and RH page has "Start study - ONS Surveys" for "en"
     And a receipt message is published to the pubsub receipting topic
     And UAC_UPDATE message is emitted with active set to false and "receiptReceived" is true
@@ -37,7 +37,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario: A deactivated UAC redirects to informative page
-    Given sample file "PHM_single_row_v1.csv" is loaded successfully
+    Given sample file "CRIS_dummy_1_row.csv" is loaded successfully
     And and we request a UAC by SMS and the UAC is ready and RH page has "Start study - ONS Surveys" for "en"
     And a deactivate uac message is put on the queue
     And UAC_UPDATE messages are emitted with active set to false
@@ -51,7 +51,7 @@ Feature: Testing the "enter a UAC" functionality of RH UI
 
   @reset_notify_stub
   Scenario: Launching with survey metadata
-    Given sample file "PHM_single_row_v1.csv" is loaded with rules "PHM_validation_rules_v1.json" and eq launch settings set to "launchData.json"
+    Given sample file "CRIS_dummy_1_row.csv" is loaded with rules "CRIS_validation_rules_v1.json" and eq launch settings set to "launchData.json"
     And and we request a UAC by SMS and the UAC is ready and RH page has "Start study - ONS Surveys" for "en"
     And the user enters a valid UAC
     Then they are redirected to EQ with the language "en" and the EQ launch settings file "launchData.json"
