@@ -18,8 +18,8 @@ from config import Config
 VALIDATION_RULES_PATH = Config.RESOURCE_FILE_PATH.joinpath('validation_rules')
 
 
-def get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns=[]):
-    emitted_cases = get_emitted_cases(len(sample_rows))
+def get_emitted_cases_and_check_against_sample(sample_rows, test_start_time, sensitive_columns=[]):
+    emitted_cases = get_emitted_cases(len(sample_rows), test_start_time)
     unmatched_sample_rows = sample_rows.copy()
     for emitted_case in emitted_cases:
         matched_row = None
@@ -66,7 +66,7 @@ def load_bom_sample_file_step(context, sample_file_name):
     for index in range(len(sample_rows)):
         sample_rows[index]['TLA'] = sample_rows[index].pop('\ufeffTLA')
 
-    context.survey_id = add_survey(sample_validation_rules)
+    context.survey_id = add_survey(sample_validation_rules, context.test_start_utc_datetime)
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
         {
@@ -75,11 +75,12 @@ def load_bom_sample_file_step(context, sample_file_name):
             "collectionInstrumentUrl": context.expected_collection_instrument_url
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
 
 @step('sample file "{sample_file_name}" is loaded successfully')
@@ -93,7 +94,7 @@ def load_sample_with_survey_type(context, sample_file_name, survey_type):
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
     sample_definition_url = "http://" + survey_type + ".json"
-    context.survey_id = add_survey(sample_validation_rules, sample_definition_url)
+    context.survey_id = add_survey(sample_validation_rules, context.test_start_utc_datetime, sample_definition_url)
 
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
@@ -103,11 +104,12 @@ def load_sample_with_survey_type(context, sample_file_name, survey_type):
             "collectionInstrumentUrl": context.expected_collection_instrument_url
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
 
 @step('sample file "{sample_file_name}" is loaded successfully with complex case CI selection rules')
@@ -115,7 +117,7 @@ def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
-    context.survey_id = add_survey(sample_validation_rules)
+    context.survey_id = add_survey(sample_validation_rules, context.test_start_utc_datetime)
 
     context.expected_collection_instrument_url = "http://test-eq.com/complex-schema"
     collection_instrument_selection_rules = [
@@ -130,11 +132,12 @@ def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
             "collectionInstrumentUrl": "this URL should not be chosen. If it is, the test is a failure"
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
 
 @step('sample file "{sample_file_name}" is loaded successfully with complex UAC CI selection rules')
@@ -142,7 +145,7 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path)
 
-    context.survey_id = add_survey(sample_validation_rules)
+    context.survey_id = add_survey(sample_validation_rules, context.test_start_utc_datetime)
 
     context.expected_collection_instrument_url = "http://test-eq.com/super-complex-schema"
     collection_instrument_selection_rules = [
@@ -162,11 +165,12 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
             "collectionInstrumentUrl": "this URL should not be chosen. If it is, the test is a failure"
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
 
 @step('the sample file "{sample_file_name}"'
@@ -178,7 +182,7 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
     sample_validation_rules = get_validation_rules(validation_rules_path)
     sensitive_columns = get_sample_sensitive_columns(sample_validation_rules)
 
-    context.survey_id = add_survey(sample_validation_rules)
+    context.survey_id = add_survey(sample_validation_rules, context.test_start_utc_datetime)
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
         {
@@ -187,12 +191,14 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
             "collectionInstrumentUrl": context.expected_collection_instrument_url
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.sample = read_sample(sample_file_path, sample_validation_rules)
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime,
+                                                                       sensitive_columns)
 
 
 def get_business_sample_columns_and_validation_rules(sample_file_path: Path):
@@ -238,7 +244,7 @@ def load_business_sample_file_step(context):
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath('business_rsi_example_sample.csv')
     sample_rows, validation_rules = get_business_sample_columns_and_validation_rules(sample_file_path)
 
-    context.survey_id = add_survey(validation_rules, "http://foo.bar.json", False, ':')
+    context.survey_id = add_survey(validation_rules, context.test_start_utc_datetime, "http://foo.bar.json", False, ':')
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
         {
@@ -247,11 +253,12 @@ def load_business_sample_file_step(context):
             "collectionInstrumentUrl": context.expected_collection_instrument_url
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
 
 @step('sample file "{sample_file_name}" with sensitive columns {sensitive_columns:array} is loaded successfully')
@@ -260,7 +267,7 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
     sample_rows, sample_validation_rules = get_sample_rows_and_generate_open_validation_rules(sample_file_path,
                                                                                               sensitive_columns)
 
-    context.survey_id = add_survey(sample_validation_rules)
+    context.survey_id = add_survey(sample_validation_rules, context.test_start_utc_datetime)
     context.expected_collection_instrument_url = "http://test-eq.com/test-schema"
     collection_instrument_selection_rules = [
         {
@@ -269,11 +276,13 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
             "collectionInstrumentUrl": context.expected_collection_instrument_url
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime,
+                                                                       sensitive_columns)
 
 
 @step('sample file "{sample_file_name}" is loaded with rules "{validation_rules_file_name}" '
@@ -286,7 +295,7 @@ def load_sample_with_rules_and_eq_launch_settings(context, sample_file_name, val
     sample_validation_rules = get_validation_rules(validation_rules_path)
     sensitive_columns = get_sample_sensitive_columns(sample_validation_rules)
 
-    context.survey_id = add_survey(sample_validation_rules)
+    context.survey_id = add_survey(sample_validation_rules, context.test_start_utc_datetime)
 
     eq_launch_settings_file_path = Config.EQ_LAUNCH_SETTINGS_FILE_PATH.joinpath(eq_launch_settings_file)
     context.eq_launch_settings = json.loads(eq_launch_settings_file_path.read_text())
@@ -300,9 +309,11 @@ def load_sample_with_rules_and_eq_launch_settings(context, sample_file_name, val
             "eqLaunchSettings": context.eq_launch_settings
         }
     ]
-    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules)
+    context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
+                                   context.test_start_utc_datetime)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.sample = read_sample(sample_file_path, sample_validation_rules)
-    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, sensitive_columns)
+    context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime,
+                                                                       sensitive_columns)

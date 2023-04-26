@@ -12,6 +12,6 @@ def check_nifi_export_file_notification_message(context):
         return message['files'][0]['name'].startswith(f'internal_reprographics/print_services/{context.pack_code}'), \
             'Notification message file name prefix did not match the pack code'
 
-    get_matching_pubsub_message_acking_others(
-        subscription=Config.PUBSUB_NIFI_INTERNAL_PRINT_NOTIFICATION_SUBSCRIPTION,
-        message_matcher=_message_matcher)
+    get_matching_pubsub_message_acking_others(subscription=Config.PUBSUB_NIFI_INTERNAL_PRINT_NOTIFICATION_SUBSCRIPTION,
+                                              message_matcher=_message_matcher,
+                                              test_start_time=context.test_start_utc_datetime)

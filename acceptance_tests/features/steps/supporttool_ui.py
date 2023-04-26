@@ -9,7 +9,7 @@ from tenacity import retry, stop_after_delay, wait_fixed
 from acceptance_tests.features.steps.email_action_rule import check_notify_called_with_correct_emails_and_uacs
 from acceptance_tests.features.steps.export_file import check_export_file
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
-from acceptance_tests.utilities.event_helper import get_emitted_cases, get_emitted_collection_exercise_update, \
+from acceptance_tests.utilities.event_helper import get_emitted_cases, get_collection_exercise_update_by_name, \
     get_uac_update_events
 from acceptance_tests.utilities.sample_helper import read_sample
 from acceptance_tests.utilities.survey_helper import get_emitted_survey_update
@@ -48,7 +48,7 @@ def create_survey_in_UI(context, survey_prefix, sample_file_name, sensitive_colu
     test_helper.assertEquals(
         len(context.browser.find_by_id('surveyListTable').first.find_by_text(context.survey_name, wait_time=20)), 1)
 
-    get_emitted_survey_update(context.survey_name)
+    get_emitted_survey_update(context.survey_name, context.test_start_utc_datetime)
 
 
 @step('the survey is clicked on it should display the collection exercise page')
@@ -83,7 +83,7 @@ def click_create_collex_button(context):
     test_helper.assertEquals(
         len(context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name)), 1)
 
-    get_emitted_collection_exercise_update()
+    get_collection_exercise_update_by_name(context.collex_name, context.test_start_utc_datetime)
 
 
 @step('the collection exercise is clicked on, navigating to the selected exercise details page')
@@ -102,7 +102,7 @@ def click_load_sample(context, sample_file_name):
     context.browser.find_by_id("jobProcessBtn", wait_time=20).click()
     poll_sample_status_processed(context.browser)
     context.browser.find_by_id('closeSampledetailsBtn').click()
-    context.emitted_cases = get_emitted_cases(context.sample_count)
+    context.emitted_cases = get_emitted_cases(context.sample_count, context.test_start_utc_datetime)
 
     test_helper.assertEquals(len(context.emitted_cases), context.sample_count)
 
@@ -157,7 +157,7 @@ def click_action_rule_button(context):
 @step('I can see the Action Rule has been triggered and export files have been created')
 def check_for_action_rule_triggered(context):
     poll_action_rule_trigger(context.browser, context.pack_code)
-    context.emitted_uacs = get_uac_update_events(context.sample_count, None, None)
+    context.emitted_uacs = get_uac_update_events(context.sample_count, None, None, context.test_start_utc_datetime)
     check_export_file(context)
 
 

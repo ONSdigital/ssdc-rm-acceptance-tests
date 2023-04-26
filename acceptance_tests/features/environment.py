@@ -1,6 +1,6 @@
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from distutils.util import strtobool
 
 import requests
@@ -44,7 +44,7 @@ def before_scenario(context, scenario):
     purge_outbound_topics()
     move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
-    context.test_start_utc_datetime = datetime.utcnow()
+    context.test_start_utc_datetime = datetime.utcnow().replace(tzinfo=timezone.utc)
     context.correlation_id = None
     context.originating_user = None
     context.sent_messages = []

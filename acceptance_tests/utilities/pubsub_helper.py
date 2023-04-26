@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+from datetime import datetime
 from typing import Callable, Mapping
 
 from google.api_core.exceptions import DeadlineExceeded
@@ -16,7 +17,7 @@ subscriptions = [Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
-                 Config.PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION,]
+                 Config.PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION, ]
 
 
 def publish_to_pubsub(message, project, topic, **kwargs):
@@ -79,51 +80,75 @@ def _ack_all_on_subscription(subscriber, subscription_path):
     return messages
 
 
-def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout):
+def is_message_from_before_scenario(message, test_start_time):
+    if not message.get('header'):
+        return False
+    if not message['header'].get('dateTime'):
+        logger.warn('Found message header with no dateTime', message=message)
+        return False
+    message_datetime = datetime.fromisoformat(message['header']['dateTime'])
+    return message_datetime < test_start_time
+
+
+def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout,
+                                   test_start_time=None):
     # Synchronously pull messages one at at time until we either hit the expected number or the timeout passes.
-    received_messages = []
+    scenario_messages = []
     deadline = time.time() + timeout
 
     # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
     # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
     # the full time for all the expected messages to be published and pulled
-    while len(received_messages) < expected_msg_count and not time.time() > deadline:
+    while len(scenario_messages) < expected_msg_count and time.time() < deadline:
         try:
             response = subscriber.pull(subscription=subscription_path, max_messages=expected_msg_count, timeout=1)
         except DeadlineExceeded:
             continue
+
+        for message in (json.loads(message.message.data) for message in response.received_messages):
+            if is_message_from_before_scenario(message, test_start_time):
+                # Ignore messages from before the test start time, to avoid cross contamination from early scenarios
+                logger.warn('Ignoring and acking a message from before this scenario', message=message)
+                print('Ignoring and acking a message from before this scenario', message)
+                continue
+
+            scenario_messages.append(message)
+
+        # Ack all received messages, including any we're ignoring
         if response.received_messages:
             subscriber.acknowledge(subscription=subscription_path,
                                    ack_ids=[message.ack_id for message in response.received_messages])
-            received_messages.extend(response.received_messages)
 
-    test_helper.assertEqual(len(received_messages), expected_msg_count,
+    test_helper.assertEqual(len(scenario_messages), expected_msg_count,
                             f'Expected to pull exactly {expected_msg_count} message(s) from '
-                            f'subscription {subscription_path} but found {len(received_messages)} '
+                            f'subscription {subscription_path} but found {len(scenario_messages)} '
                             f'within the {timeout} second timeout')
+    return scenario_messages
+
+
+def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT,
+                                        test_start_time: datetime = None):
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
+    received_messages = _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout,
+                                                       test_start_time=test_start_time)
+    subscriber.close()
     return received_messages
 
 
-def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
-    subscriber = pubsub_v1.SubscriberClient()
-    subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
-    received_messages = _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_count, timeout)
-    parsed_message_bodies = []
-
-    for received_message in received_messages:
-        parsed_body = json.loads(received_message.message.data)
-        parsed_message_bodies.append(parsed_body)
-
-    subscriber.close()
-    return parsed_message_bodies
-
-
 def get_matching_pubsub_message_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
-                                              timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
+                                              test_start_time, timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
     """
     Pull and ack all pubsub messages on the given subscription within the timeout, until a match is found
-    message_matcher is a function which takes the parsed message body json and returns a bool for whether it matches,
-    and a string for describing non-matches for helpful failure logging
+
+    Args:
+        subscription: PubSub subscription name
+        message_matcher: A function object which takes the parsed message contents and returns a tuple,
+            the first element being a bool indicating if the message matches, the second being a string used only if
+            the message does not match, describing the non match to aid logging
+        test_start_time: the test start datetime (tz aware)
+        timeout: The length of time to attempt to pull a matching message for, will fail the test if the timeout is
+            reached.
     """
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
@@ -133,21 +158,34 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
     # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
     # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
     # the full time for all the expected messages to be published and pulled
-    while not matched_message and not time.time() > deadline:
+    while not matched_message and time.time() < deadline:
+
         try:
             response = subscriber.pull(subscription=subscription_path, max_messages=1, timeout=1)
         except DeadlineExceeded:
             continue
-        if response.received_messages:
-            received_message = response.received_messages[0]
-            parsed_message = json.loads(received_message.message.data)
-            message_match, failure_description = message_matcher(parsed_message)
-            if message_match:
-                matched_message = parsed_message
-            else:
-                logger.warn(f'Acking non matching message on subscription {subscription_path}, '
-                            f'failed match description: {failure_description}')
-            subscriber.acknowledge(subscription=subscription_path, ack_ids=[received_message.ack_id])
+
+        if not response.received_messages:
+            # Keep trying to pull if we didn't receive a message
+            continue
+
+        received_message = response.received_messages[0]  # We have pulled only 1 max_messages
+        parsed_message = json.loads(received_message.message.data)
+        message_match, failure_description = message_matcher(parsed_message)
+
+        if message_match and is_message_from_before_scenario(parsed_message, test_start_time):
+            # Ignore messages from before the test start time, to avoid cross contamination from early scenarios
+            logger.warn('Ignoring and acking a message from before this scenario', message=parsed_message)
+
+        elif message_match:
+            matched_message = parsed_message
+
+        else:
+            logger.warn(f'Acking non matching message on subscription {subscription_path}, '
+                        f'failed match description: {failure_description}')
+
+        subscriber.acknowledge(subscription=subscription_path,
+                               ack_ids=[message.ack_id for message in response.received_messages])
 
     if matched_message:
         return matched_message

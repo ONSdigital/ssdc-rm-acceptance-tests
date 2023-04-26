@@ -110,7 +110,8 @@ def check_uac_in_firestore(context, language_code):
                                                         language_code)
     context.correlation_id = eq_claims['tx_id']
     check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context.emitted_cases, context.correlation_id,
-                                                                         True, "eqLaunched", True)
+                                                                         True, "eqLaunched", True,
+                                                                         context.test_start_utc_datetime)
 
 
 @step('an error section is headed "{error_section_header}" and href "{href_name}" is "{expected_text}"')

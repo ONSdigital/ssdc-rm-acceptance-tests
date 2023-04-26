@@ -23,7 +23,7 @@ def authorise_sms_pack_code(context):
     response = requests.post(url, json=body)
     response.raise_for_status()
 
-    survey_update_event = get_exactly_one_emitted_survey_update()
+    survey_update_event = get_exactly_one_emitted_survey_update(context.test_start_utc_datetime)
 
     allowed_sms_fulfilments = survey_update_event['allowedSmsFulfilments']
     test_helper.assertEqual(len(allowed_sms_fulfilments), 1,

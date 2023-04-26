@@ -9,8 +9,8 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def add_survey(sample_validation_rules, sample_definition_url="http://foo.bar.json", sample_has_header_row=True,
-               sample_file_separator=','):
+def add_survey(sample_validation_rules, test_start_time, sample_definition_url="http://foo.bar.json",
+               sample_has_header_row=True, sample_file_separator=','):
     survey_name = 'test survey ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
     url = f'{Config.SUPPORT_TOOL_API}/surveys'
@@ -27,7 +27,7 @@ def add_survey(sample_validation_rules, sample_definition_url="http://foo.bar.js
 
     survey_id = response.json()
 
-    survey_update_event = get_emitted_survey_update(survey_name)
+    survey_update_event = get_emitted_survey_update(survey_name, test_start_time)
     test_helper.assertEqual(survey_update_event['name'], survey_name,
                             'Unexpected survey name')
 
@@ -40,12 +40,12 @@ def add_survey(sample_validation_rules, sample_definition_url="http://foo.bar.js
     return survey_id
 
 
-def get_emitted_survey_update(expected_survey_name):
+def get_emitted_survey_update(expected_survey_name, test_start_time):
     # Build the matcher with the current expected survey name
     survey_name_matcher = partial(_survey_name_message_matcher, expected_survey_name=expected_survey_name)
 
     message_received = get_matching_pubsub_message_acking_others(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
-                                                                 survey_name_matcher)
+                                                                 survey_name_matcher, test_start_time)
 
     return message_received['payload']['surveyUpdate']
 

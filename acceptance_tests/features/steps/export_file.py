@@ -1,6 +1,6 @@
 import csv
 import hashlib
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
@@ -141,7 +141,7 @@ def check_export_file_matches_expected(actual_export_file, expected_export_file)
 
 def get_datetime_from_export_file_name(export_file_name: str, prefix: str, suffix: str) -> datetime:
     raw_datetime = export_file_name[len(prefix):-len(suffix)]  # Strip off the prefix and suffix
-    return datetime.strptime(raw_datetime, '%Y-%m-%dT%H-%M-%S')
+    return datetime.strptime(raw_datetime, '%Y-%m-%dT%H-%M-%S').replace(tzinfo=timezone.utc)
 
 
 def get_export_file_contents_local(after_datetime: datetime, pack_code: str, export_file_destination: str,
