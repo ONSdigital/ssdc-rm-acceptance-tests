@@ -3,7 +3,8 @@ from behave import step
 from acceptance_tests.utilities.event_helper import check_invalid_case_reason_matches_on_event, \
     get_logged_case_events_by_type, get_emitted_case_update, get_emitted_cases, get_emitted_uac_update, \
     get_uac_update_events, _check_uacs_updated_match_cases, _check_new_uacs_are_as_expected, \
-    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value
+    check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value, get_number_of_uac_update_events, \
+    check_uac_update_msgs_emitted_for_cases_with_qid_active_and_field_equals_value
 from acceptance_tests.utilities.test_case_helper import test_helper
 
 
@@ -54,15 +55,36 @@ def check_uac_update_msgs_emitted_with_qid_active(context, active):
                                     expected_value=context.expected_collection_instrument_url)
 
 
-@step(
-    'UAC_UPDATE message is emitted with active set to {active:boolean} and "{field_to_test}" is'
-    ' {expected_value:boolean}')
+@step('the correct number of UAC_UPDATE messages are emitted with active set to {active:boolean}')
+def check_uac_updated_messages_by_number_with_qid_active(context, active):
+    context.emitted_uacs = get_number_of_uac_update_events(len(context.emitted_cases), context.test_start_utc_datetime)
+    _check_uacs_updated_match_cases(context.emitted_uacs, context.emitted_cases)
+
+    _check_new_uacs_are_as_expected(emitted_uacs=context.emitted_uacs, active=active,
+                                    field_to_test='collectionInstrumentUrl',
+                                    expected_value=context.expected_collection_instrument_url)
+
+
+@step('UAC_UPDATE message is emitted with active set to {active:boolean} and "{field_to_test}" is'
+      ' {expected_value:boolean}')
 def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value_step(context, active, field_to_test,
                                                                               expected_value):
     context.emitted_uacs = check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(
         context.emitted_cases,
         context.correlation_id,
         active, field_to_test,
+        expected_value,
+        context.test_start_utc_datetime)
+
+
+@step('UAC_UPDATE messages are emitted for the correct cases with active set to {active:boolean}'
+      ' and "{bool_field_to_test}" is {expected_value:boolean}')
+def check_uac_update_for_qid_with_active_and_bool_field(context, active: bool, bool_field_to_test: str,
+                                                        expected_value: bool):
+    context.emitted_uacs = check_uac_update_msgs_emitted_for_cases_with_qid_active_and_field_equals_value(
+        context.emitted_cases,
+        active,
+        bool_field_to_test,
         expected_value,
         context.test_start_utc_datetime)
 

@@ -5,7 +5,7 @@ from tenacity import retry, wait_fixed, stop_after_delay
 from acceptance_tests.utilities.case_api_helper import get_logged_events_for_case_by_id
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.pubsub_helper import get_exact_number_of_pubsub_messages, \
-    get_matching_pubsub_message_acking_others
+    get_matching_pubsub_message_acking_others, get_matching_pubsub_messages_acking_others
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -24,13 +24,17 @@ def get_emitted_cases(expected_msg_count=1, test_start_time=None):
     return case_payloads
 
 
-def get_emitted_case_update(correlation_id, originating_user, test_start_time):
-    message_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
-                                                           expected_msg_count=1, test_start_time=test_start_time)[0]
+def _match_message_by_correlation_id(message, correlation_id: str = None):
+    if (message_cid := message['header']['correlationId']) != correlation_id:
+        return False, f'Message correlation ID "{message_cid}" does not match expected "{correlation_id}"'
+    return True, None
 
-    if correlation_id:
-        test_helper.assertEqual(message_received['header']['correlationId'], correlation_id,
-                                'Unexpected correlation ID, does not match message received')
+
+def get_emitted_case_update(correlation_id, originating_user, test_start_time):
+    message_received = get_matching_pubsub_message_acking_others(Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
+                                                                 partial(_match_message_by_correlation_id,
+                                                                         correlation_id=correlation_id),
+                                                                 test_start_time)
 
     if originating_user:
         test_helper.assertEqual(message_received['header']['originatingUser'], originating_user,
@@ -40,12 +44,10 @@ def get_emitted_case_update(correlation_id, originating_user, test_start_time):
 
 
 def get_emitted_uac_update(correlation_id, originating_user, test_start_time):
-    message_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
-                                                           expected_msg_count=1, test_start_time=test_start_time)[0]
-
-    if correlation_id:
-        test_helper.assertEqual(message_received['header']['correlationId'], correlation_id,
-                                'Unexpected correlation ID')
+    message_received = get_matching_pubsub_message_acking_others(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
+                                                                 partial(_match_message_by_correlation_id,
+                                                                         correlation_id=correlation_id),
+                                                                 test_start_time)
 
     if originating_user:
         test_helper.assertEqual(message_received['header']['originatingUser'], originating_user,
@@ -55,16 +57,15 @@ def get_emitted_uac_update(correlation_id, originating_user, test_start_time):
 
 
 def get_uac_update_events(expected_number, correlation_id, originating_user, test_start_time):
-    messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
-                                                            expected_msg_count=expected_number,
-                                                            test_start_time=test_start_time)
+    messages_received = get_matching_pubsub_messages_acking_others(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
+                                                                   partial(_match_message_by_correlation_id,
+                                                                           correlation_id=correlation_id),
+                                                                   test_start_time,
+                                                                   number_of_messages=expected_number)
 
     uac_payloads = []
-    for uac_event in messages_received:
-        if correlation_id:
-            test_helper.assertEqual(uac_event['header']['correlationId'], correlation_id,
-                                    f'Unexpected correlation ID, full messages received {messages_received}')
 
+    for uac_event in messages_received:
         if originating_user:
             test_helper.assertEqual(uac_event['header']['originatingUser'], originating_user,
                                     f'Unexpected originating user,  full messages received {messages_received}')
@@ -74,10 +75,45 @@ def get_uac_update_events(expected_number, correlation_id, originating_user, tes
     return uac_payloads
 
 
-def get_exactly_one_emitted_survey_update(test_start_time):
-    message_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
-                                                           expected_msg_count=1,
-                                                           test_start_time=test_start_time)[0]
+def _match_uac_linked_to_case_in_set(message, case_ids: set = None):
+    if (case_id := message['payload']['uacUpdate']['caseId']) not in case_ids:
+        return False, f'Uac linked to unexpected case ID "{case_id}", expected one of {case_ids}'
+    return True, None
+
+
+def get_uac_update_events_matching_cases(cases, test_start_time):
+    messages_received = get_matching_pubsub_messages_acking_others(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
+                                                                   partial(_match_uac_linked_to_case_in_set,
+                                                                           case_ids={case['caseId'] for case in cases}),
+                                                                   test_start_time,
+                                                                   number_of_messages=len(cases))
+
+    uac_payloads = []
+
+    for uac_event in messages_received:
+        uac_payloads.append(uac_event['payload']['uacUpdate'])
+
+    return uac_payloads
+
+
+def get_number_of_uac_update_events(expected_number, test_start_time):
+    messages_received = get_exact_number_of_pubsub_messages(Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
+                                                            expected_msg_count=expected_number,
+                                                            test_start_time=test_start_time)
+    return [uac_event['payload']['uacUpdate'] for uac_event in messages_received]
+
+
+def get_emitted_survey_update_by_id(survey_id, test_start_time):
+    def match_survey_id(message, expected_survey_id: str = None):
+        if message_survey_id := message['payload']['surveyUpdate']['surveyId'] != expected_survey_id:
+            return False, (f'Failed match on message survey ID, found "{message_survey_id}",'
+                           f' expected {expected_survey_id}')
+        return True, None
+
+    message_received = get_matching_pubsub_message_acking_others(Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
+                                                                 partial(match_survey_id,
+                                                                         expected_survey_id=survey_id),
+                                                                 test_start_time)
 
     return message_received['payload']['surveyUpdate']
 
@@ -90,8 +126,7 @@ def get_collection_exercise_update_by_name(collex_name, test_start_time):
 
     message_received = get_matching_pubsub_message_acking_others(
         Config.PUBSUB_OUTBOUND_COLLECTION_EXERCISE_SUBSCRIPTION,
-        partial(collex_name_matcher, expected_collex_name=collex_name),
-        test_start_time)
+        partial(collex_name_matcher, expected_collex_name=collex_name), test_start_time)
 
     return message_received['payload']['collectionExerciseUpdate']
 
@@ -122,6 +157,16 @@ def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(emitted
                                                                          field_to_test, expected_value,
                                                                          test_start_time):
     emitted_uacs = get_uac_update_events(len(emitted_cases), correlation_id, None, test_start_time=test_start_time)
+    _check_uacs_updated_match_cases(emitted_uacs, emitted_cases)
+    _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test, expected_value)
+
+    return emitted_uacs
+
+
+def check_uac_update_msgs_emitted_for_cases_with_qid_active_and_field_equals_value(emitted_cases, active,
+                                                                                   field_to_test, expected_value,
+                                                                                   test_start_time):
+    emitted_uacs = get_uac_update_events_matching_cases(emitted_cases, test_start_time=test_start_time)
     _check_uacs_updated_match_cases(emitted_uacs, emitted_cases)
     _check_new_uacs_are_as_expected(emitted_uacs, active, field_to_test, expected_value)
 

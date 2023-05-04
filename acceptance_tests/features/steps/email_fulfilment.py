@@ -6,7 +6,7 @@ from behave import step
 
 from acceptance_tests.utilities import template_helper
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
-from acceptance_tests.utilities.event_helper import get_exactly_one_emitted_survey_update
+from acceptance_tests.utilities.event_helper import get_emitted_survey_update_by_id
 from acceptance_tests.utilities.notify_helper import check_email_fulfilment_response
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -23,7 +23,7 @@ def authorise_sms_pack_code(context):
     response = requests.post(url, json=body)
     response.raise_for_status()
 
-    survey_update_event = get_exactly_one_emitted_survey_update(context.test_start_utc_datetime)
+    survey_update_event = get_emitted_survey_update_by_id(context.survey_id, context.test_start_utc_datetime)
 
     allowed_email_fulfilments = survey_update_event['allowedEmailFulfilments']
     test_helper.assertEqual(len(allowed_email_fulfilments), 1,

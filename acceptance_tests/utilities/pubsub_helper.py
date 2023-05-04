@@ -44,18 +44,6 @@ def _purge_subscription(subscription):
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
 
-    # TODO - the seek method should be quick and clean, but it doesn't seem reliable in our GCP CI pipeline
-    # timestamp = Timestamp()
-    # time_a_bit_in_the_future = datetime.utcnow() + timedelta(minutes=5)
-    # timestamp.FromDatetime(time_a_bit_in_the_future)
-    # try:
-    #     # Try purging via the seek method
-    #     # Seeking to now should ack any messages published before this moment
-    #     subscriber.seek(subscription_path, time=timestamp)
-    # except MethodNotImplemented:
-    #     # Seek is not implemented by the pubsub-emulator
-
-    # Call ack all with 5 seconds in-between to catch any stubborn stragglers
     return _ack_all_on_subscription(subscriber, subscription_path)
 
 
@@ -136,8 +124,10 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
     return received_messages
 
 
-def get_matching_pubsub_message_acking_others(subscription, message_matcher: Callable[[Mapping], tuple[bool, str]],
-                                              test_start_time, timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
+def get_matching_pubsub_message_acking_others(subscription,
+                                              message_matcher: Callable[[Mapping], tuple[bool, str]],
+                                              test_start_time,
+                                              timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
     """
     Pull and ack all pubsub messages on the given subscription within the timeout, until a match is found
 
@@ -147,18 +137,45 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
             the first element being a bool indicating if the message matches, the second being a string used only if
             the message does not match, describing the non match to aid logging
         test_start_time: the test start datetime (tz aware)
-        timeout: The length of time to attempt to pull a matching message for, will fail the test if the timeout is
-            reached.
+        timeout: Default from config, The length of time to attempt to pull a matching message for, will fail the test
+            if the timeout is reached.
+    """
+    return get_matching_pubsub_messages_acking_others(subscription,
+                                                      message_matcher,
+                                                      test_start_time,
+                                                      number_of_messages=1,
+                                                      timeout=timeout)[0]
+
+
+def get_matching_pubsub_messages_acking_others(subscription,
+                                               message_matcher: Callable[[Mapping], tuple[bool, str]],
+                                               test_start_time,
+                                               number_of_messages: int = 1,
+                                               timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
+    """
+    Pull and ack all pubsub messages on the given subscription within the timeout,
+    until the specified number of matches is found
+
+    Args:
+        number_of_messages:
+        subscription: PubSub subscription name
+        message_matcher: A function object which takes the parsed message contents and returns a tuple,
+            the first element being a bool indicating if the message matches, the second being a string used only if
+            the message does not match, describing the non match to aid logging
+        test_start_time: the test start datetime (tz aware)
+        number_of_messages: Default = 1, the number of matching messages to pull
+        timeout: Default from config, The length of time to attempt to pull a matching message for, will fail the test
+            if the timeout is reached.
     """
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(Config.PUBSUB_PROJECT, subscription)
     deadline = time.time() + timeout
-    matched_message = None
+    matching_messages = []
 
     # The PubSub subscriber client does not wait the full duration of its timeout before returning if it finds just
     # at least one message. To work around this, we loop pulling messages repeatedly within our own timeout to allow
     # the full time for all the expected messages to be published and pulled
-    while not matched_message and time.time() < deadline:
+    while len(matching_messages) < number_of_messages and time.time() < deadline:
 
         try:
             response = subscriber.pull(subscription=subscription_path, max_messages=1, timeout=1)
@@ -178,7 +195,7 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
             logger.warn('Ignoring and acking a message from before this scenario', message=parsed_message)
 
         elif message_match:
-            matched_message = parsed_message
+            matching_messages.append(parsed_message)
 
         else:
             logger.warn(f'Acking non matching message on subscription {subscription_path}, '
@@ -187,8 +204,11 @@ def get_matching_pubsub_message_acking_others(subscription, message_matcher: Cal
         subscriber.acknowledge(subscription=subscription_path,
                                ack_ids=[message.ack_id for message in response.received_messages])
 
-    if matched_message:
-        return matched_message
+    if len(matching_messages) != number_of_messages:
+        test_helper.fail(
+            f'Expected to pull {number_of_messages} matching message(s) on subscription {subscription_path} '
+            f'but found {len(matching_messages)} matches within the {timeout} second timeout, '
+            f'found messages: {matching_messages}'
+        )
 
-    test_helper.fail(f'Expected to pull a matching message on subscription {subscription_path} '
-                     f'but found no matches within the {timeout} second timeout')
+    return matching_messages

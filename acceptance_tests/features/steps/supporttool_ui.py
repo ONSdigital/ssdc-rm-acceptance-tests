@@ -10,7 +10,7 @@ from acceptance_tests.features.steps.email_action_rule import check_notify_calle
 from acceptance_tests.features.steps.export_file import check_export_file
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
 from acceptance_tests.utilities.event_helper import get_emitted_cases, get_collection_exercise_update_by_name, \
-    get_uac_update_events
+    get_number_of_uac_update_events
 from acceptance_tests.utilities.sample_helper import read_sample
 from acceptance_tests.utilities.survey_helper import get_emitted_survey_update
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -157,7 +157,7 @@ def click_action_rule_button(context):
 @step('I can see the Action Rule has been triggered and export files have been created')
 def check_for_action_rule_triggered(context):
     poll_action_rule_trigger(context.browser, context.pack_code)
-    context.emitted_uacs = get_uac_update_events(context.sample_count, None, None, context.test_start_utc_datetime)
+    context.emitted_uacs = get_number_of_uac_update_events(context.sample_count, context.test_start_utc_datetime)
     check_export_file(context)
 
 

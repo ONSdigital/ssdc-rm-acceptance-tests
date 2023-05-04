@@ -18,7 +18,8 @@ def create_export_file_action_rule(collex_id, classifiers, pack_code):
 
     response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
-    return pack_code
+    action_rule_id = str(response.text.strip('"'))
+    return action_rule_id
 
 
 def setup_deactivate_uac_action_rule(collex_id):
@@ -32,6 +33,8 @@ def setup_deactivate_uac_action_rule(collex_id):
 
     response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
+    action_rule_id = str(response.text.strip('"'))
+    return action_rule_id
 
 
 def setup_sms_action_rule(collex_id, pack_code):
@@ -47,6 +50,8 @@ def setup_sms_action_rule(collex_id, pack_code):
 
     response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
+    action_rule_id = str(response.text.strip('"'))
+    return action_rule_id
 
 
 def setup_email_action_rule(collex_id, pack_code):
@@ -62,6 +67,8 @@ def setup_email_action_rule(collex_id, pack_code):
 
     response = requests.post(ACTION_RULES_URL, json=body)
     response.raise_for_status()
+    action_rule_id = str(response.text.strip('"'))
+    return action_rule_id
 
 
 def set_eq_flush_action_rule(collex_id):

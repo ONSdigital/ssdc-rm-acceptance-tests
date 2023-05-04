@@ -6,7 +6,7 @@ import requests
 from behave import step
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
-from acceptance_tests.utilities.event_helper import get_exactly_one_emitted_survey_update
+from acceptance_tests.utilities.event_helper import get_emitted_survey_update_by_id
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -66,7 +66,7 @@ def authorise_pack_code(context):
     response = requests.post(url, json=body)
     response.raise_for_status()
 
-    survey_update_event = get_exactly_one_emitted_survey_update(context.test_start_utc_datetime)
+    survey_update_event = get_emitted_survey_update_by_id(context.survey_id, context.test_start_utc_datetime)
 
     allowed_print_fulfilments = survey_update_event['allowedPrintFulfilments']
     test_helper.assertEqual(len(allowed_print_fulfilments), 1,
