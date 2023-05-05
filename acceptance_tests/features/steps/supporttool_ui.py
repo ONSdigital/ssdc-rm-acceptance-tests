@@ -9,7 +9,8 @@ from tenacity import retry, stop_after_delay, wait_fixed
 from acceptance_tests.features.steps.email_action_rule import check_notify_called_with_correct_emails_and_uacs
 from acceptance_tests.features.steps.export_file import check_export_file
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
-from acceptance_tests.utilities.event_helper import get_emitted_cases, get_collection_exercise_update_by_name, \
+from acceptance_tests.utilities.event_helper import get_emitted_cases, \
+    get_collection_exercise_update_by_name, \
     get_number_of_uac_update_events
 from acceptance_tests.utilities.sample_helper import read_sample
 from acceptance_tests.utilities.survey_helper import get_emitted_survey_update

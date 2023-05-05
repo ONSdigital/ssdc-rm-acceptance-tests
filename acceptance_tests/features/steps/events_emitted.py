@@ -1,7 +1,8 @@
 from behave import step
 
 from acceptance_tests.utilities.event_helper import check_invalid_case_reason_matches_on_event, \
-    get_logged_case_events_by_type, get_emitted_case_update, get_emitted_cases, get_emitted_uac_update, \
+    get_logged_case_events_by_type, get_emitted_case_update_by_correlation_id, \
+    get_emitted_cases, get_emitted_uac_update, \
     get_uac_update_events, _check_uacs_updated_match_cases, _check_new_uacs_are_as_expected, \
     check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value, get_number_of_uac_update_events, \
     check_uac_update_msgs_emitted_for_cases_with_qid_active_and_field_equals_value
@@ -20,8 +21,8 @@ def uac_update_msg_emitted(context):
 
 @step('a CASE_UPDATE message is emitted where "{case_field}" is "{expected_field_value}"')
 def case_update_msg_sent_with_values(context, case_field, expected_field_value):
-    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user,
-                                           context.test_start_utc_datetime)
+    emitted_case = get_emitted_case_update_by_correlation_id(context.correlation_id, context.originating_user,
+                                                             context.test_start_utc_datetime)
 
     test_helper.assertEqual(emitted_case['caseId'], context.emitted_cases[0]['caseId'],
                             'The updated case is expected to be the first stored emitted case,'
@@ -32,8 +33,8 @@ def case_update_msg_sent_with_values(context, case_field, expected_field_value):
 
 @step('a CASE_UPDATE message is emitted where {new_values:json} are the updated values')
 def case_update_msg_sent_with_multiple_values(context, new_values):
-    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user,
-                                           context.test_start_utc_datetime)
+    emitted_case = get_emitted_case_update_by_correlation_id(context.correlation_id, context.originating_user,
+                                                             context.test_start_utc_datetime)
 
     test_helper.assertEqual(emitted_case['caseId'], context.emitted_cases[0]['caseId'],
                             'The updated case is expected to be the first stored emitted case,'
@@ -105,8 +106,8 @@ def check_expected_number_of_uac_update_msgs_emitted(context, expected_count, ac
 @step("a CASE_UPDATED message is emitted for the case")
 @step("a CASE_UPDATED message is emitted for the new case")
 def check_case_updated_emitted_for_new_case(context):
-    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user,
-                                           context.test_start_utc_datetime)
+    emitted_case = get_emitted_case_update_by_correlation_id(context.correlation_id, context.originating_user,
+                                                             context.test_start_utc_datetime)
     test_helper.assertEqual(emitted_case['caseId'], context.case_id,
                             f'The emitted case, {emitted_case} does not match the case {context.case_id}')
 
@@ -173,7 +174,7 @@ def get_bulk_data_row_from_case_id_or_fail(bulk_data, case_id):
 
 
 @step("a CASE_UPDATE message is emitted for each case with sensitive data redacted")
-def case_update_message_emited_for_every_case_with_sensitive_data_redacted(context):
+def case_update_message_emitted_for_every_case_with_sensitive_data_redacted(context):
     emitted_updated_cases = get_emitted_cases(len(context.bulk_sensitive_update), context.test_start_utc_datetime)
 
     for emitted_case in emitted_updated_cases:
@@ -185,9 +186,9 @@ def case_update_message_emited_for_every_case_with_sensitive_data_redacted(conte
 
 
 @step("a CASE_UPDATED message is emitted for the case with correct sensitive data")
-def case_updated_emitted_with_correct_sensitve_data(context):
-    emitted_case = get_emitted_case_update(context.correlation_id, context.originating_user,
-                                           context.test_start_utc_datetime)
+def case_updated_emitted_with_correct_sensitive_data(context):
+    emitted_case = get_emitted_case_update_by_correlation_id(context.correlation_id, context.originating_user,
+                                                             context.test_start_utc_datetime)
     test_helper.assertEqual(emitted_case['caseId'], context.case_id,
                             f'The emitted case, {emitted_case} does not match the case {context.case_id}')
     test_helper.assertEqual(emitted_case["sampleSensitive"]['PHONE_NUMBER'], "REDACTED",
