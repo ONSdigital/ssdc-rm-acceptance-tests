@@ -2,7 +2,7 @@ import json
 import logging
 import time
 from datetime import datetime
-from typing import Callable, Mapping
+from typing import Callable, Mapping, Optional
 
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
@@ -18,7 +18,6 @@ subscriptions = [Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_UAC_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
                  Config.PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION, ]
-
 
 def publish_to_pubsub(message, project, topic, **kwargs):
     publisher = pubsub_v1.PublisherClient()
@@ -97,7 +96,6 @@ def _pull_exact_number_of_messages(subscriber, subscription_path, expected_msg_c
             if is_message_from_before_scenario(message, test_start_time):
                 # Ignore messages from before the test start time, to avoid cross contamination from early scenarios
                 logger.warn('Ignoring and acking a message from before this scenario', message=message)
-                print('Ignoring and acking a message from before this scenario', message)
                 continue
 
             scenario_messages.append(message)
@@ -125,7 +123,7 @@ def get_exact_number_of_pubsub_messages(subscription, expected_msg_count, timeou
 
 
 def get_matching_pubsub_message_acking_others(subscription,
-                                              message_matcher: Callable[[Mapping], tuple[bool, str]],
+                                              message_matcher: Callable[[Mapping], tuple[bool, Optional[str]]],
                                               test_start_time,
                                               timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
     """
@@ -148,7 +146,7 @@ def get_matching_pubsub_message_acking_others(subscription,
 
 
 def get_matching_pubsub_messages_acking_others(subscription,
-                                               message_matcher: Callable[[Mapping], tuple[bool, str]],
+                                               message_matcher: Callable[[Mapping], tuple[bool, Optional[str]]],
                                                test_start_time,
                                                number_of_messages: int = 1,
                                                timeout=Config.PUBSUB_DEFAULT_PULL_TIMEOUT):
