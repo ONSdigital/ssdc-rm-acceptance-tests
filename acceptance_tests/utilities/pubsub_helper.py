@@ -19,6 +19,7 @@ subscriptions = [Config.PUBSUB_OUTBOUND_SURVEY_SUBSCRIPTION,
                  Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION,
                  Config.PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION, ]
 
+
 def publish_to_pubsub(message, project, topic, **kwargs):
     publisher = pubsub_v1.PublisherClient()
 
