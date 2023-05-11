@@ -20,7 +20,7 @@ def check_eq_flush_cloud_task_message(context):
         return True, ''
 
     cloud_task_message = get_matching_pubsub_message_acking_others(Config.PUBSUB_CLOUD_TASK_QUEUE_AT_SUBSCRIPTION,
-                                                                   _message_matcher)
+                                                                   _message_matcher, context.test_start_utc_datetime)
 
     test_helper.assertIsNotNone(cloud_task_message['payload'].get('transactionId'),
                                 'Expected EQ flush cloud task payload to have a transaction ID')

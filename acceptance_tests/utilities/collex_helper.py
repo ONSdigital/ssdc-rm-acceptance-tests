@@ -2,12 +2,12 @@ from datetime import datetime, timedelta
 
 import requests
 
-from acceptance_tests.utilities.event_helper import get_emitted_collection_exercise_update
+from acceptance_tests.utilities.event_helper import get_collection_exercise_update_by_name
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def add_collex(survey_id, collection_instrument_selection_rules):
+def add_collex(survey_id, collection_instrument_selection_rules, test_start_time):
     collex_name = 'test collex ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     start_date = datetime.utcnow()
     end_date = start_date + timedelta(days=2)
@@ -27,7 +27,7 @@ def add_collex(survey_id, collection_instrument_selection_rules):
 
     collex_id = response.json()
 
-    collection_exercise_update_event = get_emitted_collection_exercise_update()
+    collection_exercise_update_event = get_collection_exercise_update_by_name(collex_name, test_start_time)
     test_helper.assertEqual(collection_exercise_update_event['name'], collex_name,
                             'Unexpected collection exercise name')
     test_helper.assertEqual(collection_exercise_update_event['surveyId'], survey_id,
