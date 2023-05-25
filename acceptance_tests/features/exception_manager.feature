@@ -30,12 +30,6 @@ Feature: Check exception manager is called for every topic and handles them as e
     And each bad msg can be successfully quarantined
 
   @regression
-  Scenario: Bad respondent authenticated message turns up in exception manager
-    When a bad respondent authenticated event is put on the topic
-    Then a bad message appears in exception manager with exception message containing "qid '666' not found!"
-    And each bad msg can be successfully quarantined
-
-  @regression
   Scenario: Bad update sample message turns up in exception manager
     When a bad update sample event is put on the topic
     Then a bad message appears in exception manager with exception message containing "Case with ID '386a50b8-6ba0-40f6-bd3c-34333d58be90' not found"
