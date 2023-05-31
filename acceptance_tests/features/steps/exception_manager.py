@@ -12,7 +12,7 @@ from config import Config
 
 ALL_INCOMING_TOPICS = [Config.PUBSUB_RECEIPT_TOPIC, Config.PUBSUB_REFUSAL_TOPIC, Config.PUBSUB_INVALID_CASE_TOPIC,
                        Config.PUBSUB_DEACTIVATE_UAC_TOPIC, Config.PUBSUB_PRINT_FULFILMENT_TOPIC,
-                       Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC, Config.PUBSUB_UAC_AUTHENTICATION_TOPIC]
+                       Config.PUBSUB_UPDATE_SAMPLE_SENSITIVE_TOPIC]
 
 
 @step("a bad json msg is sent to every topic consumed by RM")
