@@ -89,7 +89,8 @@ def click_create_collex_button(context):
 
 @step('the collection exercise is clicked on, navigating to the selected exercise details page')
 def click_into_collex_details(context):
-    context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name).click()
+    context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name,
+                                                                                 wait_time=20).click()
 
 
 @step('I click the upload sample file button with file "{sample_file_name}"')
@@ -199,7 +200,7 @@ def allow_email_template_on_action_rule(context):
     context.browser.find_by_id('allowEmailTemplateDialogBtn', wait_time=20).click()
     context.browser.find_by_id('selectEmailTemplate').click()
     context.browser.find_by_id(context.pack_code).click()
-    context.browser.find_by_id("allowEmailTemplateOnActionRule").click()
+    context.browser.find_by_id("allowEmailTemplateOnActionRule", wait_time=20).click()
 
 
 @step('I create an email action rule with email column "{email_column}"')
