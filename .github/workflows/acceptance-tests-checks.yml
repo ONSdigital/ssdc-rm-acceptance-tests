@@ -25,7 +25,7 @@ jobs:
           python -m pip install --upgrade pip pipenv setuptools wheel
           pipenv install --dev --deploy
 
-      - name: Run Tests and Checks
+      - name: Run Checks
         run: |
           make check
           make flake
