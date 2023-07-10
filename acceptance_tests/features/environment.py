@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 from datetime import datetime, timezone
@@ -16,6 +17,8 @@ from acceptance_tests.utilities.exception_manager_helper import get_bad_messages
 from acceptance_tests.utilities.notify_helper import reset_notify_stub
 from acceptance_tests.utilities.parameter_parsers import parse_array_to_list, parse_json_object
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
+from acceptance_tests.utilities.template_helper import create_email_template, create_export_file_template, \
+    create_sms_template
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -26,10 +29,12 @@ register_type(json=parse_json_object)
 register_type(array=parse_array_to_list)
 
 CONTEXT_ATTRIBUTES = parse_markdown_context_table(Config.CODE_GUIDE_MARKDOWN_FILE_PATH)
+TEMPLATE_FILES_PATH = Config.RESOURCE_FILE_PATH.joinpath('template_files')
 
 
 def before_all(context):
     context.config.setup_logging()
+    _setup_templates(context)
 
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
@@ -121,3 +126,31 @@ def _clear_queues_for_bad_messages_and_reset_exception_manager(list_of_bad_messa
         time.sleep(1)
 
     quarantine_bad_messages_check_and_reset(list_of_bad_message_hashes)
+
+
+def _setup_templates(context):
+    email_templates_path = TEMPLATE_FILES_PATH.joinpath("email_templates.json")
+    email_templates = json.loads(email_templates_path.read_text())
+    context.email_templates = {template['templateName']: template for template in email_templates}
+    context.email_packcodes = {}
+    for _, template in context.email_templates.items():
+        pack_code, notify_template_id = create_email_template(template['template'])
+        context.email_packcodes[template['templateName']] = {"pack_code": pack_code,
+                                                             "notify_template_id": notify_template_id}
+
+    export_file_templates_path = TEMPLATE_FILES_PATH.joinpath("export_file_templates.json")
+    export_file_templates = json.loads(export_file_templates_path.read_text())
+    context.export_file_templates = {template['templateName']: template for template in export_file_templates}
+    context.export_file_packcodes = {}
+    for _, template in context.export_file_templates.items():
+        pack_code = create_export_file_template(template['template'])
+        context.export_file_packcodes[template['templateName']] = {"pack_code": pack_code}
+
+    sms_templates_path = TEMPLATE_FILES_PATH.joinpath("sms_templates.json")
+    sms_templates = json.loads(sms_templates_path.read_text())
+    context.sms_templates = {template['templateName']: template for template in sms_templates}
+    context.sms_packcodes = {}
+    for _, template in context.sms_templates.items():
+        pack_code, notify_template_id = create_sms_template(template['template'])
+        context.sms_packcodes[template['templateName']] = {"pack_code": pack_code,
+                                                           "notify_template_id": notify_template_id}

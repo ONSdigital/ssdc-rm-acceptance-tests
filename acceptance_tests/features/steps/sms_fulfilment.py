@@ -1,10 +1,8 @@
 import uuid
-from typing import List
 
 import requests
 from behave import step
 
-from acceptance_tests.utilities import template_helper
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.event_helper import get_emitted_survey_update_by_id
 from acceptance_tests.utilities.notify_helper import check_sms_fulfilment_response
@@ -82,7 +80,8 @@ def check_uac_message_matches_sms_uac(context):
                             f"context.fulfilment_response_json {context.fulfilment_response_json}")
 
 
-@step('an sms template has been created with template {template:array}')
-def create_sms_template(context, template: List):
-    context.template = template
-    context.pack_code, context.notify_template_id = template_helper.create_sms_template(template)
+@step('an sms template has been created with template {templateName}')
+def create_sms_template(context, templateName):
+    context.template = context.sms_templates[templateName]['template']
+    context.pack_code = context.sms_packcodes[templateName]['pack_code']
+    context.notify_template_id = context.sms_packcodes[templateName]['notify_template_id']

@@ -143,7 +143,7 @@ def _redirect_to_eq(context, language_code):
 
 @step('and we request a UAC by SMS and the UAC is ready and RH page has "{expected_text}" for "{language_code}"')
 def we_request_a_UAC_via_SMS_and_check_the_UAC_in_firestore_and_page_is_ready(context, expected_text, language_code):
-    create_sms_template(context, ["__uac__", "__qid__"])
+    create_sms_template(context, 'uac_qid')
     authorise_sms_pack_code(context)
     request_replacement_uac_by_sms(context, "07123456789")
     check_uac_update_msgs_emitted_with_qid_active(context, True)

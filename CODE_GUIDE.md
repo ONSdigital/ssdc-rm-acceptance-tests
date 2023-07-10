@@ -71,7 +71,13 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | rh_launch_qid                      | Stores a qid paired with the UAC used for launching in RH                           | str      |
 | rh_launch_endpoint_response        | Stores the response from the API call RH launch                                     | str      |
 | eq_launch_claims                   | Stores the decrypted EQ launch claims json                                          | Mapping  | 
-| eq_flush_claims                    | Stores the decrypted EQ flush claims json                                           | Mapping  | 
+| eq_flush_claims                    | Stores the decrypted EQ flush claims json                                           | Mapping  |
+| email_templates                    | Stores the list of email templates setup prior to the tests                         | Mapping  |
+| email_packcodes                    | Stores the list of email packcodes setup prior to the tests                         | Mapping  |
+| export_file_templates              | Stores the list of export file templates setup prior to the tests                   | Mapping  |
+| export_file_packcodes              | Stores the list of export packcodes setup prior to the tests                        | Mapping  |
+| sms_templates                      | Stores the list of sms templates setup prior to the tests                           | Mapping  |
+| sms_packcodes                      | Stores the list of sms packcodes setup prior to the tests                           | Mapping  |
 
 </div>
 

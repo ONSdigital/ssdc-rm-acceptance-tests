@@ -2,7 +2,7 @@ Feature: A case can be receipted with an event from sdx
 
   Scenario: A case is loaded and can be receipted
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
-    And an email template has been created with template ["__uac__", "__qid__"]
+    And an email template has been created with template uac_qid
     And fulfilments are authorised on email template
     When a request has been made for a replacement UAC by email from email address "foo@bar.baz"
     Then UAC_UPDATE messages are emitted with active set to true

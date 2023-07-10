@@ -1,10 +1,8 @@
 import uuid
-from typing import List
 
 import requests
 from behave import step
 
-from acceptance_tests.utilities import template_helper
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.event_helper import get_emitted_survey_update_by_id
 from acceptance_tests.utilities.notify_helper import check_email_fulfilment_response
@@ -82,7 +80,8 @@ def check_uac_message_matches_email_uac(context):
                             f"context.fulfilment_response_json {context.fulfilment_response_json}")
 
 
-@step('an email template has been created with template {template:array}')
-def create_email_template(context, template: List):
-    context.template = template
-    context.pack_code, context.notify_template_id = template_helper.create_email_template(template)
+@step('an email template has been created with template {templateName}')
+def create_email_template(context, templateName):
+    context.template = context.email_templates[templateName]['template']
+    context.pack_code = context.email_packcodes[templateName]['pack_code']
+    context.notify_template_id = context.email_packcodes[templateName]['notify_template_id']

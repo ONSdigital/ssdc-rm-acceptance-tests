@@ -10,12 +10,14 @@ Feature: Test basic Support Tool Functionality
     And the collection exercise is clicked on, navigating to the selected exercise details page
     Then I click the upload sample file button with file "social_sample_3_lines_fields.csv"
 
+  @regression
   Scenario: Create an export file template
     Given the support tool landing page is displayed
     And the Create Export File Template button is clicked on
     When an export file template with packcode "export-file-packcode" and template ["__uac__"] has been created
     Then I should see the export file template in the template list
 
+  @regression
   Scenario: Create an Export File Action Rule
     Given the support tool landing page is displayed
     And the Create Export File Template button is clicked on
@@ -32,6 +34,7 @@ Feature: Test basic Support Tool Functionality
     Then I can see the Action Rule has been triggered and export files have been created
 
   @reset_notify_stub
+  @regression
   Scenario: Create an Email Action Rule
     Given the support tool landing page is displayed
     And the Create Email Template button is clicked on
