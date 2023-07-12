@@ -19,7 +19,7 @@ Feature: Export files can be created and sent with correct data
 
   Scenario: Export file containing sensitive case fields
     Given the sample file "CRIS_dummy_1_row.csv" with validation rules "CRIS_validation_rules_v1.json" is loaded successfully
-    And an export file template has been created with template sensitive_middle_name__sensitive_last_name
+    And an export file template has been created with template "sensitive_middle_name__sensitive_last_name"
     When an export file action rule has been created
     And an export file is created with correct rows
     And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
@@ -42,7 +42,7 @@ Feature: Export files can be created and sent with correct data
 
   Scenario Outline: A case is loaded action rule triggered and export file created with differing classifiers
     Given sample file "<sample file>" is loaded successfully
-    And an export file template has been created with template uac
+    And an export file template has been created with template "uac"
     When an export file action rule has been created with classifiers "<classifiers>"
     Then <expected row count> UAC_UPDATE messages are emitted with active set to true
     Then an export file is created with correct rows

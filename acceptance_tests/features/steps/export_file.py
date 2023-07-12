@@ -45,8 +45,8 @@ def check_export_file(context):
 
 @step('an export file template has been created with template {templateName}')
 def create_export_file_template(context, templateName):
-    context.template = context.export_file_templates[templateName]['template']
-    context.pack_code = context.export_file_packcodes[templateName]['pack_code']
+    context.template = context.export_file_templates[templateName.strip('\"')]['template']
+    context.pack_code = context.export_file_packcodes[templateName.strip('\"')]['pack_code']
 
 
 @step('an export file template has been created for the internal reprographics supplier with template {template:array}')

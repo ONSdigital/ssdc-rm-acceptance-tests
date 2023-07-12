@@ -4,7 +4,7 @@
     "template": ["__uac__"]
   },
   {
-    "templateName": "uac_qid",
+    "templateName": "uac__qid",
     "template": ["__uac__","__qid__"]
   },
   {

@@ -55,8 +55,11 @@ def print_fulfilments_trigger_step(context):
     response.raise_for_status()
 
 
-@step("fulfilments are authorised on the export file template")
-def authorise_pack_code(context):
+@step("fulfilments are authorised for the export file template {templateName}")
+def authorise_pack_code(context, templateName):
+    context.template = context.export_file_templates[templateName.strip('\"')]['template']
+    context.pack_code = context.export_file_packcodes[templateName.strip('\"')]['pack_code']
+
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyExportFileTemplates'
     body = {
         'surveyId': context.survey_id,

@@ -4,7 +4,7 @@
     "template": ["__uac__"]
   },
   {
-    "templateName": "uac_qid",
+    "templateName": "uac__qid",
     "template": ["__uac__", "__qid__"]
   },
   {
@@ -20,7 +20,7 @@
     "template": ["__sensitive__.childLastName","__uac__"]
   },
   {
-    "templateName": "sensitive_emailaddress_uac",
+    "templateName": "sensitive_emailaddress__uac",
     "template": ["__sensitive__.emailAddress","__uac__"]
   }
 ]

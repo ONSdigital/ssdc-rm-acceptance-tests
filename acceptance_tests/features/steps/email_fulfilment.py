@@ -10,8 +10,12 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("fulfilments are authorised on email template")
-def authorise_sms_pack_code(context):
+@step("fulfilments are authorised for email template {templateName}")
+def authorise_sms_pack_code(context, templateName):
+    context.template = context.email_templates[templateName.strip('\"')]['template']
+    context.pack_code = context.email_packcodes[templateName.strip('\"')]['pack_code']
+    context.notify_template_id = context.email_packcodes[templateName.strip('\"')]['notify_template_id']
+
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyEmailTemplates'
     body = {
         'surveyId': context.survey_id,
@@ -82,6 +86,6 @@ def check_uac_message_matches_email_uac(context):
 
 @step('an email template has been created with template {templateName}')
 def create_email_template(context, templateName):
-    context.template = context.email_templates[templateName]['template']
-    context.pack_code = context.email_packcodes[templateName]['pack_code']
-    context.notify_template_id = context.email_packcodes[templateName]['notify_template_id']
+    context.template = context.email_templates[templateName.strip('\"')]['template']
+    context.pack_code = context.email_packcodes[templateName.strip('\"')]['pack_code']
+    context.notify_template_id = context.email_packcodes[templateName.strip('\"')]['notify_template_id']
