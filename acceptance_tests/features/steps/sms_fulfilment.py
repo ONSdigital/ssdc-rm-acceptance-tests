@@ -10,11 +10,11 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("fulfilments are authorised for sms template {template_name}")
+@step('fulfilments are authorised for sms template "{template_name}"')
 def authorise_sms_pack_code(context, template_name):
-    context.template = context.sms_templates[template_name.strip('\"')]['template']
-    context.pack_code = context.sms_packcodes[template_name.strip('\"')]['pack_code']
-    context.notify_template_id = context.sms_packcodes[template_name.strip('\"')]['notify_template_id']
+    context.template = context.sms_templates[template_name]['template']
+    context.pack_code = context.sms_packcodes[template_name]['pack_code']
+    context.notify_template_id = context.sms_packcodes[template_name]['notify_template_id']
 
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveySmsTemplates'
     body = {
@@ -84,8 +84,8 @@ def check_uac_message_matches_sms_uac(context):
                             f"context.fulfilment_response_json {context.fulfilment_response_json}")
 
 
-@step('an sms template has been created with template {template_name}')
+@step('an sms template has been created with template "{template_name}"')
 def create_sms_template(context, template_name):
-    context.template = context.sms_templates[template_name.strip('\"')]['template']
-    context.pack_code = context.sms_packcodes[template_name.strip('\"')]['pack_code']
-    context.notify_template_id = context.sms_packcodes[template_name.strip('\"')]['notify_template_id']
+    context.template = context.sms_templates[template_name]['template']
+    context.pack_code = context.sms_packcodes[template_name]['pack_code']
+    context.notify_template_id = context.sms_packcodes[template_name]['notify_template_id']
