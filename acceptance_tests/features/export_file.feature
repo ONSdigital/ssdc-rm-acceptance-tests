@@ -9,13 +9,13 @@ Feature: Export files can be created and sent with correct data
     And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
     Examples:
-      | sample file                      | template                                               |
+      | sample file                      | template                                    |
       | social_sample_3_lines_fields.csv | address_line1__address_line2__postcode__uac |
 
     @regression
     Examples:
-      | sample file                 | template                                                     |
-      | business_sample_6_lines.csv | business_name__town_name__uac__qid__industry|
+      | sample file                 | template                                     |
+      | business_sample_6_lines.csv | business_name__town_name__uac__qid__industry |
 
   Scenario: Export file containing sensitive case fields
     Given the sample file "CRIS_dummy_1_row.csv" with validation rules "CRIS_validation_rules_v1.json" is loaded successfully
@@ -32,12 +32,12 @@ Feature: Export files can be created and sent with correct data
     And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
     Examples:
-      | sample file                      | template                                     |
-      | social_sample_3_lines_fields.csv | address_line1__address_line2__postcode|
+      | sample file                      | template                               |
+      | social_sample_3_lines_fields.csv | address_line1__address_line2__postcode |
 
     @regression
     Examples:
-      | sample file                 | template                                 |
+      | sample file                 | template                           |
       | business_sample_6_lines.csv | business_name__town_name__industry |
 
   Scenario Outline: A case is loaded action rule triggered and export file created with differing classifiers

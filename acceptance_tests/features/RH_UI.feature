@@ -8,9 +8,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And link text displays string "<expected link test>"
 
     Examples:
-      | language code | expected error text                                          | error section header               | expected link test                                           |
-      | en            | Access code not recognised. Enter the code again.            | There is a problem with this page  | Access code not recognised. Enter the code again.            |
-      | cy            | Nid yw'r cod mynediad yn cael ei gydnabod. Rhowch y cod eto. | Mae problem gyda'r dudalen hon     | Nid yw'r cod mynediad yn cael ei gydnabod. Rhowch y cod eto. |
+      | language code | expected error text                                          | error section header              | expected link test                                           |
+      | en            | Access code not recognised. Enter the code again.            | There is a problem with this page | Access code not recognised. Enter the code again.            |
+      | cy            | Nid yw'r cod mynediad yn cael ei gydnabod. Rhowch y cod eto. | Mae problem gyda'r dudalen hon    | Nid yw'r cod mynediad yn cael ei gydnabod. Rhowch y cod eto. |
 
   @reset_notify_stub
   Scenario Outline: Works with a good UAC
@@ -21,9 +21,9 @@ Feature: Testing the "enter a UAC" functionality of RH UI
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is true
 
     Examples:
-      | language code | expected text                           |
-      | en            | Start study - ONS Surveys               |
-      | cy            | Dechrau'r astudiaeth - Arolygon SYG     |
+      | language code | expected text                       |
+      | en            | Start study - ONS Surveys           |
+      | cy            | Dechrau'r astudiaeth - Arolygon SYG |
 
   @reset_notify_stub
   Scenario: A receipted UAC redirects to informative page

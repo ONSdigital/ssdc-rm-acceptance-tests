@@ -43,10 +43,10 @@ def check_export_file(context):
     check_export_file_matches_expected(actual_export_file_rows, expected_export_file_rows)
 
 
-@step('an export file template has been created with template {templateName}')
-def create_export_file_template(context, templateName):
-    context.template = context.export_file_templates[templateName.strip('\"')]['template']
-    context.pack_code = context.export_file_packcodes[templateName.strip('\"')]['pack_code']
+@step('an export file template has been created with template {template_name}')
+def create_export_file_template(context, template_name):
+    context.template = context.export_file_templates[template_name.strip('\"')]['template']
+    context.pack_code = context.export_file_packcodes[template_name.strip('\"')]['pack_code']
 
 
 @step('an export file template has been created for the internal reprographics supplier with template {template:array}')
