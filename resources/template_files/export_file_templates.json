@@ -1,0 +1,46 @@
+[
+  {
+    "templateName": "uac",
+    "template": ["__uac__"]
+  },
+  {
+    "templateName": "uac__qid",
+    "template": ["__uac__","__qid__"]
+  },
+  {
+    "templateName": "empty",
+    "template": []
+  },
+  {
+    "templateName": "address_line1__address_line2__postcode__uac",
+    "template": ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE","__uac__"]
+  },
+  {
+    "templateName": "business_name__town_name__uac__qid__industry",
+    "template": ["BUSINESS_NAME","TOWN_NAME","__uac__","__qid__","INDUSTRY"]
+  },
+  {
+    "templateName": "sensitive_middle_name__sensitive_last_name",
+    "template": ["__sensitive__.MIDDLE_NAME","__sensitive__.LAST_NAME"]
+  },
+  {
+    "templateName": "address_line1__address_line2__postcode",
+    "template": ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE"]
+  },
+  {
+    "templateName": "business_name__town_name__industry",
+    "template": ["BUSINESS_NAME","TOWN_NAME","INDUSTRY"]
+  },
+  {
+    "templateName": "first_name__postcode",
+    "template": ["FIRST_NAME", "POSTCODE"]
+  },
+  {
+    "templateName": "address_line1__postcode__uac",
+    "template": ["ADDRESS_LINE1","POSTCODE","__uac__"]
+  },
+  {
+    "templateName": "request_name__address_line1__postcode__uac",
+    "template": ["__request__.name","ADDRESS_LINE1","POSTCODE","__uac__"]
+  }
+]

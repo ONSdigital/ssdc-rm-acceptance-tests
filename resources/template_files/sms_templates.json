@@ -1,0 +1,26 @@
+[
+  {
+    "templateName": "uac",
+    "template": ["__uac__"]
+  },
+  {
+    "templateName": "uac__qid",
+    "template": ["__uac__", "__qid__"]
+  },
+  {
+    "templateName": "empty",
+    "template": []
+  },
+  {
+    "templateName": "request_name",
+    "template": ["__request__.name"]
+  },
+  {
+    "templateName": "sensitive_childlastname__uac",
+    "template": ["__sensitive__.childLastName","__uac__"]
+  },
+  {
+    "templateName": "sensitive_emailaddress__uac",
+    "template": ["__sensitive__.emailAddress","__uac__"]
+  }
+]

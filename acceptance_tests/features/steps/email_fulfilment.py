@@ -1,10 +1,8 @@
 import uuid
-from typing import List
 
 import requests
 from behave import step
 
-from acceptance_tests.utilities import template_helper
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.event_helper import get_emitted_survey_update_by_id
 from acceptance_tests.utilities.notify_helper import check_email_fulfilment_response
@@ -12,8 +10,12 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-@step("fulfilments are authorised on email template")
-def authorise_sms_pack_code(context):
+@step('fulfilments are authorised for email template "{template_name}"')
+def authorise_sms_pack_code(context, template_name):
+    context.template = context.email_templates[template_name]['template']
+    context.pack_code = context.email_packcodes[template_name]['pack_code']
+    context.notify_template_id = context.email_packcodes[template_name]['notify_template_id']
+
     url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyEmailTemplates'
     body = {
         'surveyId': context.survey_id,
@@ -82,7 +84,8 @@ def check_uac_message_matches_email_uac(context):
                             f"context.fulfilment_response_json {context.fulfilment_response_json}")
 
 
-@step('an email template has been created with template {template:array}')
-def create_email_template(context, template: List):
-    context.template = template
-    context.pack_code, context.notify_template_id = template_helper.create_email_template(template)
+@step('an email template has been created with template "{template_name}"')
+def create_email_template(context, template_name):
+    context.template = context.email_templates[template_name]['template']
+    context.pack_code = context.email_packcodes[template_name]['pack_code']
+    context.notify_template_id = context.email_packcodes[template_name]['notify_template_id']

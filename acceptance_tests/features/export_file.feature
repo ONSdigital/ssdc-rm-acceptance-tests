@@ -2,47 +2,47 @@ Feature: Export files can be created and sent with correct data
 
   Scenario Outline: A case is loaded, action rule triggered and export file created with differing templates with UACs
     Given sample file "<sample file>" is loaded successfully
-    And an export file template has been created with template <template>
+    And an export file template has been created with template "<template>"
     When an export file action rule has been created
     Then UAC_UPDATE messages are emitted with active set to true
     And an export file is created with correct rows
     And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
     Examples:
-      | sample file                      | template                                               |
-      | social_sample_3_lines_fields.csv | ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE","__uac__"] |
+      | sample file                      | template                                    |
+      | social_sample_3_lines_fields.csv | address_line1__address_line2__postcode__uac |
 
     @regression
     Examples:
-      | sample file                 | template                                                     |
-      | business_sample_6_lines.csv | ["BUSINESS_NAME","TOWN_NAME","__uac__","__qid__","INDUSTRY"] |
+      | sample file                 | template                                     |
+      | business_sample_6_lines.csv | business_name__town_name__uac__qid__industry |
 
   Scenario: Export file containing sensitive case fields
     Given the sample file "CRIS_dummy_1_row.csv" with validation rules "CRIS_validation_rules_v1.json" is loaded successfully
-    And an export file template has been created with template ["__sensitive__.MIDDLE_NAME","__sensitive__.LAST_NAME"]
+    And an export file template has been created with template "sensitive_middle_name__sensitive_last_name"
     When an export file action rule has been created
     And an export file is created with correct rows
     And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
   Scenario Outline: A case is loaded, action rule triggered and export file created with differing templates no UACs
     Given sample file "<sample file>" is loaded successfully
-    And an export file template has been created with template <template>
+    And an export file template has been created with template "<template>"
     When an export file action rule has been created
     And an export file is created with correct rows
     And the events logged against the cases are ["NEW_CASE","EXPORT_FILE"]
 
     Examples:
-      | sample file                      | template                                     |
-      | social_sample_3_lines_fields.csv | ["ADDRESS_LINE1","ADDRESS_LINE2","POSTCODE"] |
+      | sample file                      | template                               |
+      | social_sample_3_lines_fields.csv | address_line1__address_line2__postcode |
 
     @regression
     Examples:
-      | sample file                 | template                                 |
-      | business_sample_6_lines.csv | ["BUSINESS_NAME","TOWN_NAME","INDUSTRY"] |
+      | sample file                 | template                           |
+      | business_sample_6_lines.csv | business_name__town_name__industry |
 
   Scenario Outline: A case is loaded action rule triggered and export file created with differing classifiers
     Given sample file "<sample file>" is loaded successfully
-    And an export file template has been created with template ["__uac__"]
+    And an export file template has been created with template "uac"
     When an export file action rule has been created with classifiers "<classifiers>"
     Then <expected row count> UAC_UPDATE messages are emitted with active set to true
     Then an export file is created with correct rows

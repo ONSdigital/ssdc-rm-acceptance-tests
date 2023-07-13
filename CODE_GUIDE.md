@@ -71,7 +71,13 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | rh_launch_qid                      | Stores a qid paired with the UAC used for launching in RH                           | str      |
 | rh_launch_endpoint_response        | Stores the response from the API call RH launch                                     | str      |
 | eq_launch_claims                   | Stores the decrypted EQ launch claims json                                          | Mapping  | 
-| eq_flush_claims                    | Stores the decrypted EQ flush claims json                                           | Mapping  | 
+| eq_flush_claims                    | Stores the decrypted EQ flush claims json                                           | Mapping  |
+| email_templates                    | Stores the list of email templates setup prior to the tests                         | Mapping  |
+| email_packcodes                    | Stores the list of email packcodes setup prior to the tests                         | Mapping  |
+| export_file_templates              | Stores the list of export file templates setup prior to the tests                   | Mapping  |
+| export_file_packcodes              | Stores the list of export packcodes setup prior to the tests                        | Mapping  |
+| sms_templates                      | Stores the list of sms templates setup prior to the tests                           | Mapping  |
+| sms_packcodes                      | Stores the list of sms packcodes setup prior to the tests                           | Mapping  |
 
 </div>
 
@@ -122,3 +128,24 @@ def example(bar: List):
 ```gherkin
 When this step receives an array parameter ["spam", "eggs"]
 ```
+
+### SMS/Print/Email Templates
+
+The templates used for action rules and fulfilments are set up in the `before_all` environment step prior to whatever
+test(s) are running so that they can be used repeatedly.
+The templates are held in .json files within the `resources/template_files` directory and there is a file for each of
+the type.
+
+The template format is a list, and this list holds the fields to be included on the template, for example a template
+consisting of a sensitive email address and a uac would look like:
+
+```["__sensitive__.emailAddress","__uac__"]```
+
+The corresponding format to use the template in a feature step would be:
+
+```"sensitive_emailaddress__uac"```
+
+So to add a new template, find the appropriate .json file and add a new block, add the template list to the template
+value, and the templateName value would be the list but converted so it is single underscore where there would be dot
+notation, and double underscores to show the gap between two list items as can be seen above between email address and
+uac.

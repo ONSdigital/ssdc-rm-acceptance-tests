@@ -3,8 +3,7 @@ Feature: Launch a survey with a claims token from Respondent Home UI using a UAC
   @reset_notify_stub
   Scenario: Post a UAC to the launch endpoint and get redirected to a launch URL with a claims token
     Given sample file "sample_1_limited_address_fields.csv" is loaded successfully
-    And an sms template has been created with template ["__uac__", "__qid__"]
-    And fulfilments are authorised on sms template
+    And fulfilments are authorised for sms template "uac__qid"
     And a request has been made for a replacement UAC by SMS from phone number "07123456789"
     And UAC_UPDATE messages are emitted with active set to true
     And the UAC_UPDATE message matches the SMS fulfilment UAC

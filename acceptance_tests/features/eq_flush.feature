@@ -3,7 +3,7 @@ Feature: Un-submitted eQ partials can be flushed automatically by action rule
   @reset_notify_stub
   Scenario: An eQ flush action rule generates the correct PubSub cloud task messages
     Given sample file "1_ROW_EMAIL.csv" with sensitive columns ["emailAddress"] is loaded successfully
-    And an email template has been created with template ["__uac__"]
+    And an email template has been created with template "uac"
     And an email action rule has been created
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is false
     And an EQ_LAUNCH event is received
@@ -16,7 +16,7 @@ Feature: Un-submitted eQ partials can be flushed automatically by action rule
   @reset_notify_stub
   Scenario: An eQ flush action rule triggers the calls to the eQ flush endpoint
     Given sample file "1_ROW_EMAIL.csv" with sensitive columns ["emailAddress"] is loaded successfully
-    And an email template has been created with template ["__uac__","__qid__"]
+    And an email template has been created with template "uac__qid"
     And an email action rule has been created
     And UAC_UPDATE message is emitted with active set to true and "eqLaunched" is false
     And we retrieve the UAC and QID from the email log to use for launching in RH
