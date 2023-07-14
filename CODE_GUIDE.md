@@ -45,6 +45,7 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | test_start_utc_datetime            | Stores the UTC time at the beginning of each scenario in an environment hook        | datetime |
 | survey_id                          | Stores the ID of the survey generated and or used by the scenario                   | UUID     |
 | collex_id                          | Stores the ID of the collection exercise generated and or used by the scenario      | UUID     |
+| collex_end_date                    | Stores the UTC time for a collection exercise end date                              | datetime |
 | emitted_cases                      | Stores the caseUpdate DTO objects emitted on `CASE_UPDATE` events                   | List     |
 | emitted_uacs                       | Stores the UAC DTO objects from the emitted `UAC_UPDATE` events                     | List     |
 | pack_code                          | Stores the pack code used for fulfilments or action rules                           | str      |

@@ -14,6 +14,7 @@ def check_launch_redirect_and_token(context):
                                                         context.rh_launch_qid,
                                                         context.emitted_cases[0]['caseId'],
                                                         context.collex_id,
+                                                        context.collex_end_date,
                                                         'en')
     context.correlation_id = eq_claims['tx_id']
     context.eq_launch_claims = eq_claims

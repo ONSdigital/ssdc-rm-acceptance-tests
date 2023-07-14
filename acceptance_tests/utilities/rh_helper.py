@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from requests import Response
 
 from acceptance_tests.utilities.jwe_helper import decrypt_claims_token_and_check_contents
@@ -9,6 +11,7 @@ def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response: Respons
                                             rh_launch_qid: str,
                                             case_id: str,
                                             collex_id: str,
+                                            collex_end_date: datetime,
                                             language_code: str):
     test_helper.assertTrue(rh_launch_endpoint_response.is_redirect, 'Expected RH response to redirect to EQ launch')
 
@@ -24,5 +27,6 @@ def check_launch_redirect_and_get_eq_claims(rh_launch_endpoint_response: Respons
     return decrypt_claims_token_and_check_contents(rh_launch_qid,
                                                    case_id,
                                                    collex_id,
+                                                   collex_end_date,
                                                    query_strings['token'][0],
                                                    language_code)
