@@ -1,6 +1,6 @@
 import csv
 import json
-import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import List
 
@@ -77,8 +77,8 @@ def load_bom_sample_file_step(context, sample_file_name):
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
@@ -110,8 +110,8 @@ def load_sample_with_survey_type(context, sample_file_name, survey_type):
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
@@ -142,8 +142,8 @@ def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
@@ -179,8 +179,8 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
@@ -209,8 +209,8 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
@@ -275,8 +275,8 @@ def load_business_sample_file_step(context):
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
@@ -302,8 +302,8 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
@@ -339,8 +339,8 @@ def load_sample_with_rules_and_eq_launch_settings(context, sample_file_name, val
         }
     ]
 
-    collection_exercise_start_date = datetime.datetime.utcnow()
-    context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
+    collection_exercise_start_date = datetime.now(timezone.utc)
+    context.collex_end_date = collection_exercise_start_date + timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
