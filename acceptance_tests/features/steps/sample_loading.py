@@ -80,7 +80,8 @@ def load_bom_sample_file_step(context, sample_file_name):
     collection_exercise_start_date = datetime.datetime.utcnow().astimezone(datetime.UTC)
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
-                                   context.test_start_utc_datetime, collection_exercise_start_date, context.collex_end_date)
+                                   context.test_start_utc_datetime, collection_exercise_start_date,
+                                   context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
