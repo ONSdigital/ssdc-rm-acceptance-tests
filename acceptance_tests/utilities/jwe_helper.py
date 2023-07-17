@@ -46,7 +46,7 @@ def decrypt_claims_token_and_check_contents(rh_launch_qid: str, case_id: str, co
                                   expected_response_expires_at_date,
                                   delta=datetime.timedelta(minutes=1),
                                   msg=f'Expected response_expires_at date to be 4 exactly weeks in future of '
-                                      f'collex_end_date (within 1 minute boundary), actual payload: '
+                                      f'collex_end_date (within 1 minute), actual payload: '
                                       f'{eq_claims}')
 
     return eq_claims

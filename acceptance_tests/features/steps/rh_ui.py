@@ -107,6 +107,7 @@ def check_uac_in_firestore(context, language_code):
                                                         context.rh_launch_qid,
                                                         context.emitted_cases[0]['caseId'],
                                                         context.collex_id,
+                                                        context.collex_end_date,
                                                         language_code)
     context.correlation_id = eq_claims['tx_id']
     check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(context.emitted_cases, context.correlation_id,
@@ -136,6 +137,7 @@ def _redirect_to_eq(context, language_code):
                                                         context.emitted_cases[0][
                                                             'caseId'],
                                                         context.collex_id,
+                                                        context.collex_end_date,
                                                         query_strings['token'][
                                                             0], language_code)
     return eq_claims

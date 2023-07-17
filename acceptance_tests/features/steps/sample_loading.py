@@ -80,7 +80,7 @@ def load_bom_sample_file_step(context, sample_file_name):
     collection_exercise_start_date = datetime.datetime.utcnow().astimezone(datetime.UTC)
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
-                                   context.test_start_utc_datetime, collection_exercise_start_date, context.context.collex_end_date)
+                                   context.test_start_utc_datetime, collection_exercise_start_date, context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -145,7 +145,7 @@ def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
-                                   context.context.collex_end_date)
+                                   context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -182,7 +182,7 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
-                                   context.context.collex_end_date)
+                                   context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -212,7 +212,7 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
-                                   context.context.collex_end_date)
+                                   context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -278,7 +278,7 @@ def load_business_sample_file_step(context):
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
-                                   context.context.collex_end_date)
+                                   context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -305,7 +305,7 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
-                                   context.context.collex_end_date)
+                                   context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
@@ -342,7 +342,7 @@ def load_sample_with_rules_and_eq_launch_settings(context, sample_file_name, val
     context.collex_end_date = collection_exercise_start_date + datetime.timedelta(days=2)
     context.collex_id = add_collex(context.survey_id, collection_instrument_selection_rules,
                                    context.test_start_utc_datetime, collection_exercise_start_date,
-                                   context.context.collex_end_date)
+                                   context.collex_end_date)
 
     upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
 
