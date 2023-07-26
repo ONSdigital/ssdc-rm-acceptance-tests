@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import requests
 
@@ -7,17 +7,15 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def add_collex(survey_id, collection_instrument_selection_rules, test_start_time):
+def add_collex(survey_id, collection_instrument_selection_rules, test_start_time, start_date, end_date):
     collex_name = 'test collex ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    start_date = datetime.utcnow()
-    end_date = start_date + timedelta(days=2)
 
     url = f'{Config.SUPPORT_TOOL_API}/collectionExercises'
     body = {'name': collex_name,
             'surveyId': survey_id,
             'reference': "MVP012021",
-            'startDate': f'{start_date.isoformat()}Z',
-            'endDate': f'{end_date.isoformat()}Z',
+            'startDate': f'{start_date.isoformat()}',
+            'endDate': f'{end_date.isoformat()}',
             'metadata': {'test': 'passed'},
             'collectionInstrumentSelectionRules': collection_instrument_selection_rules
             }
@@ -35,8 +33,8 @@ def add_collex(survey_id, collection_instrument_selection_rules, test_start_time
     test_helper.assertEqual(collection_exercise_update_event['reference'], "MVP012021",
                             'Unexpected reference')
 
-    parsed_start_date = datetime.strptime(collection_exercise_update_event['startDate'], "%Y-%m-%dT%H:%M:%S.%fZ")
-    parsed_end_date = datetime.strptime(collection_exercise_update_event['endDate'], "%Y-%m-%dT%H:%M:%S.%fZ")
+    parsed_start_date = datetime.fromisoformat(collection_exercise_update_event['startDate'])
+    parsed_end_date = datetime.fromisoformat(collection_exercise_update_event['endDate'])
 
     test_helper.assertEqual(parsed_start_date, start_date, 'Invalid or missing start date')
     test_helper.assertEqual(parsed_end_date, end_date, 'Invalid or missing end date')
