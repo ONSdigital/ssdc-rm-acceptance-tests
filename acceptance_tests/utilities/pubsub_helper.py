@@ -31,7 +31,7 @@ def publish_to_pubsub(message, project, topic, **kwargs):
     future.result(timeout=30)
 
 
-@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+@retry(reraise=True, wait=wait_fixed(1), stop=stop_after_delay(30))
 def purge_outbound_topics():
     subscriptions_with_leftover_messages = []
 
@@ -44,7 +44,8 @@ def purge_outbound_topics():
             f'There are left over messages on the following subscriptions: {subscriptions_with_leftover_messages}, '
             f'see logs above for details. This might be caused by messages published when the Pub/Sub service is in a '
             f'cold state. Will retry purging the leftover messages a few times until giving up...')
-        raise TryAgain
+        raise TryAgain(f'Failed to purge messages from the following subscriptions: '
+                       f'{subscriptions_with_leftover_messages}')
 
 
 def _purge_subscription(subscription):
