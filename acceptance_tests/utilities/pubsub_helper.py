@@ -7,6 +7,7 @@ from typing import Callable, Mapping, Optional
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
 from structlog import wrap_logger
+from tenacity import retry_if_result, retry, wait_fixed, stop_after_delay, TryAgain
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -30,6 +31,7 @@ def publish_to_pubsub(message, project, topic, **kwargs):
     future.result(timeout=30)
 
 
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
 def purge_outbound_topics():
     subscriptions_with_leftover_messages = []
 
@@ -37,7 +39,12 @@ def purge_outbound_topics():
         if _purge_subscription(subscription_to_purge):
             subscriptions_with_leftover_messages.append(subscription_to_purge)
 
-    return subscriptions_with_leftover_messages
+    if subscriptions_with_leftover_messages:
+        logger.warn(
+            f'There are left over messages on the following subscriptions: {subscriptions_with_leftover_messages}, '
+            f'see logs above for details. This might be caused by messages published when the Pub/Sub service is in a '
+            f'cold state. Will retry purging the leftover messages a few times until giving up...')
+        raise TryAgain
 
 
 def _purge_subscription(subscription):

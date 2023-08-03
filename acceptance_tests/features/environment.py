@@ -36,6 +36,8 @@ def before_all(context):
     context.config.setup_logging()
     _setup_templates(context)
 
+    purge_outbound_topics()
+
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
     # The year 3000 ought to be far enough in the future for this fulfilment to never trigger again, no?
@@ -46,7 +48,6 @@ def move_fulfilment_triggers_harmlessly_massively_into_the_future():
 
 
 def before_scenario(context, scenario):
-    purge_outbound_topics()
     move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
     context.test_start_utc_datetime = datetime.utcnow().replace(tzinfo=timezone.utc)
@@ -90,10 +91,7 @@ def after_scenario(context, scenario):
     if "reset_eq_stub" in scenario.tags:
         reset_eq_stub()
 
-    leftover_messages = purge_outbound_topics()
-    if leftover_messages:
-        logger.warn(f'There are left over messages on the following subscriptions: {leftover_messages}, see logs '
-                    f'above for details.')
+    purge_outbound_topics()
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
@@ -121,9 +119,7 @@ def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
 
 
 def _clear_queues_for_bad_messages_and_reset_exception_manager(list_of_bad_message_hashes):
-    for _ in range(4):
-        purge_outbound_topics()
-        time.sleep(1)
+    purge_outbound_topics()
 
     quarantine_bad_messages_check_and_reset(list_of_bad_message_hashes)
 
