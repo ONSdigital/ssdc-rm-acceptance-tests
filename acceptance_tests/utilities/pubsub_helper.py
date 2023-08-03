@@ -7,7 +7,7 @@ from typing import Callable, Mapping, Optional
 from google.api_core.exceptions import DeadlineExceeded
 from google.cloud import pubsub_v1
 from structlog import wrap_logger
-from tenacity import retry_if_result, retry, wait_fixed, stop_after_delay, TryAgain
+from tenacity import retry, wait_fixed, stop_after_delay, TryAgain
 
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
