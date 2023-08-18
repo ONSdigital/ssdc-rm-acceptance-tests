@@ -31,7 +31,19 @@ def publish_to_pubsub(message, project, topic, **kwargs):
     future.result(timeout=30)
 
 
-@retry(reraise=True, wait=wait_fixed(1), stop=stop_after_delay(30))
+@retry(reraise=True, wait=wait_fixed(1), stop=stop_after_delay(60))
+def purge_outbound_topics_with_retry():
+    subscriptions_with_leftover_messages = purge_outbound_topics()
+
+    if subscriptions_with_leftover_messages:
+        logger.warn(
+            f'There are left over messages on the following subscriptions: {subscriptions_with_leftover_messages}, '
+            f'see logs above for details. This might be caused by messages published when the Pub/Sub service is in a '
+            f'cold state. Will retry purging the leftover messages a few times until giving up and forcing a failure')
+        raise TryAgain(f'Failed to purge messages from the following subscriptions: '
+                       f'{subscriptions_with_leftover_messages}')
+
+
 def purge_outbound_topics():
     subscriptions_with_leftover_messages = []
 
@@ -39,13 +51,7 @@ def purge_outbound_topics():
         if _purge_subscription(subscription_to_purge):
             subscriptions_with_leftover_messages.append(subscription_to_purge)
 
-    if subscriptions_with_leftover_messages:
-        logger.warn(
-            f'There are left over messages on the following subscriptions: {subscriptions_with_leftover_messages}, '
-            f'see logs above for details. This might be caused by messages published when the Pub/Sub service is in a '
-            f'cold state. Will retry purging the leftover messages a few times until giving up...')
-        raise TryAgain(f'Failed to purge messages from the following subscriptions: '
-                       f'{subscriptions_with_leftover_messages}')
+    return subscriptions_with_leftover_messages
 
 
 def _purge_subscription(subscription):
