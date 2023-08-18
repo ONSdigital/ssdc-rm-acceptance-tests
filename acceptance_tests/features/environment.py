@@ -16,7 +16,7 @@ from acceptance_tests.utilities.exception_manager_helper import get_bad_messages
     quarantine_bad_messages_check_and_reset
 from acceptance_tests.utilities.notify_helper import reset_notify_stub
 from acceptance_tests.utilities.parameter_parsers import parse_array_to_list, parse_json_object
-from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
+from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics_with_retry, purge_outbound_topics
 from acceptance_tests.utilities.template_helper import create_email_template, create_export_file_template, \
     create_sms_template
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -36,7 +36,7 @@ def before_all(context):
     context.config.setup_logging()
     _setup_templates(context)
 
-    purge_outbound_topics()
+    purge_outbound_topics_with_retry()
 
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
@@ -91,7 +91,10 @@ def after_scenario(context, scenario):
     if "reset_eq_stub" in scenario.tags:
         reset_eq_stub()
 
-    purge_outbound_topics()
+    leftover_messages = purge_outbound_topics()
+    if leftover_messages:
+        test_helper.fail(f'There are left over messages on the following subscriptions: {leftover_messages}, see logs '
+                         f'above for details.')
 
 
 def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
@@ -119,7 +122,7 @@ def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
 
 
 def _clear_queues_for_bad_messages_and_reset_exception_manager(list_of_bad_message_hashes):
-    purge_outbound_topics()
+    purge_outbound_topics_with_retry()
 
     quarantine_bad_messages_check_and_reset(list_of_bad_message_hashes)
 
