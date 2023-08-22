@@ -16,7 +16,7 @@ from acceptance_tests.utilities.exception_manager_helper import get_bad_messages
     quarantine_bad_messages_check_and_reset
 from acceptance_tests.utilities.notify_helper import reset_notify_stub
 from acceptance_tests.utilities.parameter_parsers import parse_array_to_list, parse_json_object
-from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics
+from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics_with_retry, purge_outbound_topics
 from acceptance_tests.utilities.template_helper import create_email_template, create_export_file_template, \
     create_sms_template
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -36,6 +36,8 @@ def before_all(context):
     context.config.setup_logging()
     _setup_templates(context)
 
+    purge_outbound_topics_with_retry()
+
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
     # The year 3000 ought to be far enough in the future for this fulfilment to never trigger again, no?
@@ -46,7 +48,6 @@ def move_fulfilment_triggers_harmlessly_massively_into_the_future():
 
 
 def before_scenario(context, scenario):
-    purge_outbound_topics()
     move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
     context.test_start_utc_datetime = datetime.utcnow().replace(tzinfo=timezone.utc)
@@ -121,9 +122,7 @@ def _record_and_remove_any_unexpected_bad_messages(unexpected_bad_messages):
 
 
 def _clear_queues_for_bad_messages_and_reset_exception_manager(list_of_bad_message_hashes):
-    for _ in range(4):
-        purge_outbound_topics()
-        time.sleep(1)
+    purge_outbound_topics_with_retry()
 
     quarantine_bad_messages_check_and_reset(list_of_bad_message_hashes)
 
