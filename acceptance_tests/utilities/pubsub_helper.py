@@ -225,3 +225,9 @@ def get_matching_pubsub_messages_acking_others(subscription,
         )
 
     return matching_messages
+
+
+def warmup_pubsub(project):
+    for topic in topics:
+        message = json.dumps({"message": "warmup"})
+        publish_to_pubsub(message, project, topic)

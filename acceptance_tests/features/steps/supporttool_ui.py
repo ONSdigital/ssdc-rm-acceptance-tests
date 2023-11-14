@@ -47,7 +47,7 @@ def create_survey_in_UI(context, survey_prefix, sample_file_name, sensitive_colu
     context.browser.find_by_id('postCreateSurveyBtn').click()
 
     test_helper.assertEquals(
-        len(context.browser.find_by_id('surveyListTable').first.find_by_text(context.survey_name, wait_time=20)), 1)
+        len(context.browser.find_by_id('surveyListTable').first.find_by_text(context.survey_name, wait_time=30)), 1)
 
     get_emitted_survey_update(context.survey_name, context.test_start_utc_datetime)
 
@@ -90,7 +90,7 @@ def click_create_collex_button(context):
 @step('the collection exercise is clicked on, navigating to the selected exercise details page')
 def click_into_collex_details(context):
     context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name,
-                                                                                 wait_time=20).click()
+                                                                                 wait_time=30).click()
 
 
 @step('I click the upload sample file button with file "{sample_file_name}"')
@@ -99,9 +99,9 @@ def click_load_sample(context, sample_file_name):
     context.browser.find_by_id('contained-button-file').first.type(str(sample_file_path))
     context.sample_count = sum(1 for _ in open(sample_file_path)) - 1
     test_helper.assertEquals(
-        len(context.browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name, wait_time=20)), 1)
+        len(context.browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name, wait_time=30)), 1)
     context.browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").click()
-    context.browser.find_by_id("jobProcessBtn", wait_time=20).click()
+    context.browser.find_by_id("jobProcessBtn", wait_time=30).click()
     poll_sample_status_processed(context.browser)
     context.browser.find_by_id('closeSampledetailsBtn').click()
     context.emitted_cases = get_emitted_cases(context.sample_count, context.test_start_utc_datetime)
@@ -134,8 +134,8 @@ def create_export_file_template(context, packcode, template: List):
 @step('I should see the export file template in the template list')
 def find_created_export_file(context):
     test_helper.assertEquals(
-        len(context.browser.find_by_id('exportFileTemplateTable', wait_time=20).first
-            .find_by_text(context.pack_code, wait_time=20)), 1)
+        len(context.browser.find_by_id('exportFileTemplateTable', wait_time=30).first
+            .find_by_text(context.pack_code, wait_time=30)), 1)
 
 
 @step("the export file template has been added to the allow on action rule list")
@@ -197,10 +197,10 @@ def find_created_email_template(context):
 
 @step("the email template has been added to the allow on action rule list")
 def allow_email_template_on_action_rule(context):
-    context.browser.find_by_id('allowEmailTemplateDialogBtn', wait_time=20).click()
+    context.browser.find_by_id('allowEmailTemplateDialogBtn', wait_time=30).click()
     context.browser.find_by_id('selectEmailTemplate').click()
     context.browser.find_by_id(context.pack_code).click()
-    context.browser.find_by_id("allowEmailTemplateOnActionRule", wait_time=20).click()
+    context.browser.find_by_id("allowEmailTemplateOnActionRule", wait_time=30).click()
 
 
 @step('I create an email action rule with email column "{email_column}"')
@@ -209,9 +209,9 @@ def click_email_action_rule_button(context, email_column):
     context.browser.find_by_id('selectActionRuleType').click()
     context.browser.find_by_value('Email').click()
     context.browser.find_by_id('selectActionRuleEmailPackCode').click()
-    context.browser.find_by_id(context.pack_code, wait_time=20).click()
+    context.browser.find_by_id(context.pack_code, wait_time=30).click()
     context.browser.find_by_id('selectActionRuleEmailColumn').click()
-    context.browser.find_by_id(email_column, wait_time=20).click()
+    context.browser.find_by_id(email_column, wait_time=30).click()
     context.browser.find_by_id('createActionRuleBtn').click()
 
 
