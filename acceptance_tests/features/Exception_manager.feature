@@ -1,6 +1,6 @@
 Feature: Check exception manager is called for every topic and handles them as expected
 
-  Scenario: AA Bad Json Msg sent to every topic, msg arrives in exception manager
+  Scenario: A Bad Json Msg sent to every topic, msg arrives in exception manager
     When a bad json msg is sent to every topic consumed by RM
     Then each bad msg is seen by exception manager with the message containing "com.fasterxml.jackson.core.JsonParseException"
     And each bad msg can be successfully quarantined
