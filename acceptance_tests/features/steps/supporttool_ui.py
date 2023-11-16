@@ -142,7 +142,7 @@ def find_created_export_file(context):
 def allow_export_file_template_on_action_rule(context):
     context.browser.find_by_id('actionRuleExportFileTemplateBtn').click()
     context.browser.find_by_id('allowExportFileTemplateSelect').click()
-    context.browser.find_by_value(context.pack_code).click()
+    context.browser.find_by_value(context.pack_code, wait_time=30).click()
     context.browser.find_by_id("addAllowExportFileTemplateBtn").click()
 
 
@@ -152,7 +152,7 @@ def click_action_rule_button(context):
     context.browser.find_by_id('selectActionRuleType').click()
     context.browser.find_by_value('Export File').click()
     context.browser.find_by_id('selectActionRuleExportFilePackCode').click()
-    context.browser.find_by_id(context.pack_code).click()
+    context.browser.find_by_id(context.pack_code, wait_time=30).click()
     context.browser.find_by_id('createActionRuleBtn').click()
 
 
@@ -199,7 +199,7 @@ def find_created_email_template(context):
 def allow_email_template_on_action_rule(context):
     context.browser.find_by_id('allowEmailTemplateDialogBtn', wait_time=30).click()
     context.browser.find_by_id('selectEmailTemplate').click()
-    context.browser.find_by_id(context.pack_code).click()
+    context.browser.find_by_id(context.pack_code, wait_time=30).click()
     context.browser.find_by_id("allowEmailTemplateOnActionRule", wait_time=30).click()
 
 
