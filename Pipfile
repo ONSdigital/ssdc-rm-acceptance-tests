@@ -14,7 +14,7 @@ google-cloud-pubsub = "*"
 requests-toolbelt = "*"
 tenacity = "*"
 google-cloud-storage = "*"
-splinter = {extras = ["selenium3"], version = "*"}
+splinter = {extras = ["selenium"], version = "*"}
 jwcrypto = "*"
 
 [dev-packages]
