@@ -4,6 +4,9 @@ from datetime import datetime
 from typing import List
 
 from behave import step
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from tenacity import retry, stop_after_delay, wait_fixed
 
 from acceptance_tests.features.steps.email_action_rule import check_notify_called_with_correct_emails_and_uacs
@@ -200,6 +203,7 @@ def allow_email_template_on_action_rule(context):
     context.browser.find_by_id('allowEmailTemplateDialogBtn', wait_time=30).click()
     context.browser.find_by_id('selectEmailTemplate').click()
     context.browser.find_by_id(context.pack_code, wait_time=30).click()
+    context.browser.find_by_id("allowEmailTemplateOnActionRule", wait_time=30).is_visible(30)
     context.browser.find_by_id("allowEmailTemplateOnActionRule", wait_time=30).click()
 
 
