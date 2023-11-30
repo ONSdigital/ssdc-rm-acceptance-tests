@@ -34,11 +34,10 @@ Feature: Test basic Support Tool Functionality
     Then I can see the Action Rule has been triggered and export files have been created
 
   @reset_notify_stub
-  @regression
-  Scenario: Create an Email Action Rule
+  Scenario Outline: Create an Email Action Rule
     Given the support tool landing page is displayed
     And the Create Email Template button is clicked on
-    And an email template with packcode "email-packcode" and template ["__uac__"] has been created
+    And an email template with packcode "email-packcode", notify service ref "<notify service ref>" and template ["__uac__"] has been created
     And I should see the email template in the template list
     And the Create Survey Button is clicked on
     And a Survey called "EmailTest" plus unique suffix is created for sample file "sis_survey_link.csv" with sensitive columns ["emailAddress"]
@@ -50,3 +49,9 @@ Feature: Test basic Support Tool Functionality
     When I create an email action rule with email column "emailAddress"
     Then I can see the Action Rule has been triggered and emails sent to notify api with email column "emailAddress"
     And the correct number of UAC_UPDATE messages are emitted with active set to true
+
+    @regression
+    Examples:
+      | notify service ref                           |
+      | Office_for_National_Statistics_surveys_UKHSA |
+      | test_service                                 |
