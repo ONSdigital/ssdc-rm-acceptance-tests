@@ -14,7 +14,7 @@ RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
     unzip /tmp/chromedriver.zip chromedriver-linux64/chromedriver -d /usr/local/bin/ && \
     mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
-# Install pipenvm
+# Install pipenv
 RUN pip3 install pipenv
 
 # set display port to avoid crash
