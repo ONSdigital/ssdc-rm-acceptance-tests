@@ -16,6 +16,7 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
     }
     if notify_template_id:
         body['notifyTemplateId'] = notify_template_id
+        body['notifyServiceRef'] = "test_service"
 
     if export_file_destination:
         body['exportFileDestination'] = export_file_destination

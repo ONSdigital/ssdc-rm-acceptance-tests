@@ -176,16 +176,19 @@ def click_create_email_template_button(context):
     context.browser.find_by_id('openCreateEmailTemplateBtn').click()
 
 
-@step('an email template with packcode "{packcode}" and template {template:array} has been created')
-def create_email_template(context, packcode, template: List):
+@step('an email template with packcode "{packcode}", notify service ref "{notify_service_ref}" '
+      'and template {template:array} has been created')
+def create_email_template(context, packcode, notify_service_ref, template: List):
     context.pack_code = f'{packcode}-' + get_random_alpha_numerics(5)
     context.template = template
     context.notify_template_id = str(uuid.uuid4())
 
     context.browser.find_by_id('EmailPackcodeTextField').fill(context.pack_code)
-    context.browser.find_by_id('EmailDescriptionTextField').fill('export-file description')
+    context.browser.find_by_id('EmailDescriptionTextField').fill('email description')
     context.browser.find_by_id('EmailNotifyTemplateIdTextField').fill(context.notify_template_id)
     context.browser.find_by_id('EmailTemplateTextField').fill(str(context.template).replace('\'', '\"'))
+    context.browser.find_by_id('EmailNotifyServiceRef').click()
+    context.browser.find_by_id(notify_service_ref).click()
     context.browser.find_by_id('createEmailTemplateBtn').click()
 
 
