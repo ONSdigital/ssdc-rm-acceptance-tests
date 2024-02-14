@@ -105,3 +105,5 @@ class Config:
 
     SUPPLIER_INTERNAL_REPROGRAPHICS = os.getenv('SUPPLIER_INTERNAL_REPROGRAPHICS', 'internal_reprographics')
     SUPPLIER_DEFAULT_TEST = os.getenv('SUPPLIER_DEFAULT_TEST', 'test_supplier')
+
+    IAP_CLIENT_ID = os.getenv('IAP_CLIENT_ID')

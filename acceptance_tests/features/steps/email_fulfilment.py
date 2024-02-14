@@ -3,6 +3,7 @@ import uuid
 import requests
 from behave import step
 
+from acceptance_tests.utilities import iap_requests
 from acceptance_tests.utilities.audit_trail_helper import get_unique_user_email
 from acceptance_tests.utilities.event_helper import get_emitted_survey_update_by_id
 from acceptance_tests.utilities.notify_helper import check_email_fulfilment_response
@@ -22,7 +23,13 @@ def authorise_sms_pack_code(context, template_name):
         'packCode': context.pack_code
     }
 
-    response = requests.post(url, json=body)
+    if Config.IAP_CLIENT_ID:
+        response = iap_requests.make_iap_request(url,
+                                                 Config.IAP_CLIENT_ID,
+                                                 method='POST',
+                                                 json=body)
+    else:
+        response = requests.post(url, json=body)
     response.raise_for_status()
 
     survey_update_event = get_emitted_survey_update_by_id(context.survey_id, context.test_start_utc_datetime)
@@ -63,7 +70,13 @@ def request_replacement_uac_by_email(context, email, personalisation=None):
     if personalisation:
         context.fulfilment_personalisation = body['payload']['emailFulfilment']['personalisation'] = personalisation
 
-    response = requests.post(url, json=body)
+    if Config.IAP_CLIENT_ID:
+        response = iap_requests.make_iap_request(url,
+                                                 Config.IAP_CLIENT_ID,
+                                                 method='POST',
+                                                 json=body)
+    else:
+        response = requests.post(url, json=body)
     response.raise_for_status()
 
     context.fulfilment_response_json = response.json()

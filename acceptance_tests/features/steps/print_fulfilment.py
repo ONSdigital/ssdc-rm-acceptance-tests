@@ -5,6 +5,7 @@ from datetime import datetime
 import requests
 from behave import step
 
+from acceptance_tests.utilities import iap_requests
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.event_helper import get_emitted_survey_update_by_id
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
@@ -51,7 +52,12 @@ def print_fulfilments_trigger_step(context):
     url = (f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/'
            f'?triggerDateTime={datetime.utcnow().replace(microsecond=0).isoformat()}Z')
 
-    response = requests.post(url)
+    if Config.IAP_CLIENT_ID:
+        response = iap_requests.make_iap_request(url,
+                                                 Config.IAP_CLIENT_ID,
+                                                 method='POST')
+    else:
+        response = requests.post(url)
     response.raise_for_status()
 
 
@@ -66,7 +72,13 @@ def authorise_pack_code(context, template_name):
         'packCode': context.pack_code
     }
 
-    response = requests.post(url, json=body)
+    if Config.IAP_CLIENT_ID:
+        response = iap_requests.make_iap_request(url,
+                                                 Config.IAP_CLIENT_ID,
+                                                 method='POST',
+                                                 json=body)
+    else:
+        response = requests.post(url, json=body)
     response.raise_for_status()
 
     survey_update_event = get_emitted_survey_update_by_id(context.survey_id, context.test_start_utc_datetime)
