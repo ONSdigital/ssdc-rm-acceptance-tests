@@ -4,6 +4,7 @@ from typing import Mapping
 
 import requests
 
+from acceptance_tests.utilities import iap_requests
 from acceptance_tests.utilities.pubsub_helper import get_matching_pubsub_message_acking_others
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -22,7 +23,14 @@ def add_survey(sample_validation_rules, test_start_time, sample_definition_url="
             "sampleDefinitionUrl": sample_definition_url,
             "metadata": {'foo': 'bar'}}
 
-    response = requests.post(url, json=body)
+    if Config.IAP_CLIENT_ID:
+        response = iap_requests.make_iap_request(url,
+                                                 Config.IAP_CLIENT_ID,
+                                                 method='POST',
+                                                 json=body)
+    else:
+        response = requests.post(url, json=body)
+
     response.raise_for_status()
 
     survey_id = response.json()

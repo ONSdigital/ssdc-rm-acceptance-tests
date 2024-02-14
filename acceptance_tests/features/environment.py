@@ -11,6 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from splinter import Browser
 from structlog import wrap_logger
 
+from acceptance_tests.utilities import iap_requests
 from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_values, parse_markdown_context_table
 from acceptance_tests.utilities.eq_stub_helper import reset_eq_stub
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages, \
@@ -42,9 +43,13 @@ def before_all(context):
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
     # The year 3000 ought to be far enough in the future for this fulfilment to never trigger again, no?
-    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers?triggerDateTime=3000-01-01T00:00:00.000Z'
-
-    response = requests.post(url)
+    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/?triggerDateTime=3000-01-01T00:00:00.000Z'
+    if Config.IAP_CLIENT_ID:
+        response = iap_requests.make_iap_request(url,
+                                                 Config.IAP_CLIENT_ID,
+                                                 method='POST')
+    else:
+        response = requests.post(url)
     response.raise_for_status()
 
 

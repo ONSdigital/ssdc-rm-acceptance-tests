@@ -49,8 +49,8 @@ class Config:
 
     SUPPORT_TOOL_HOST = os.getenv('SUPPORT_TOOL_HOST', 'localhost')
     SUPPORT_TOOL_PORT = os.getenv('SUPPORT_TOOL_PORT', '9999')
-    SUPPORT_TOOL_API = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}/api'
-    SUPPORT_TOOL_URL = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}'
+    SUPPORT_TOOL_API = f'https://{SUPPORT_TOOL_HOST}/api'
+    SUPPORT_TOOL_URL = f'https://{SUPPORT_TOOL_HOST}'
 
     NOTIFY_SERVICE_HOST = os.getenv('NOTIFY_SERVICE_HOST', 'localhost')
     NOTIFY_SERVICE_PORT = os.getenv('NOTIFY_SERVICE_PORT', '8162')
@@ -105,3 +105,5 @@ class Config:
 
     SUPPLIER_INTERNAL_REPROGRAPHICS = os.getenv('SUPPLIER_INTERNAL_REPROGRAPHICS', 'internal_reprographics')
     SUPPLIER_DEFAULT_TEST = os.getenv('SUPPLIER_DEFAULT_TEST', 'test_supplier')
+
+    IAP_CLIENT_ID = os.getenv('IAP_CLIENT_ID')
