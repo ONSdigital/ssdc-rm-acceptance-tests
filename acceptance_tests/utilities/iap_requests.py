@@ -4,7 +4,7 @@ from google.oauth2 import id_token
 from requests import Response
 
 
-def make_iap_request(url: str, client_id: str, method: str = 'GET', **kwargs) -> Response:
+def make_iap_request(url: str, client_id: str, method: str = 'GET', content_type=None, **kwargs) -> Response:
     """Makes a request to an application protected by Identity-Aware Proxy.
     Args:
       url: The Identity-Aware Proxy-protected URL to fetch.
@@ -26,9 +26,9 @@ def make_iap_request(url: str, client_id: str, method: str = 'GET', **kwargs) ->
     # account.
     open_id_connect_token = id_token.fetch_id_token(Request(), client_id)
 
-    if 'content_type' in kwargs:
+    if content_type:
         headers = {'Authorization': 'Bearer {}'.format(open_id_connect_token),
-                   'Content-Type': kwargs.get('content_type')}
+                   'Content-Type': content_type}
     else:
         headers = {'Authorization': 'Bearer {}'.format(open_id_connect_token)}
 
@@ -37,5 +37,5 @@ def make_iap_request(url: str, client_id: str, method: str = 'GET', **kwargs) ->
     # Google-issued OpenID Connect token for the service account.
     response = requests.request(
         method, url,
-        headers=headers)
+        headers=headers, **kwargs)
     return response
