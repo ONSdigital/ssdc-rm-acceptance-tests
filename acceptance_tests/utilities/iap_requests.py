@@ -37,5 +37,5 @@ def make_iap_request(url: str, client_id: str, method: str = 'GET', **kwargs) ->
     # Google-issued OpenID Connect token for the service account.
     response = requests.request(
         method, url,
-        headers=headers, **kwargs)
+        headers=headers)
     return response
