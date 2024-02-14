@@ -24,7 +24,7 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
                                                  Config.IAP_CLIENT_ID,
                                                  method='POST',
                                                  data=multipart_data,
-                                                 headers={'Content-Type': multipart_data.content_type})
+                                                 content_type=multipart_data.content_type)
     else:
         response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
     response.raise_for_status()

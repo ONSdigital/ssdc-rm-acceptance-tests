@@ -26,10 +26,16 @@ def make_iap_request(url: str, client_id: str, method: str = 'GET', **kwargs) ->
     # account.
     open_id_connect_token = id_token.fetch_id_token(Request(), client_id)
 
+    if 'content_type' in kwargs:
+        headers = {'Authorization': 'Bearer {}'.format(open_id_connect_token),
+                   'Content-Type': kwargs.get('content_type')}
+    else:
+        headers = {'Authorization': 'Bearer {}'.format(open_id_connect_token)}
+
     # Fetch the Identity-Aware Proxy-protected URL, including an
     # Authorization header containing "Bearer " followed by a
     # Google-issued OpenID Connect token for the service account.
     response = requests.request(
         method, url,
-        headers={'Authorization': 'Bearer {}'.format(open_id_connect_token)}, **kwargs)
+        headers=headers, **kwargs)
     return response
