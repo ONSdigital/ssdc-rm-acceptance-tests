@@ -11,6 +11,7 @@ def make_iap_request(url: str, client_id: str, method: str = 'GET', content_type
       client_id: The client ID used by Identity-Aware Proxy.
       method: The request method to use
               ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE')
+      content_type: Sets content type when uploading files.
       **kwargs: Any of the parameters defined for the request function:
                 https://github.com/requests/requests/blob/master/requests/api.py
                 If no timeout is provided, it is set to 90 by default.
