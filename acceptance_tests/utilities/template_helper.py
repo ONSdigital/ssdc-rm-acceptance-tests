@@ -4,6 +4,7 @@ import uuid
 
 import requests
 
+from acceptance_tests.utilities import iap_requests
 from config import Config
 
 
@@ -21,7 +22,13 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
     if export_file_destination:
         body['exportFileDestination'] = export_file_destination
 
-    response = requests.post(create_url, json=body)
+    if Config.IAP_CLIENT_ID:
+        response = iap_requests.make_iap_request(create_url,
+                                                 Config.IAP_CLIENT_ID,
+                                                 method='POST',
+                                                 json=body)
+    else:
+        response = requests.post(create_url, json=body)
     response.raise_for_status()
 
 

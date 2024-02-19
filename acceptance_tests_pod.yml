@@ -22,7 +22,7 @@ spec:
               cp /home/acceptancetests/postgresql/* /home/acceptancetests/.postgresql
               chmod 0600 /home/acceptancetests/.postgresql/postgresql.key
               # the above is a workaround to get round the permissions as currently we cant mount it without doing this
-    image: europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests:$MANIFEST_IMAGE_TAG
+    image: europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests:72-spike-ats-should-go-via-https-domain-and-use-iap
     tty: true
     stdin: true
     imagePullPolicy: Always
@@ -81,7 +81,7 @@ spec:
     - name: SUPPLIER_CONFIG_JSON_PATH
       value: "/home/acceptancetests/destination_config/export-file-destination-config.json"
     - name: SUPPORT_TOOL_HOST
-      value: "support-tool"
+      value: "<your-support-tool>.rm.gcp.onsdigital.uk"
     - name: SUPPORT_TOOL_PORT
       value: "80"
     - name: EXCEPTIONMANAGER_CONNECTION_HOST
@@ -115,6 +115,11 @@ spec:
       value: "BUCKET"
     - name: EQ_FLUSH_STUB_URL
       value: "http://eq-stub"
+    - name: IAP_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: support-tool-iap
+          key: client_id
   volumes:
   - name: export-file-destinations
     secret:
