@@ -10,7 +10,7 @@ RUN apt-get -y update && apt-get install -y curl git wget gnupg jq && wget -q -O
 
 # Chrome and chromedriver share the same version (as of 115) so use this to download chromedriver directly
 RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
-    wget -O /tmp/chromedriver.zip https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROME_VERSION}/linux64/chromedriver-linux64.zip && \
+    wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip && \
     unzip /tmp/chromedriver.zip chromedriver-linux64/chromedriver -d /usr/local/bin/ && \
     mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
