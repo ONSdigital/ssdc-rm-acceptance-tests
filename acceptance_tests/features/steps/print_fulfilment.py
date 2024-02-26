@@ -48,7 +48,7 @@ def request_print_fulfilment_step(context, personalisation=None):
 
 @step("export file fulfilments are triggered to be exported")
 def print_fulfilments_trigger_step(context):
-    url = (f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/'
+    url = (f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers'
            f'?triggerDateTime={datetime.utcnow().replace(microsecond=0).isoformat()}Z')
 
     response = requests.post(url)
