@@ -21,6 +21,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 @step("the support tool landing page is displayed")
 def navigate_to_support_tool_landing_page(context):
     context.browser.visit(f'{Config.SUPPORT_TOOL_URL}')
@@ -92,7 +93,7 @@ def click_create_collex_button(context):
 @step('the collection exercise is clicked on, navigating to the selected exercise details page')
 def click_into_collex_details(context):
     context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name,
-                                                                                wait_time=30).click()
+                                                                                 wait_time=30).click()
 
 
 @step('I click the upload sample file button with file "{sample_file_name}"')
@@ -203,10 +204,9 @@ def find_created_email_template(context):
 @step("the email template has been added to the allow on action rule list")
 def allow_email_template_on_action_rule(context):
     context.browser.driver.refresh()
-    allowEmailTemplateDialogBtn = WebDriverWait(context.browser.driver, 30).until(
+    WebDriverWait(context.browser.driver, 30).until(
         EC.element_to_be_clickable((By.ID, 'allowEmailTemplateDialogBtn'))
-    )
-    allowEmailTemplateDialogBtn.click()
+    ).click()
     context.browser.find_by_id('selectEmailTemplate').click()
     context.browser.find_by_id(context.pack_code, wait_time=30).click()
     context.browser.find_by_id("allowEmailTemplateOnActionRule", wait_time=30).click()
