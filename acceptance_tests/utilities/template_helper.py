@@ -22,13 +22,7 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
     if export_file_destination:
         body['exportFileDestination'] = export_file_destination
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(create_url,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(create_url, json=body)
+    response = iap_requests.make_request(method='POST', url=create_url, json=body)
     response.raise_for_status()
 
 

@@ -23,13 +23,7 @@ def authorise_sms_pack_code(context, template_name):
         'packCode': context.pack_code
     }
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(url,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(url, json=body)
+    response = iap_requests.make_request(method='POST', url=url, json=body)
     response.raise_for_status()
 
     survey_update_event = get_emitted_survey_update_by_id(context.survey_id, context.test_start_utc_datetime)
@@ -70,13 +64,7 @@ def request_replacement_uac_by_email(context, email, personalisation=None):
     if personalisation:
         context.fulfilment_personalisation = body['payload']['emailFulfilment']['personalisation'] = personalisation
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(url,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(url, json=body)
+    response = iap_requests.make_request(method='POST', url=url, json=body)
     response.raise_for_status()
 
     context.fulfilment_response_json = response.json()

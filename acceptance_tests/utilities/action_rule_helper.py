@@ -17,13 +17,7 @@ def create_export_file_action_rule(collex_id, classifiers, pack_code):
         'collectionExerciseId': collex_id
     }
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(ACTION_RULES_URL,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(ACTION_RULES_URL, json=body)
+    response = iap_requests.make_request(method='POST', url=ACTION_RULES_URL, json=body)
     response.raise_for_status()
     action_rule_id = str(response.text.strip('"'))
     return action_rule_id
@@ -38,13 +32,7 @@ def setup_deactivate_uac_action_rule(collex_id):
         'collectionExerciseId': collex_id
     }
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(ACTION_RULES_URL,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(ACTION_RULES_URL, json=body)
+    response = iap_requests.make_request(method='POST', url=ACTION_RULES_URL, json=body)
     response.raise_for_status()
     action_rule_id = str(response.text.strip('"'))
     return action_rule_id
@@ -61,13 +49,7 @@ def setup_sms_action_rule(collex_id, pack_code):
         'uacMetadata': {"waveOfContact": "1"}
     }
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(ACTION_RULES_URL,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(ACTION_RULES_URL, json=body)
+    response = iap_requests.make_iap_request(method='POST', url=ACTION_RULES_URL, json=body)
     response.raise_for_status()
     action_rule_id = str(response.text.strip('"'))
     return action_rule_id
@@ -84,13 +66,7 @@ def setup_email_action_rule(collex_id, pack_code):
         'uacMetadata': {"waveOfContact": "1"}
     }
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(ACTION_RULES_URL,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(ACTION_RULES_URL, json=body)
+    response = iap_requests.make_request(method='POST', url=ACTION_RULES_URL, json=body)
     response.raise_for_status()
     action_rule_id = str(response.text.strip('"'))
     return action_rule_id
@@ -105,11 +81,5 @@ def set_eq_flush_action_rule(collex_id):
         'collectionExerciseId': collex_id,
     }
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(ACTION_RULES_URL,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(ACTION_RULES_URL, json=body)
+    response = iap_requests.make_request(method='POST', url=ACTION_RULES_URL, json=body)
     response.raise_for_status()

@@ -1,17 +1,31 @@
 import requests
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
-from requests import Response
+
+from config import Config
 
 
-def make_iap_request(url: str, client_id: str, method: str = 'GET', content_type=None, **kwargs) -> Response:
-    """Makes a request to an application protected by Identity-Aware Proxy.
-    Args:
-      url: The Identity-Aware Proxy-protected URL to fetch.
-      client_id: The client ID used by Identity-Aware Proxy.
+def make_request(method: str = "GET", url: str = None, **kwargs) -> requests.Response:
+    """Make an IAP authorized request if IAP config is present,
+    otherwise fall back on a regular, unauthenticated request
+    Kwargs:
       method: The request method to use
               ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE')
-      content_type: Sets content type when uploading files.
+      url: The Identity-Aware Proxy-protected URL to fetch.
+      **kwargs: Any of the parameters defined for the request function:
+                https://github.com/requests/requests/blob/master/requests/api.py
+    """
+    if Config.IAP_CLIENT_ID:
+        return _make_iap_request(method, url, **kwargs)
+    return requests.request(method, url, **kwargs)
+
+
+def _make_iap_request(method: str = 'GET', url: str = None, **kwargs) -> requests.Response:
+    """Makes a request to an application protected by Identity-Aware Proxy.
+    Args:
+      method: The request method to use
+              ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE')
+      url: The Identity-Aware Proxy-protected URL to fetch.
       **kwargs: Any of the parameters defined for the request function:
                 https://github.com/requests/requests/blob/master/requests/api.py
                 If no timeout is provided, it is set to 90 by default.
@@ -23,20 +37,16 @@ def make_iap_request(url: str, client_id: str, method: str = 'GET', content_type
     if 'timeout' not in kwargs:
         kwargs['timeout'] = 90
 
-    # Obtain an OpenID Connect (OIDC) token from metadata server or using service
-    # account.
-    open_id_connect_token = id_token.fetch_id_token(Request(), client_id)
+    # Obtain an OpenID Connect (OIDC) token from metadata server or using service account.
+    open_id_connect_token = id_token.fetch_id_token(Request(), Config.IAP_CLIENT_ID)
 
-    if content_type:
-        headers = {'Authorization': 'Bearer {}'.format(open_id_connect_token),
-                   'Content-Type': content_type}
-    else:
-        headers = {'Authorization': 'Bearer {}'.format(open_id_connect_token)}
+    # Initialise headers if none are passed in the kwargs
+    if 'headers' not in kwargs:
+        kwargs['headers'] = {}
 
-    # Fetch the Identity-Aware Proxy-protected URL, including an
-    # Authorization header containing "Bearer " followed by a
+    # Set an authorization header containing "Bearer " followed by a
     # Google-issued OpenID Connect token for the service account.
-    response = requests.request(
-        method, url,
-        headers=headers, **kwargs)
-    return response
+    kwargs['headers']['Authorization'] = f'Bearer {open_id_connect_token}'
+
+    return requests.request(
+        method, url, **kwargs)

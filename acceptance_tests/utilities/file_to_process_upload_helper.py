@@ -18,15 +18,12 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
 
     url = f'{Config.SUPPORT_TOOL_API}/upload'
 
+    # TODO fix file upload
     # response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(url,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 content_type=multipart_data.content_type,
-                                                 data=multipart_data)
-    else:
-        response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
+    response = iap_requests.make_request(method='POST',
+                                         url=url,
+                                         headers={'Content-Type': multipart_data.content_type},
+                                         data=multipart_data)
     response.raise_for_status()
 
     file_id = response.json()
@@ -39,13 +36,7 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
     }
 
     create_job_url = f'{Config.SUPPORT_TOOL_API}/job'
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(create_job_url,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 params=request_params)
-    else:
-        response = requests.post(create_job_url, params=request_params)
+    response = iap_requests.make_request(method='POST', url=create_job_url, params=request_params)
     response.raise_for_status()
 
     job_id = response.json()
@@ -67,13 +58,7 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
 
     if file_validated:
         process_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}/process'
-
-        if Config.IAP_CLIENT_ID:
-            response = iap_requests.make_iap_request(process_job_url,
-                                                     Config.IAP_CLIENT_ID,
-                                                     method='POST')
-        else:
-            response = requests.post(process_job_url)
+        response = iap_requests.make_request(method='POST', url=process_job_url)
         response.raise_for_status()
 
         if delete_after_upload:

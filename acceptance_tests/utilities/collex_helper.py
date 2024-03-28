@@ -21,13 +21,7 @@ def add_collex(survey_id, collection_instrument_selection_rules, test_start_time
             'collectionInstrumentSelectionRules': collection_instrument_selection_rules
             }
 
-    if Config.IAP_CLIENT_ID:
-        response = iap_requests.make_iap_request(url,
-                                                 Config.IAP_CLIENT_ID,
-                                                 method='POST',
-                                                 json=body)
-    else:
-        response = requests.post(url, json=body)
+    response = iap_requests.make_request(method='POST', url=url, json=body)
     response.raise_for_status()
 
     collex_id = response.json()
