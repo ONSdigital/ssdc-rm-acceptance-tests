@@ -15,13 +15,10 @@ def make_request(method: str = "GET", url: str = None, **kwargs) -> requests.Res
       **kwargs: Any of the parameters defined for the request function:
                 https://github.com/requests/requests/blob/master/requests/api.py
     """
-    #TODO Remove debug
     if Config.IAP_CLIENT_ID:
-        response = _make_iap_request(method, url, **kwargs)
-    else:
-        response = requests.request(method, url, **kwargs)
-    print(response.text, response.status_code, response.headers)
-    return response
+        return _make_iap_request(method, url, **kwargs)
+    return requests.request(method, url, **kwargs)
+
 
 def _make_iap_request(method: str = 'GET', url: str = None, **kwargs) -> requests.Response:
     """Makes a request to an application protected by Identity-Aware Proxy.
