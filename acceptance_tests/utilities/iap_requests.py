@@ -17,11 +17,11 @@ def make_request(method: str = "GET", url: str = None, **kwargs) -> requests.Res
     """
     #TODO Remove debug
     if Config.IAP_CLIENT_ID:
-        reponse = _make_iap_request(method, url, **kwargs)
+        response = _make_iap_request(method, url, **kwargs)
     else:
         response = requests.request(method, url, **kwargs)
-    print(response.text, reponse.status_code, reponse.headers)
-    return reponse
+    print(response.text, response.status_code, response.headers)
+    return response
 
 def _make_iap_request(method: str = 'GET', url: str = None, **kwargs) -> requests.Response:
     """Makes a request to an application protected by Identity-Aware Proxy.
