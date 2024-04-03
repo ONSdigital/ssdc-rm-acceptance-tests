@@ -43,7 +43,7 @@ def before_all(context):
 
 def move_fulfilment_triggers_harmlessly_massively_into_the_future():
     # The year 3000 ought to be far enough in the future for this fulfilment to never trigger again, no?
-    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers/?triggerDateTime=3000-01-01T00:00:00.000Z'
+    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers?triggerDateTime=3000-01-01T00:00:00.000Z'
     response = iap_requests.make_request(method='POST', url=url)
     response.raise_for_status()
 
