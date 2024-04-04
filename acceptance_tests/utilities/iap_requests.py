@@ -46,7 +46,7 @@ def _make_iap_request(method: str = 'GET', url: str = None, **kwargs) -> request
 
     # Set an authorization header containing "Bearer " followed by a
     # Google-issued OpenID Connect token for the service account.
-    kwargs['headers']['Authorization'] = f'Bearer {open_id_connect_token}'
+    kwargs['headers']['Proxy-Authorization'] = f'Bearer {open_id_connect_token}'
 
     return requests.request(
         method, url, **kwargs)
