@@ -18,15 +18,11 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
 
     url = f'{Config.SUPPORT_TOOL_API}/upload'
 
-    # TODO fix file upload
-    # response = requests.post(url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
     response = iap_requests.make_request(method='POST',
                                          url=url,
                                          headers={'Content-Type': multipart_data.content_type},
                                          data=multipart_data)
     response.raise_for_status()
-
-    # file_id = response.json()
     file_id = str(response.text.strip('"'))
 
     request_params = {
@@ -48,11 +44,8 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
     file_validated = False
 
     while time.time() < deadline:
-        response = requests.get(get_job_url)
+        response = iap_requests.make_request('GET', url=get_job_url)
         response.raise_for_status()
-
-        # TODO debug
-        print(response.text[:200])
 
         if response.json().get("jobStatus") == "VALIDATED_OK":
             file_validated = True
