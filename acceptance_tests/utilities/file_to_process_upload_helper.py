@@ -27,7 +27,7 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
     response.raise_for_status()
 
     # file_id = response.json()
-    file_id = response.text
+    file_id = str(response.text.strip('"'))
 
     request_params = {
         'fileId': file_id,
