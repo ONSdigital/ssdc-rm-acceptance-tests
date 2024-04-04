@@ -26,6 +26,9 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
                                          data=multipart_data)
     response.raise_for_status()
 
+    # TODO debug
+    print(response.status_code, response.text)
+
     file_id = response.json()
 
     request_params = {
