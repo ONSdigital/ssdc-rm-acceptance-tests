@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime
 from behave import step
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
-from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
+from acceptance_tests.utilities.file_to_process_upload_helper import upload_and_process_file_by_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -78,4 +78,4 @@ def create_and_upload_bulk_refusal_file(context):
         for case_id, refusal_type in context.bulk_refusals.items():
             writer.writerow({'caseId': case_id, 'refusalType': refusal_type})
 
-    upload_file_via_api(context.collex_id, bulk_refusals_file, 'BULK_REFUSAL')
+    upload_and_process_file_by_api(context.collex_id, bulk_refusals_file, 'BULK_REFUSAL')

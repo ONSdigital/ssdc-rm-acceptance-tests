@@ -8,7 +8,7 @@ from behave import step
 
 from acceptance_tests.utilities.collex_helper import add_collex
 from acceptance_tests.utilities.event_helper import get_emitted_cases
-from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
+from acceptance_tests.utilities.file_to_process_upload_helper import upload_and_process_file_by_api
 from acceptance_tests.utilities.sample_helper import read_sample
 from acceptance_tests.utilities.survey_helper import add_survey
 from acceptance_tests.utilities.test_case_helper import test_helper
@@ -83,7 +83,7 @@ def load_bom_sample_file_step(context, sample_file_name):
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
@@ -116,7 +116,7 @@ def load_sample_with_survey_type(context, sample_file_name, survey_type):
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
@@ -148,7 +148,7 @@ def load_sample_file_with_complex_case_ci_rules_step(context, sample_file_name):
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
@@ -185,7 +185,7 @@ def load_sample_file_with_complex_uac_ci_rules_step(context, sample_file_name):
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
@@ -215,7 +215,7 @@ def load_sample_file_with_validation_rules_step(context, sample_file_name, valid
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.sample = read_sample(sample_file_path, sample_validation_rules)
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime,
@@ -281,7 +281,7 @@ def load_business_sample_file_step(context):
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime)
 
@@ -308,7 +308,7 @@ def load_sample_file_step_for_sensitive_data_multi_column(context, sample_file_n
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime,
                                                                        sensitive_columns)
@@ -345,7 +345,7 @@ def load_sample_with_rules_and_eq_launch_settings(context, sample_file_name, val
                                    context.test_start_utc_datetime, collection_exercise_start_date,
                                    context.collex_end_date)
 
-    upload_file_via_api(context.collex_id, sample_file_path, 'SAMPLE')
+    upload_and_process_file_by_api(context.collex_id, sample_file_path, 'SAMPLE')
 
     context.sample = read_sample(sample_file_path, sample_validation_rules)
     context.emitted_cases = get_emitted_cases_and_check_against_sample(sample_rows, context.test_start_utc_datetime,
