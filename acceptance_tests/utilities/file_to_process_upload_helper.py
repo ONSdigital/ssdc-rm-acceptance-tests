@@ -40,7 +40,7 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
     response = iap_requests.make_request(method='POST', url=create_job_url, params=request_params)
     response.raise_for_status()
 
-    job_id = response.json()
+    job_id = str(response.text.strip('"'))
 
     get_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}'
 
