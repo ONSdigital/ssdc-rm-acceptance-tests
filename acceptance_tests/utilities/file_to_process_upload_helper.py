@@ -51,6 +51,9 @@ def upload_file_via_api(collex_id, file_path, job_type, delete_after_upload=Fals
         response = requests.get(get_job_url)
         response.raise_for_status()
 
+        # TODO debug
+        print(response.text)
+        
         if response.json().get("jobStatus") == "VALIDATED_OK":
             file_validated = True
             break
