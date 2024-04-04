@@ -15,7 +15,7 @@ def make_request(method: str = "GET", url: str = None, **kwargs) -> requests.Res
       **kwargs: Any of the parameters defined for the request function:
                 https://github.com/requests/requests/blob/master/requests/api.py
     """
-    if Config.IAP_CLIENT_ID:
+    if Config.SUPPORT_TOOL_IAP_CLIENT_ID:
         return _make_iap_request(method, url, **kwargs)
     return requests.request(method, url, **kwargs)
 
@@ -38,7 +38,7 @@ def _make_iap_request(method: str = 'GET', url: str = None, **kwargs) -> request
         kwargs['timeout'] = 90
 
     # Obtain an OpenID Connect (OIDC) token from metadata server or using service account.
-    open_id_connect_token = id_token.fetch_id_token(Request(), Config.IAP_CLIENT_ID)
+    open_id_connect_token = id_token.fetch_id_token(Request(), Config.SUPPORT_TOOL_IAP_CLIENT_ID)
 
     # Initialise headers if none are passed in the kwargs
     if 'headers' not in kwargs:

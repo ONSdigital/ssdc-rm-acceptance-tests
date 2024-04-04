@@ -24,7 +24,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @step("the support tool landing page is displayed")
 def navigate_to_support_tool_landing_page(context):
-    context.browser.visit(f'{Config.SUPPORT_TOOL_URL}')
+    context.browser.visit(f'{Config.SUPPORT_TOOL_UI_URL}')
 
 
 @step("the Create Survey Button is clicked on")
