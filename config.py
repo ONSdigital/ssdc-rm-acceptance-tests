@@ -107,7 +107,8 @@ class Config:
     EQ_DECRYPTION_KEY = jwk.JWK.from_pem(JWT_DICT['jwePrivateKey']['value'].encode())
     EQ_VERIFICATION_KEY = jwk.JWK.from_pem(JWT_DICT['jwsPublicKey']['value'].encode())
 
-    SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
+    API_USER_EMAIL = os.getenv('API_USER_EMAIL', 'dummy@fake-email.com')
+    UI_USER_EMAIL = os.getenv('UI_USER_EMAIL', 'dummy@fake-email.com')
 
     CODE_GUIDE_MARKDOWN_FILE_PATH = Path(
         os.getenv('CODE_GUIDE_MARKDOWN_FILE_PATH') or Path(__file__).parent.joinpath('CODE_GUIDE.md'))

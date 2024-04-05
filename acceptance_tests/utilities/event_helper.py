@@ -12,20 +12,21 @@ from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
 
-def get_emitted_cases(expected_msg_count=1, test_start_time: datetime = None):
+def get_emitted_cases(expected_msg_count=1, test_start_time: datetime = None,
+                      originating_user_email: str = Config.API_USER_EMAIL) -> List[Mapping]:
     messages_received = get_exact_number_of_pubsub_messages(
         Config.PUBSUB_OUTBOUND_CASE_SUBSCRIPTION, expected_msg_count, test_start_time=test_start_time)
 
     case_payloads = []
     for message_received in messages_received:
-        test_helper.assertEqual(message_received['header']['originatingUser'], Config.SAMPLE_LOAD_ORIGINATING_USER,
+        test_helper.assertEqual(message_received['header']['originatingUser'], originating_user_email,
                                 f'Unexpected originating user, all of messages_received: {messages_received}')
         case_payloads.append(message_received['payload']['caseUpdate'])
 
     return case_payloads
 
 
-def _match_message_by_correlation_id(message: Mapping, correlation_id: str = None):
+def _match_message_by_correlation_id(message: Mapping, correlation_id: str = None) -> (bool, Optional[str]):
     if (message_cid := message['header']['correlationId']) != correlation_id:
         return False, f'Message correlation ID "{message_cid}" does not match expected "{correlation_id}"'
     return True, None

@@ -35,7 +35,7 @@ def click_on_create_survey_button(context):
 @step(
     'a Survey called "{survey_prefix}" plus unique suffix is created for sample file "{sample_file_name}" '
     'with sensitive columns {sensitive_columns:array}')
-def create_survey_in_UI(context, survey_prefix, sample_file_name, sensitive_columns):
+def create_survey_in_ui(context, survey_prefix, sample_file_name, sensitive_columns):
     context.survey_name = survey_prefix + get_random_alpha_numerics(5)
     context.browser.find_by_id('surveyNameTextField').fill(context.survey_name)
 
@@ -107,7 +107,8 @@ def click_load_sample(context, sample_file_name):
     context.browser.find_by_id("jobProcessBtn", wait_time=30).click()
     poll_sample_status_processed(context.browser)
     context.browser.find_by_id('closeSampledetailsBtn').click()
-    context.emitted_cases = get_emitted_cases(context.sample_count, context.test_start_utc_datetime)
+    context.emitted_cases = get_emitted_cases(context.sample_count, context.test_start_utc_datetime,
+                                              originating_user_email=Config.UI_USER_EMAIL)
 
     test_helper.assertEquals(len(context.emitted_cases), context.sample_count)
 

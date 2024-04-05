@@ -124,7 +124,7 @@ spec:
         secretKeyRef:
           name: support-tool-iap
           key: client_id
-    - name: ORIGINATING_USER
+    - name: API_USER_EMAIL
       value: "acceptance-tests@ssdc-rm-$ENV.iam.gserviceaccount.com"
   volumes:
   - name: export-file-destinations
