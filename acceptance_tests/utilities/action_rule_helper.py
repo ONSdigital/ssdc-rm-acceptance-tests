@@ -49,7 +49,7 @@ def setup_sms_action_rule(collex_id, pack_code):
         'uacMetadata': {"waveOfContact": "1"}
     }
 
-    response = iap_requests.make_iap_request(method='POST', url=ACTION_RULES_URL, json=body)
+    response = iap_requests.make_request(method='POST', url=ACTION_RULES_URL, json=body)
     response.raise_for_status()
     action_rule_id = str(response.text.strip('"'))
     return action_rule_id
