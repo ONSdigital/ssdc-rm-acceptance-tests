@@ -18,7 +18,7 @@ def make_request(method: str = "GET", url: str = None,
                 https://github.com/requests/requests/blob/master/requests/api.py
     """
     if iap_client_id:
-        return _make_iap_request(method, url, **kwargs)
+        return _make_iap_request(method, url, iap_client_id, **kwargs)
     return requests.request(method, url, **kwargs)
 
 
