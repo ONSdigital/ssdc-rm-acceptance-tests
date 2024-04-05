@@ -110,7 +110,8 @@ def create_and_upload_sensitive_update_file(context):
             writer.writerow({'caseId': case_row['caseId'], 'fieldToUpdate': case_row['fieldToUpdate'],
                              'newValue': case_row['newValue']})
 
-    upload_and_process_file_by_api(context.collex_id, bulk_sensitive_update_filename, job_type='BULK_UPDATE_SAMPLE_SENSITIVE',
+    upload_and_process_file_by_api(context.collex_id, bulk_sensitive_update_filename,
+                                   job_type='BULK_UPDATE_SAMPLE_SENSITIVE',
                                    delete_after_upload=True)
 
 

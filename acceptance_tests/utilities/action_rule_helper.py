@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import requests
-
 from acceptance_tests.utilities import iap_requests
 from config import Config
 

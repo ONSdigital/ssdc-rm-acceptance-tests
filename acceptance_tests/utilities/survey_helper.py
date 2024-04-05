@@ -2,8 +2,6 @@ from datetime import datetime
 from functools import partial
 from typing import Mapping
 
-import requests
-
 from acceptance_tests.utilities import iap_requests
 from acceptance_tests.utilities.pubsub_helper import get_matching_pubsub_message_acking_others
 from acceptance_tests.utilities.test_case_helper import test_helper

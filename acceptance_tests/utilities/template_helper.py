@@ -2,8 +2,6 @@ import random
 import string
 import uuid
 
-import requests
-
 from acceptance_tests.utilities import iap_requests
 from config import Config
 

@@ -77,4 +77,5 @@ def bulk_invalid_file_created_and_uploaded(context):
         for case_id, reason in context.bulk_invalids.items():
             writer.writerow({'caseId': case_id, 'reason': reason})
 
-    upload_and_process_file_by_api(context.collex_id, bulk_invalid_filename, job_type='BULK_INVALID', delete_after_upload=True)
+    upload_and_process_file_by_api(context.collex_id, bulk_invalid_filename, job_type='BULK_INVALID',
+                                   delete_after_upload=True)

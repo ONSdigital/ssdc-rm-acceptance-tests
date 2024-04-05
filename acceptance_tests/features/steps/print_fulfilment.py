@@ -2,7 +2,6 @@ import json
 import uuid
 from datetime import datetime
 
-import requests
 from behave import step
 
 from acceptance_tests.utilities import iap_requests

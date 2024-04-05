@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import requests
-
 from acceptance_tests.utilities import iap_requests
 from acceptance_tests.utilities.event_helper import get_collection_exercise_update_by_name
 from acceptance_tests.utilities.test_case_helper import test_helper

@@ -1,7 +1,7 @@
 import os
 import time
 import uuid
-import requests
+
 from requests_toolbelt import MultipartEncoder
 
 from acceptance_tests.utilities import iap_requests
@@ -55,6 +55,7 @@ def create_job(collex_id: str, file_name: str, file_id: str, job_type: str) -> s
     job_id = str(response.text.strip('"'))
     return job_id
 
+
 def wait_for_job_file_validation(job_id: str, timeout_sec=30) -> None:
     get_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}'
 
@@ -68,8 +69,9 @@ def wait_for_job_file_validation(job_id: str, timeout_sec=30) -> None:
             break
         else:
             time.sleep(1)
-    else: # Executes if the while condition is false, without breaking out of the loop
+    else:  # Executes if the while condition is false, without breaking out of the loop
         test_helper.fail(f"File did not pass validation before timeout, job response: {response.json()}")
+
 
 def process_job(job_id: str) -> None:
     process_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}/process'
