@@ -18,7 +18,10 @@ def upload_and_process_file_by_api(collex_id, file_path, job_type, delete_after_
 
     wait_for_job_file_validation(job_id)
 
-    process_job(job_id, file_id, delete_after_upload=delete_after_upload)
+    process_job(job_id)
+
+    if delete_after_upload:
+        os.unlink(file_path)
 
 
 def upload_file_by_api(file_path: str, file_name: str) -> str:
@@ -68,10 +71,7 @@ def wait_for_job_file_validation(job_id: str, timeout_sec=30) -> None:
     else: # Executes if the while condition is false, without breaking out of the loop
         test_helper.fail(f"File did not pass validation before timeout, job response: {response.json()}")
 
-def process_job(job_id: str, file_path: str, delete_after_upload: bool) -> None:
+def process_job(job_id: str) -> None:
     process_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}/process'
     response = iap_requests.make_request(method='POST', url=process_job_url)
     response.raise_for_status()
-
-    if delete_after_upload:
-        os.unlink(file_path)
