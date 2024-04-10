@@ -32,11 +32,12 @@ echo "Running with behave tags: \"$BEHAVE_TAGS\""
 IMAGE_TAG="${1:-latest}"
 COMPLETE_MANIFEST="tmp_${IMAGE_TAG}_acceptance_tests_pod.yml"
 
-echo "Using image tag [$IMAGE_TAG], saving manifest as \"$COMPLETE_MANIFEST\""
+echo "Using image tag [$IMAGE_TAG] and env [$ENV], saving manifest as \"$COMPLETE_MANIFEST\""
 
 # Replace "$MANIFEST_IMAGE_TAG" in the target manifest with the value of IMAGE_TAG,
+# And replace the "$ENV" with the value of ENV for environment specific values
 # save the output to the tmp_manifests directory
-sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" acceptance_tests_pod.yml > $COMPLETE_MANIFEST
+sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" -e "s/\$ENV/$ENV/" acceptance_tests_pod.yml > $COMPLETE_MANIFEST
 
 
 kubectl delete pod acceptance-tests --wait || true

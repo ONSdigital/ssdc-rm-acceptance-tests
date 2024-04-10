@@ -81,9 +81,13 @@ spec:
     - name: SUPPLIER_CONFIG_JSON_PATH
       value: "/home/acceptancetests/destination_config/export-file-destination-config.json"
     - name: SUPPORT_TOOL_HOST
-      value: "support-tool"
+      value: "support-tool-$ENV.rm.gcp.onsdigital.uk"
     - name: SUPPORT_TOOL_PORT
       value: "80"
+    - name: SUPPORT_TOOL_PROTOCOL
+      value: "https"
+    - name: SUPPORT_TOOL_UI_URL
+      value: "http://support-tool"
     - name: EXCEPTIONMANAGER_CONNECTION_HOST
       value: "exception-manager"
     - name: EXCEPTIONMANAGER_CONNECTION_PORT
@@ -115,6 +119,13 @@ spec:
       value: "BUCKET"
     - name: EQ_FLUSH_STUB_URL
       value: "http://eq-stub"
+    - name: SUPPORT_TOOL_IAP_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: support-tool-iap
+          key: client_id
+    - name: API_USER_EMAIL
+      value: "acceptance-tests@ssdc-rm-$ENV.iam.gserviceaccount.com"
   volumes:
   - name: export-file-destinations
     secret:

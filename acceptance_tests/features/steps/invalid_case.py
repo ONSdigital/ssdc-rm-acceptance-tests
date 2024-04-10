@@ -9,7 +9,7 @@ from datetime import datetime
 from behave import step
 
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
-from acceptance_tests.utilities.file_to_process_upload_helper import upload_file_via_api
+from acceptance_tests.utilities.file_to_process_upload_helper import upload_and_process_file_by_api
 from acceptance_tests.utilities.pubsub_helper import publish_to_pubsub
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -77,4 +77,5 @@ def bulk_invalid_file_created_and_uploaded(context):
         for case_id, reason in context.bulk_invalids.items():
             writer.writerow({'caseId': case_id, 'reason': reason})
 
-    upload_file_via_api(context.collex_id, bulk_invalid_filename, job_type='BULK_INVALID', delete_after_upload=True)
+    upload_and_process_file_by_api(context.collex_id, bulk_invalid_filename, job_type='BULK_INVALID',
+                                   delete_after_upload=True)

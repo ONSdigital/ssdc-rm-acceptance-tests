@@ -8,11 +8,12 @@ image_resource:
 params:
   # Required
   SERVICE_ACCOUNT_JSON: # GCP service account key JSON
-  GCP_PROJECT_NAME: # Target project which hosts the K8s cluster
-  KUBERNETES_CLUSTER: # Target K8s cluster ID
+  GCP_PROJECT_NAME:     # Target project which hosts the K8s cluster
+  KUBERNETES_CLUSTER:   # Target K8s cluster ID
+  ENV:                  # Environment suffix for the project, assuming the project follows our ssdc-rm-<ENV> convention
 
   # Optional
-  IMAGE_TAG: # Optional, specific acceptance tests image tag. If not set, will default to using the given commit ref from the "acceptance-tests-repo"
+  IMAGE_TAG:   # Optional, specific acceptance tests image tag. If not set, will default to using the given commit ref from the "acceptance-tests-repo"
   BEHAVE_TAGS: # Optional, list of behave tags passed into the behave feature run
 
 inputs:
@@ -38,7 +39,7 @@ run:
       
       # Substitute the image tag into the template manifest yaml
       COMPLETE_MANIFEST="${IMAGE_TAG}_acceptance_tests_pod.yml"
-      sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" acceptance-tests-repo/acceptance_tests_pod.yml > $COMPLETE_MANIFEST
+      sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" -e "s/\$ENV/$ENV/" acceptance-tests-repo/acceptance_tests_pod.yml > $COMPLETE_MANIFEST
 
       # Pre-clean up any left over acceptance test pod
       kubectl delete pod acceptance-tests --wait || true

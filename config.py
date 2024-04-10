@@ -47,10 +47,25 @@ class Config:
     EXCEPTIONMANAGER_CONNECTION_PORT = os.getenv('EXCEPTIONMANAGER_CONNECTION_PORT', '8666')
     EXCEPTION_MANAGER_URL = f'http://{EXCEPTIONMANAGER_CONNECTION_HOST}:{EXCEPTIONMANAGER_CONNECTION_PORT}'
 
+    # Providing an IAP client ID will switch the tests to attempt to make all support tool requests with IAP auth,
+    # This uses the default auth available in the environment
+    SUPPORT_TOOL_IAP_CLIENT_ID = os.getenv('SUPPORT_TOOL_IAP_CLIENT_ID')
+
     SUPPORT_TOOL_HOST = os.getenv('SUPPORT_TOOL_HOST', 'localhost')
     SUPPORT_TOOL_PORT = os.getenv('SUPPORT_TOOL_PORT', '9999')
-    SUPPORT_TOOL_API = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}/api'
-    SUPPORT_TOOL_URL = f'http://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}'
+
+    # To go via IAP this must be set to 'https'
+    SUPPORT_TOOL_PROTOCOL = os.getenv('SUPPORT_TOOL_PROTOCOL', 'http')
+
+    if SUPPORT_TOOL_PORT == '80':
+        SUPPORT_TOOL_API = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}/api'
+        SUPPORT_TOOL_URL = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}'
+    else:
+        SUPPORT_TOOL_API = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}/api'
+        SUPPORT_TOOL_URL = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}'
+
+    # Allow the URL used for UI navigation to be set differently, since the browser driver cannot support IAP auth
+    SUPPORT_TOOL_UI_URL = os.getenv('SUPPORT_TOOL_UI_URL', SUPPORT_TOOL_URL)
 
     NOTIFY_SERVICE_HOST = os.getenv('NOTIFY_SERVICE_HOST', 'localhost')
     NOTIFY_SERVICE_PORT = os.getenv('NOTIFY_SERVICE_PORT', '8162')
@@ -92,7 +107,8 @@ class Config:
     EQ_DECRYPTION_KEY = jwk.JWK.from_pem(JWT_DICT['jwePrivateKey']['value'].encode())
     EQ_VERIFICATION_KEY = jwk.JWK.from_pem(JWT_DICT['jwsPublicKey']['value'].encode())
 
-    SAMPLE_LOAD_ORIGINATING_USER = os.getenv('ORIGINATING_USER', 'dummy@fake-email.com')
+    API_USER_EMAIL = os.getenv('API_USER_EMAIL', 'dummy@fake-email.com')
+    UI_USER_EMAIL = os.getenv('UI_USER_EMAIL', 'dummy@fake-email.com')
 
     CODE_GUIDE_MARKDOWN_FILE_PATH = Path(
         os.getenv('CODE_GUIDE_MARKDOWN_FILE_PATH') or Path(__file__).parent.joinpath('CODE_GUIDE.md'))

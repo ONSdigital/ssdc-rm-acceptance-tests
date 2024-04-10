@@ -2,8 +2,7 @@ import random
 import string
 import uuid
 
-import requests
-
+from acceptance_tests.utilities import iap_requests
 from config import Config
 
 
@@ -21,7 +20,7 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
     if export_file_destination:
         body['exportFileDestination'] = export_file_destination
 
-    response = requests.post(create_url, json=body)
+    response = iap_requests.make_request(method='POST', url=create_url, json=body)
     response.raise_for_status()
 
 
