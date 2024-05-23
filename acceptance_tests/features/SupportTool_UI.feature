@@ -53,5 +53,5 @@ Feature: Test basic Support Tool Functionality
     @regression
     Examples:
       | notify service ref                           |
-      | Office_for_National_Statistics_surveys_UKHSA |
+      | Office_for_National_Statistics_surveys_NHS |
       | test_service                                 |
