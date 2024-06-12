@@ -20,7 +20,7 @@ def healthcheck(url: str, max_retries: int):
                 print("Reached Maximum number of retries. Stopping script")
                 break
             print("Support Tool not available. Sleeping for a minute")
-            sleep(2)
+            sleep(60)
 
 
 def parse_arguments():
