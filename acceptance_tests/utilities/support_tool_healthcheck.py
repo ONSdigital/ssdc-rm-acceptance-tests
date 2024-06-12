@@ -16,8 +16,8 @@ def healthcheck(url: str, max_retries: int):
             check_support_tool = False
         except (ConnectionError, HTTPError):
             num_of_retries += 1
-            if num_of_retries > max_retries:
-                print("Reached Maximum number of retries. Stopping script")
+            if num_of_retries == max_retries:
+                print("Reached maximum number of retries. Stopping script")
                 break
             print("Support Tool not available. Sleeping for a minute")
             sleep(60)
