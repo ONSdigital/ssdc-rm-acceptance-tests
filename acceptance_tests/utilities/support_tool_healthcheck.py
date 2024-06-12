@@ -6,7 +6,7 @@ from requests.exceptions import ConnectionError, HTTPError
 from acceptance_tests.utilities.iap_requests import make_request
 
 
-def healthcheck(url: str, max_retries: int):
+def support_tool_healthcheck(url: str, max_retries: int):
     check_support_tool = True
     num_of_retries = 0
     while check_support_tool:
@@ -34,7 +34,7 @@ def parse_arguments():
 
 def main():
     args = parse_arguments()
-    healthcheck(url=args.url, max_retries=args.max_retries)
+    support_tool_healthcheck(url=args.url, max_retries=args.max_retries)
 
 
 if __name__ == "__main__":
