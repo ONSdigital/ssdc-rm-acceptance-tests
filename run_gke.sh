@@ -47,7 +47,7 @@ kubectl apply -f $COMPLETE_MANIFEST
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
-kubectl exec -it acceptance-tests --/bin/bash -c \
+kubectl exec -it acceptance-tests -- /bin/bash -c \
   "sleep 2;  python -m acceptance_tests.utilities.support_tool_healthcheck --url https://support-tool-ryangrundy-317208.rm.gcp.onsdigital.uk/actuator/health"
 
 

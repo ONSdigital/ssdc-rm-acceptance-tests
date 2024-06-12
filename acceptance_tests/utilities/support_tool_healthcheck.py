@@ -1,7 +1,7 @@
 import argparse
 from time import sleep
 
-import requests
+from requests.exceptions import  ConnectionError, HTTPError
 
 from acceptance_tests.utilities.iap_requests import make_request
 
@@ -13,7 +13,7 @@ def healthcheck(url: str):
             response = make_request(url=url)
             response.raise_for_status()
             retry = False
-        except requests.exceptions.ConnectionError:
+        except (ConnectionError, HTTPError):
             print("Support Tool not available. Sleeping for a minute")
             sleep(60)
 
