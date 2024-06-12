@@ -50,6 +50,9 @@ run:
       # Give the pod time to start
       kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
+      kubectl exec -it acceptance-tests --/bin/bash -c \
+      "sleep 2;  python -m acceptance_tests.utilities.support_tool_healthcheck --url https://support-tool-ryangrundy-317208.rm.gcp.onsdigital.uk/actuator/health"
+
       # Exec into the pod to run the tests while tailing their logs
       # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
       kubectl exec -it acceptance-tests -- /bin/bash -c \
