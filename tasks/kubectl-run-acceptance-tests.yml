@@ -51,7 +51,7 @@ run:
       kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
       # Exec into the pod to run a healthcheck on the support tool to see if it's reachable
-      kubectl exec -it acceptance-tests --/bin/bash -c \
+      kubectl exec -it acceptance-tests -- /bin/bash -c \
       "sleep 2;  python -m acceptance_tests.utilities.support_tool_healthcheck --url https://support-tool-$ENV.rm.gcp.onsdigital.uk/actuator/health --max_retries 15"
 
       # Exec into the pod to run the tests while tailing their logs

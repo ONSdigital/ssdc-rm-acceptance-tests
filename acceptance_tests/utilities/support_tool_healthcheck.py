@@ -18,7 +18,8 @@ def support_tool_healthcheck(url: str, max_retries: int):
             num_of_retries += 1
             if num_of_retries == max_retries:
                 print("Reached maximum number of retries. Stopping script")
-                break
+                exit(1)
+
             print("Support Tool not available. Sleeping for a minute")
             sleep(60)
 
