@@ -24,7 +24,9 @@ def support_tool_healthcheck(url: str, max_retries: int):
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Check support tool is up and running')
+    parser = argparse.ArgumentParser(
+        description="This script polls the Support Tool health endpoint to check if it's available for the Acceptance "
+                    "Tests to start running")
     parser.add_argument('--url', help='The Support Tool url to pass in', type=str, required=True)
     parser.add_argument('--max_retries', help='Maximum number of retries we want to check support tool is up', type=int,
                         required=True)
