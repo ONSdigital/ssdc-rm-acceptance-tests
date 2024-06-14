@@ -52,7 +52,7 @@ run:
 
       # Exec into the pod to run a healthcheck on the support tool to see if it's reachable
       kubectl exec -it acceptance-tests -- /bin/bash -c \
-      "sleep 2;  python -m acceptance_tests.utilities.support_tool_healthcheck --url https://support-tool-$ENV.rm.gcp.onsdigital.uk/actuator/health --max_retries 15"
+      "sleep 2;  python -m poll_endpoint --url https://support-tool-$ENV.rm.gcp.onsdigital.uk/actuator/health --max_retries 15"
 
       # Exec into the pod to run the tests while tailing their logs
       # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
