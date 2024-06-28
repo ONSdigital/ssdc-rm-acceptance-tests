@@ -11,3 +11,6 @@ updates:
           - "*"
     schedule:
       interval: daily
+    labels:
+      - "patch"
+      - "dependencies"
