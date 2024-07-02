@@ -161,18 +161,18 @@ def click_action_rule_button(context):
 
 
 @step('I can see the Action Rule has been triggered and export files have been created')
-def check_for_action_rule_triggered(context):
-    poll_action_rule_trigger(context.browser, context.pack_code)
+def check_for_action_rule_completed(context):
+    poll_action_rule_completed(context.browser, context.pack_code)
     context.emitted_uacs = get_number_of_uac_update_events(context.sample_count, context.test_start_utc_datetime)
     check_export_file(context)
 
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(120))
-def poll_action_rule_trigger(browser, pack_code):
+def poll_action_rule_completed(browser, pack_code):
     browser.reload()
     test_helper.assertEquals(
         len(browser.find_by_id('actionRuleTable').first.find_by_text(pack_code)), 1)
-    test_helper.assertEquals(browser.find_by_id('hasTriggered').text, 'YES')
+    test_helper.assertEquals(browser.find_by_id('actionRuleStatus').text, 'COMPLETED')
 
 
 @step('the Create Email Template button is clicked on')
@@ -227,5 +227,5 @@ def click_email_action_rule_button(context, email_column):
 
 @step('I can see the Action Rule has been triggered and emails sent to notify api with email column "{email_column}"')
 def check_action_rule_triggered_for_email(context, email_column):
-    poll_action_rule_trigger(context.browser, context.pack_code)
+    poll_action_rule_completed(context.browser, context.pack_code)
     check_notify_called_with_correct_emails_and_uacs(context, email_column)
