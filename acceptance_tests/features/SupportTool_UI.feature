@@ -75,4 +75,4 @@ Feature: Test basic Support Tool Functionality
     Examples:
       | notify service ref                         | action rule date | expected timezone |
       | Office_for_National_Statistics_surveys_NHS | 01-01-2124       | GMT               |
-      | test_service                               | 06-06-2124       | GMT+01:00         |
+      | test_service                               | 06-06-2124       | BST               |

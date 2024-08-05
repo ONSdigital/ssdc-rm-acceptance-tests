@@ -245,4 +245,11 @@ def check_action_rule_triggered_for_email(context, email_column):
 @step('I can see the action rule has been created in "{expected_timezone}"')
 def check_action_rule_triggered_for_email_in_future(context, expected_timezone):
     action_rule_date_time_str = context.browser.find_by_id('actionRuleDateTime', wait_time=30).text
-    test_helper.assertEquals(action_rule_date_time_str[21:], expected_timezone)
+
+    if expected_timezone == "GMT":
+        action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z")
+        test_helper.assertIsNone(action_rule_date_time.utcoffset()) # Time is in UTC, so we assert there's no offset
+    else:
+        action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z%z")
+        test_helper.assertEquals(action_rule_date_time.utcoffset().seconds, 3600)
+
