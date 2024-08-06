@@ -248,8 +248,7 @@ def check_action_rule_triggered_for_email_in_future(context, expected_timezone):
 
     if expected_timezone == "GMT":
         action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z")
-        test_helper.assertIsNone(action_rule_date_time.utcoffset()) # Time is in UTC, so we assert there's no offset
+        test_helper.assertIsNone(action_rule_date_time.utcoffset())  # Time is in UTC, so we assert there's no offset
     else:
         action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z%z")
         test_helper.assertEquals(action_rule_date_time.utcoffset().seconds, 3600)
-
