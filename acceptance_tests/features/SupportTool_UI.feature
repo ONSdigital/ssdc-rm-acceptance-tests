@@ -57,7 +57,7 @@ Feature: Test basic Support Tool Functionality
       | test_service                               |
 
   @reset_notify_stub
-  Scenario Outline: Create an Email Action Rule in the future
+  Scenario Outline: Support tool displays action rules with correct timezone
     Given the support tool landing page is displayed
     And the Create Email Template button is clicked on
     And an email template with packcode "email-packcode", notify service ref "<notify service ref>" and template ["__uac__"] has been created
