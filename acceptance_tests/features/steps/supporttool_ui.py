@@ -4,6 +4,9 @@ from datetime import datetime
 from typing import List
 
 from behave import step
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from tenacity import retry, stop_after_delay, wait_fixed
 
 from acceptance_tests.features.steps.email_action_rule import check_notify_called_with_correct_emails_and_uacs
@@ -17,9 +20,6 @@ from acceptance_tests.utilities.survey_helper import get_emitted_survey_update
 from acceptance_tests.utilities.test_case_helper import test_helper
 from acceptance_tests.utilities.validation_rule_helper import get_sample_rows_and_generate_open_validation_rules
 from config import Config
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 @step("the support tool landing page is displayed")
@@ -215,6 +215,18 @@ def allow_email_template_on_action_rule(context):
 
 @step('I create an email action rule with email column "{email_column}"')
 def click_email_action_rule_button(context, email_column):
+    setup_email_action_rule(context, email_column)
+    context.browser.find_by_id('createActionRuleBtn').click()
+
+
+@step('I create an email action rule on the date "{action_rule_date}" with email column "{email_column}"')
+def click_email_action_rule_button_with_date(context, action_rule_date, email_column):
+    setup_email_action_rule(context, email_column)
+    context.browser.find_by_id("triggerDate")[0].value = action_rule_date
+    context.browser.find_by_id('createActionRuleBtn').click()
+
+
+def setup_email_action_rule(context, email_column):
     context.browser.find_by_id('createActionRuleDialogBtn').click()
     context.browser.find_by_id('selectActionRuleType').click()
     context.browser.find_by_value('Email').click()
@@ -222,10 +234,21 @@ def click_email_action_rule_button(context, email_column):
     context.browser.find_by_id(context.pack_code, wait_time=30).click()
     context.browser.find_by_id('selectActionRuleEmailColumn').click()
     context.browser.find_by_id(email_column, wait_time=30).click()
-    context.browser.find_by_id('createActionRuleBtn').click()
 
 
 @step('I can see the Action Rule has been triggered and emails sent to notify api with email column "{email_column}"')
 def check_action_rule_triggered_for_email(context, email_column):
     poll_action_rule_completed(context.browser, context.pack_code)
     check_notify_called_with_correct_emails_and_uacs(context, email_column)
+
+
+@step('I can see the action rule has been created in "{expected_timezone}"')
+def check_action_rule_triggered_for_email_in_future(context, expected_timezone):
+    action_rule_date_time_str = context.browser.find_by_id('actionRuleDateTime', wait_time=30).text
+
+    if expected_timezone == "GMT":
+        action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z")
+        test_helper.assertIsNone(action_rule_date_time.utcoffset())  # Time is in UTC, so we assert there's no offset
+    else:
+        action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z%z")
+        test_helper.assertEquals(action_rule_date_time.utcoffset().seconds, 3600)

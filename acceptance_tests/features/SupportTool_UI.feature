@@ -52,6 +52,27 @@ Feature: Test basic Support Tool Functionality
 
     @regression
     Examples:
-      | notify service ref                           |
+      | notify service ref                         |
       | Office_for_National_Statistics_surveys_NHS |
-      | test_service                                 |
+      | test_service                               |
+
+  @reset_notify_stub
+  Scenario Outline: Support tool displays action rules with correct timezone
+    Given the support tool landing page is displayed
+    And the Create Email Template button is clicked on
+    And an email template with packcode "email-packcode", notify service ref "<notify service ref>" and template ["__uac__"] has been created
+    And I should see the email template in the template list
+    And the Create Survey Button is clicked on
+    And a Survey called "EmailTest" plus unique suffix is created for sample file "sis_survey_link.csv" with sensitive columns ["emailAddress"]
+    And the survey is clicked on it should display the collection exercise page
+    And the create collection exercise button is clicked, the details are submitted and the exercise is created
+    And the email template has been added to the allow on action rule list
+    And the collection exercise is clicked on, navigating to the selected exercise details page
+    When I create an email action rule on the date "<action rule date>" with email column "emailAddress"
+    Then I can see the action rule has been created in "<expected timezone>"
+
+    @regression
+    Examples:
+      | notify service ref                         | action rule date | expected timezone |
+      | Office_for_National_Statistics_surveys_NHS | 01-01-2124       | GMT               |
+      | test_service                               | 06-06-2124       | BST               |
