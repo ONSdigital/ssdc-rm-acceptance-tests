@@ -128,5 +128,5 @@ smaller value such as `10` (seconds), since a local PubSub emulator or "warmed u
 such a long wait for messages.
 
 ### Exception test naming
-All feature files have been named with all lower case titles. The one exception is the `Exception_manager.feature` test file. This is because we want this test to run at the begininng of the test run, and behave will execure feature files that are capatilised before files named with lower case titles.
-The reason we want this test to run first is to help warmup a cold pubsub in the CI environment. This test uses all the pubsub topics and services, it also utilises some waits so it should work as a good test to run to ensure pubsub is fully warmed up when the rest of the tests run. 
+All feature files have been named with all lower case titles. The one exception is the `Exception_manager.feature` test file. This is because we want this test to run at the beginning of the test run, and behave will execure feature files that are capitalised before files named with lower case titles.
+The reason we want this test to run first is to help warmup a cold pubsub in the CI environment. This test uses all the pubsub topics and services. It also utilises some waits, so it should work as a good test to run to ensure pubsub is fully warmed up when the rest of the tests run.
