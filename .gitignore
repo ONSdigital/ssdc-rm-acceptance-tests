@@ -125,3 +125,6 @@ setenvs.sh
 
 # Temporary manifests
 tmp_*_acceptance_tests_pod.yml
+
+# Megalinter reports
+megalinter-reports/
