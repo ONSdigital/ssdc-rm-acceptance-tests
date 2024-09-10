@@ -1,4 +1,4 @@
- install:
+install:
 	pipenv install --dev
 
 check_safety:
