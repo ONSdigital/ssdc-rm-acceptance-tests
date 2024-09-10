@@ -6,14 +6,14 @@ if [ -z "$ENV" ]; then
 
 else
   GCP_PROJECT=ssdc-rm-$ENV
-  gcloud config set project $GCP_PROJECT
+  gcloud config set project "$GCP_PROJECT"
   gcloud container clusters get-credentials rm-k8s-cluster \
       --region europe-west2 \
-      --project $GCP_PROJECT
+      --project "$GCP_PROJECT"
 fi
 
 if [ "$NAMESPACE" ]; then
-  kubectl config set-context $(kubectl config current-context) --namespace=$NAMESPACE
+  kubectl config set-context "$(kubectl config current-context)" --namespace="$NAMESPACE"
   echo "NAMESPACE = [$NAMESPACE] Set kubectl namespace for subsequent commands [$NAMESPACE]."
 fi
 
@@ -37,13 +37,13 @@ echo "Using image tag [$IMAGE_TAG] and env [$ENV], saving manifest as \"$COMPLET
 # Replace "$MANIFEST_IMAGE_TAG" in the target manifest with the value of IMAGE_TAG,
 # And replace the "$ENV" with the value of ENV for environment specific values
 # save the output to the tmp_manifests directory
-sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" -e "s/\$ENV/$ENV/" acceptance_tests_pod.yml > $COMPLETE_MANIFEST
+sed -e "s/\$MANIFEST_IMAGE_TAG/$IMAGE_TAG/" -e "s/\$ENV/$ENV/" acceptance_tests_pod.yml > "$COMPLETE_MANIFEST"
 
 
 kubectl delete pod acceptance-tests --wait || true
 
 echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
-kubectl apply -f $COMPLETE_MANIFEST
+kubectl apply -f "$COMPLETE_MANIFEST"
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
 
