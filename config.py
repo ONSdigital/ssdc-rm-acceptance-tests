@@ -154,7 +154,7 @@ class Config:
         or Path(__file__).parent.joinpath("CODE_GUIDE.md")
     )
 
-    HEADLESS = strtobool(os.getenv("HEADLESS", "False"))
+    HEADLESS = strtobool(os.getenv("HEADLESS", "True"))
     SAMPLE_FILES_PATH = RESOURCE_FILE_PATH.joinpath("sample_files")
     EQ_LAUNCH_SETTINGS_FILE_PATH = RESOURCE_FILE_PATH.joinpath("eq_launch_settings")
 
