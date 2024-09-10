@@ -1,28 +1,39 @@
 @UI
 Feature: testing the cookie selection functionality of RH UI
 
-    Scenario Outline: The cookies banner is displayed
+    Scenario: The cookies banner is displayed
         When the UAC entry page is displayed
         Then the cookies banner is displayed
 
-    
-    # TODO: check the link on the cookies banner
+    Scenario: The 'cookies' hyperlink on the cookies banner points to the cookies page
+        Given the UAC entry page is displayed
+        And the cookies banner is displayed
+        Then the 'cookies' hyperlink on the cookies banner points to en/cookies/
 
-    
-    Scenario Outline: Accepting the cookies via the cookies banner is reflected in page cookies
+    Scenario: The "View cookies" hyperlink on the cookies banner points to the cookies page
+        Given the UAC entry page is displayed
+        And the cookies banner is displayed
+        Then the 'View cookies' hyperlink points to en/cookies/
+
+    Scenario: The "change cookie preferneces" hyperlink points to the cookies page
+        Given the UAC entry page is displayed
+        And the cookies banner is displayed
+        When the user accepts the cookies on the cookies banner
+        Then the "change cookie preferences" hyperlink text points to en/cookies/
+
+    Scenario: Accepting the cookies via the cookies banner is reflected in page cookies
         Given the UAC entry page is displayed
         And the cookies banner is displayed
         When the user accepts the cookies on the cookies banner
         Then all optional cookies are set to On
         
-    Scenario Outline: Rejecting the cookies via the cookies banner is reflected in page cookies
+    Scenario: Rejecting the cookies via the cookies banner is reflected in page cookies
         Given the UAC entry page is displayed
         And the cookies banner is displayed
         When the user rejects the cookies on the cookies banner
         Then all optional cookies are set to Off
-
     
-    Scenario Outline: Changing cookie selection is reflected in the cookies
+    Scenario Outline: Changing cookie selection on cookies page is reflected in the cookies
         Given the cookies page is displayed
         And the cookies banner is displayed
         And the user accepts the cookies on the cookies banner
