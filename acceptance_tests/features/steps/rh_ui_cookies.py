@@ -74,9 +74,6 @@ def change_cookies_selection(context, para_title, cookie_selection):
     submit_button_xpath_string = '//button[@type="submit"]'
     context.browser.find_by_xpath(submit_button_xpath_string).click()
 
-    cookies_dict = context.browser.cookies.all()
-    ons_cookie_policy_string = cookies_dict["ons_cookie_policy"]
-
 
 # Checking cookie values
 
