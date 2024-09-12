@@ -23,7 +23,7 @@ def display_cookies_banner(context):
 
 
 @step("the user {action} the cookies on the cookies banner")
-def accept_cookies_on_cookies_banner(context, action):
+def select_cookies_on_cookies_banner(context, action):
     button_class = (
         "ons-js-accept-cookies" if action == "accepts" else "ons-js-reject-cookies"
     )
@@ -33,21 +33,25 @@ def accept_cookies_on_cookies_banner(context, action):
 
 
 @step("the 'View cookies' hyperlink points to {expected_path}")
-def click_view_cookies_link_on_banner(context, expected_path):
+def assert_view_cookies_link_on_banner_points_to_cookies_page(context, expected_path):
     xpath_string = '//a[@class="ons-cookies-banner__link" and text()="View cookies"]'
     link = context.browser.find_by_xpath(xpath_string).first
     test_helper.assertEqual(link["href"], f"{Config.RH_UI_URL}{expected_path}")
 
 
 @step("the 'cookies' hyperlink on the cookies banner points to {expected_path}")
-def click_cookies_hyperlinked_text_on_banner(context, expected_path):
+def assert_cookies_hyperlinked_text_on_banner_points_to_cookies_page(
+    context, expected_path
+):
     xpath_string = '//div[@class="ons-cookies-banner__statement"]/a[text()=" cookies."]'
     link = context.browser.find_by_xpath(xpath_string)
     test_helper.assertEqual(link["href"], f"{Config.RH_UI_URL}{expected_path}")
 
 
 @step('the "change cookie preferences" hyperlink text points to {expected_path}')
-def click_change_cookie_preferences_link_on_banner(context, expected_path):
+def assert_change_cookie_preferences_link_on_banner_points_to_cookies_page(
+    context, expected_path
+):
     xpath_string = '//span[@class="ons-cookies-banner__preferences-text"]/a[text()=" change your cookie preferences"]'
     link = context.browser.find_by_xpath(xpath_string)
     test_helper.assertEqual(link["href"], f"{Config.RH_UI_URL}{expected_path}")
@@ -57,7 +61,7 @@ def click_change_cookie_preferences_link_on_banner(context, expected_path):
 
 
 @step("the user sets the selection under {para_title} to {cookie_selection}")
-def change_cookies_selection(context, para_title, cookie_selection):
+def update_cookie_selection_radio(context, para_title, cookie_selection):
     match para_title:
         case "Cookies that measure website use":
             name_attribute_value = "cookies-usage"
@@ -78,10 +82,14 @@ def change_cookies_selection(context, para_title, cookie_selection):
 # Checking cookie values
 
 
-@step("the field {cookie_key} within the ons_cookie_policy cookie is set to {cookie_selection}")
-def assert_ons_cookie_policy(context, cookie_key, cookie_selection):
+@step(
+    "the field {cookie_key} within the ons_cookie_policy cookie is set to {cookie_selection}"
+)
+def assert_ons_cookie_policy_selection(context, cookie_key, cookie_selection):
     cookies_dict = context.browser.cookies.all()
-    ons_cookie_policy_dict = _parse_ons_cookie_policy_json_string(cookies_dict["ons_cookie_policy"])
+    ons_cookie_policy_dict = _parse_ons_cookie_policy_json_string(
+        cookies_dict["ons_cookie_policy"]
+    )
 
     actual_value = ons_cookie_policy_dict[cookie_key]
     expected_value = True if cookie_selection == "On" else False
@@ -90,15 +98,17 @@ def assert_ons_cookie_policy(context, cookie_key, cookie_selection):
 
 
 @step("all optional cookies are set to {cookie_selection}")
-def assert_bulk_optional_cookie_selection(context, cookie_selection):
+def assert_optional_cookie_selection(context, cookie_selection):
     cookies_dict = context.browser.cookies.all()
-    ons_cookie_policy_dict = _parse_ons_cookie_policy_json_string(cookies_dict["ons_cookie_policy"])
+    ons_cookie_policy_dict = _parse_ons_cookie_policy_json_string(
+        cookies_dict["ons_cookie_policy"]
+    )
 
     expected_value = True if cookie_selection == "On" else False
 
     for cookie_key in ons_cookie_policy_dict:
         if cookie_key != "essential":
-            test_helper.assertEqual(ons_cookie_policy_dict[cookie_key],expected_value)
+            test_helper.assertEqual(ons_cookie_policy_dict[cookie_key], expected_value)
 
 
 def _parse_ons_cookie_policy_json_string(ons_cookie_policy_string) -> dict:
