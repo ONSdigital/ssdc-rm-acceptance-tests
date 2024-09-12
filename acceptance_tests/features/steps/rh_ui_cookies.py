@@ -28,7 +28,7 @@ def select_cookies_on_cookies_banner(context, action):
         "ons-js-accept-cookies" if action == "accepts" else "ons-js-reject-cookies"
     )
 
-    xpath_string = f"//button[contains(@class,{button_class})]"
+    xpath_string = f'//button[contains(@class,"{button_class}")]'
     context.browser.find_by_xpath(xpath_string).click()
 
 
