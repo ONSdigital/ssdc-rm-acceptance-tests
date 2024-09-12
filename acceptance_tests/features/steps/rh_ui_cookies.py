@@ -78,11 +78,11 @@ def change_cookies_selection(context, para_title, cookie_selection):
 # Checking cookie values
 
 
-@step(
-    "the field {cookie_key} within the ons_cookie_policy cookie is set to {cookie_selection}"
-)
+@step("the field {cookie_key} within the ons_cookie_policy cookie is set to {cookie_selection}")
 def assert_ons_cookie_policy(context, cookie_key, cookie_selection):
-    ons_cookie_policy_dict = _parse_ons_cookie_policy_string(context)
+    cookies_dict = context.browser.cookies.all()
+    ons_cookie_policy_dict = _parse_ons_cookie_policy_json_string(cookies_dict["ons_cookie_policy"])
+
     actual_value = ons_cookie_policy_dict[cookie_key]
     expected_value = True if cookie_selection == "On" else False
 
@@ -91,19 +91,17 @@ def assert_ons_cookie_policy(context, cookie_key, cookie_selection):
 
 @step("all optional cookies are set to {cookie_selection}")
 def assert_bulk_optional_cookie_selection(context, cookie_selection):
-    ons_cookie_policy_dict = _parse_ons_cookie_policy_string(context)
+    cookies_dict = context.browser.cookies.all()
+    ons_cookie_policy_dict = _parse_ons_cookie_policy_json_string(cookies_dict["ons_cookie_policy"])
 
     expected_value = True if cookie_selection == "On" else False
 
     for cookie_key in ons_cookie_policy_dict:
         if cookie_key != "essential":
-            test_helper.assertEqual(ons_cookie_policy_dict[cookie_key], expected_value)
+            test_helper.assertEqual(ons_cookie_policy_dict[cookie_key],expected_value)
 
 
-def _parse_ons_cookie_policy_string(context) -> dict:
-    cookies_dict = context.browser.cookies.all()
-
-    ons_cookie_policy_string = cookies_dict["ons_cookie_policy"]
+def _parse_ons_cookie_policy_json_string(ons_cookie_policy_string) -> dict:
     ons_cookie_policy_string = ons_cookie_policy_string.replace("'", '"')
     ons_cookie_policy_dict = json.loads(ons_cookie_policy_string)
 
