@@ -144,7 +144,7 @@ def cases_emitted_for_bulk_invalid_with_correct_reason(context):
         test_helper.assertEqual(len(logged_invalid_events), 1,
                                 msg=f'Expected 1 Invalid Case event, received {len(logged_invalid_events)}')
 
-        test_helper.assertEqual(logged_invalid_events[0]['payload']['invalidCase']['reason'], expected_reason,)
+        test_helper.assertEqual(logged_invalid_events[0]['payload']['invalidCase']['reason'], expected_reason)
 
 
 @step("a CASE_UPDATE message is emitted for each bulk updated sample row")
