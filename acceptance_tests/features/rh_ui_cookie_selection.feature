@@ -21,7 +21,6 @@ Feature: testing the cookie selection functionality of RH UI
 
         Examples:
             | action  | cookie_selection |
-            |---------|------------------|
             | accepts | On               |
             | rejects | Off              |
 
