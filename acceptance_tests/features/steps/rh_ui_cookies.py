@@ -22,15 +22,13 @@ def display_cookies_banner(context):
     context.browser.find_by_id("ons-cookies-banner")
 
 
-@step("the user accepts the cookies on the cookies banner")
-def accept_cookies_on_cookies_banner(context):
-    xpath_string = '//button[contains(@class,"ons-js-accept-cookies")]'
-    context.browser.find_by_xpath(xpath_string).click()
+@step("the user {action} the cookies on the cookies banner")
+def accept_cookies_on_cookies_banner(context, action):
+    button_class = (
+        "ons-js-accept-cookies" if action == "accepts" else "ons-js-reject-cookies"
+    )
 
-
-@step("the user rejects the cookies on the cookies banner")
-def reject_cookies_on_cookies_banner(context):
-    xpath_string = '//button[contains(@class,"ons-js-reject-cookies")]'
+    xpath_string = f"//button[contains(@class,{button_class})]"
     context.browser.find_by_xpath(xpath_string).click()
 
 
@@ -67,6 +65,8 @@ def change_cookies_selection(context, para_title, cookie_selection):
             name_attribute_value = "cookies-campaigns"
         case "Cookies that remember your settings":
             name_attribute_value = "cookies-settings"
+        case _:
+            raise Exception("Expected header not found on the cookies page")
 
     xpath_string = f'//input[@name="{name_attribute_value}" and @value="{cookie_selection.lower()}"]'
     context.browser.find_by_xpath(xpath_string).first.click()

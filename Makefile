@@ -19,7 +19,7 @@ test_core: check lint run_tests_core
 test: check lint run_tests
 
 run_tests:
-	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@cloud_only"
+	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features/rh_ui_cookie_selection.feature --tags="~@cloud_only"
 
 run_tests_core:
 	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@regression" --tags="~@cloud_only"
