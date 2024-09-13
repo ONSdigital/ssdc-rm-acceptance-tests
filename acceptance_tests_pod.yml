@@ -104,10 +104,6 @@ spec:
       value: "notify-service"
     - name: NOTIFY_SERVICE_PORT
       value: "80"
-    - name: RH_UI_HOST
-      value: "rh-ui"
-    - name: RH_UI_PORT
-      value: "80"
     - name: RH_UI_URL
       value: "http://rh-ui/"
     - name: HEADLESS
