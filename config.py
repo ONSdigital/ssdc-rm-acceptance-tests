@@ -99,7 +99,7 @@ class Config:
 
     RH_UI_HOST = os.getenv('RH_UI_HOST', 'localhost')
     RH_UI_PORT = os.getenv('RH_UI_PORT', '9092')
-    RH_UI_URL = f'{PROTOCOL}://{RH_UI_HOST}:{RH_UI_PORT}/'
+    RH_UI_URL = os.getenv("RH_UI_URL", f"{PROTOCOL}://{RH_UI_HOST}:{RH_UI_PORT}/")
 
     EQ_DECRYPTION_JSON_FILE = Path(os.getenv('EQ_JSON_FILE') or RESOURCE_FILE_PATH.joinpath('dummy_keys',
                                                                                             'eq-decrypt-keys.json'))
