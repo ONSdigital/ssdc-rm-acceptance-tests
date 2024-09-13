@@ -108,6 +108,8 @@ spec:
       value: "rh-ui"
     - name: RH_UI_PORT
       value: "80"
+    - name: RH_UI_URL
+      value: "http://rh-ui/"
     - name: HEADLESS
       value: "True"
     - name: FILE_UPLOAD_DESTINATION
