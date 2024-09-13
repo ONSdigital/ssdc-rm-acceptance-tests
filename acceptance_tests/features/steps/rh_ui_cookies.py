@@ -15,10 +15,8 @@ def display_uac_cookies_page(context):
 
 # Cookies banner checks and interactions
 
-
 @step("the cookies banner is displayed")
 def display_cookies_banner(context):
-    context.browser.cookies.delete_all()  # clear cookies to ensure that the banner is displayed
     context.browser.find_by_id("ons-cookies-banner")
 
 
