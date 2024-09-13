@@ -15,6 +15,7 @@ def display_uac_cookies_page(context):
 
 # Cookies banner checks and interactions
 
+
 @step("the cookies banner is displayed")
 def display_cookies_banner(context):
     context.browser.find_by_id("ons-cookies-banner")
@@ -68,7 +69,7 @@ def update_cookie_selection_radio(context, para_title, cookie_selection):
         case "Cookies that remember your settings":
             name_attribute_value = "cookies-settings"
         case _:
-            raise Exception("Expected header not found on the cookies page")
+            test_helper.fail(f"Found unexpected cookies paragraph title: {para_title}")
 
     xpath_string = f'//input[@name="{name_attribute_value}" and @value="{cookie_selection.lower()}"]'
     context.browser.find_by_xpath(xpath_string).first.click()
