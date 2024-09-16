@@ -80,12 +80,8 @@ spec:
           key: project-name
     - name: SUPPLIER_CONFIG_JSON_PATH
       value: "/home/acceptancetests/destination_config/export-file-destination-config.json"
-    - name: SUPPORT_TOOL_HOST
-      value: "support-tool-$ENV.rm.gcp.onsdigital.uk"
-    - name: SUPPORT_TOOL_PORT
-      value: "80"
-    - name: SUPPORT_TOOL_PROTOCOL
-      value: "https"
+    - name: SUPPORT_TOOL_BASE_URL
+      value: "https://support-tool-$ENV.rm.gcp.onsdigital.uk"
     - name: SUPPORT_TOOL_UI_URL
       value: "http://support-tool"
     - name: EXCEPTIONMANAGER_CONNECTION_HOST
