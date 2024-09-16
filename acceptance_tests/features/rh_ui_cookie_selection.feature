@@ -7,7 +7,7 @@ Feature: testing the cookie selection functionality of RH UI
         And the 'cookies' hyperlink on the cookies banner points to en/cookies/
         And the 'View cookies' hyperlink points to en/cookies/
 
-    Scenario: The "change cookie preferneces" hyperlink points to the cookies page
+    Scenario: The "change cookie preferences" hyperlink points to the cookies page
         Given the UAC entry page is displayed
         And the cookies banner is displayed
         When the user accepts the cookies on the cookies banner
