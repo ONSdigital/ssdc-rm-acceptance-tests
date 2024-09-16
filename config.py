@@ -52,8 +52,8 @@ class Config:
     SUPPORT_TOOL_IAP_CLIENT_ID = os.getenv('SUPPORT_TOOL_IAP_CLIENT_ID')
 
     # Note that for the ATs to go via IAP the protocol must be set to HTTPS in the Pod config
-    SUPPORT_TOOL_BASE_URL = os.getenv("SUPPORT_TOOL_BASE_URL", f"http://localhost:9999")
-    
+    SUPPORT_TOOL_BASE_URL = os.getenv("SUPPORT_TOOL_BASE_URL", "http://localhost:9999")
+
     SUPPORT_TOOL_API_URL = f"{SUPPORT_TOOL_BASE_URL}/api"
 
     # Allow the URL used for UI navigation to be set differently, since the browser driver cannot support IAP auth
@@ -87,7 +87,7 @@ class Config:
     CASEAPI_SERVICE = f'http://{CASEAPI_SERVICE_HOST}:{CASEAPI_SERVICE_PORT}'
     CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
 
-    RH_UI_URL = os.getenv("RH_UI_URL", f"http://localhost:9092/")
+    RH_UI_URL = os.getenv("RH_UI_URL", "http://localhost:9092/")
 
     EQ_DECRYPTION_JSON_FILE = Path(os.getenv('EQ_JSON_FILE') or RESOURCE_FILE_PATH.joinpath('dummy_keys',
                                                                                             'eq-decrypt-keys.json'))
