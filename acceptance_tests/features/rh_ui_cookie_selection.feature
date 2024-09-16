@@ -1,18 +1,21 @@
 @UI
 Feature: testing the cookie selection functionality of RH UI
 
+    @regression
     Scenario: The cookies banner is displayed and all the links work as expected
         When the UAC entry page is displayed
         Then the cookies banner is displayed
         And the 'cookies' hyperlink on the cookies banner points to en/cookies/
         And the 'View cookies' hyperlink points to en/cookies/
 
+    @regression
     Scenario: The "change cookie preferneces" hyperlink points to the cookies page
         Given the UAC entry page is displayed
         And the cookies banner is displayed
         When the user accepts the cookies on the cookies banner
         Then the "change cookie preferences" hyperlink text points to en/cookies/
 
+    @regression
     Scenario Outline: Selecting the cookies via the cookies banner is reflected in the cookies
         Given the UAC entry page is displayed
         And the cookies banner is displayed
@@ -24,6 +27,7 @@ Feature: testing the cookie selection functionality of RH UI
             | accepts | On               |
             | rejects | Off              |
 
+    @regression
     Scenario Outline: Changing cookie selection on cookies page is reflected in the cookies
         Given the cookies page is displayed
         And the cookies banner is displayed
