@@ -193,7 +193,7 @@ def _check_new_uacs_are_as_expected(emitted_uacs: List[Mapping], active: bool, f
 
 
 @retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def check_if_event_types_are_exact_match(expected_logged_event_types, case_id):
+def check_if_event_types_are_exact_match(expected_logged_event_types: list[str], case_id: str):
     logged_events = get_logged_events_for_case_by_id(case_id)
     actual_logged_event_types = [event['type'] for event in logged_events]
 
@@ -202,8 +202,7 @@ def check_if_event_types_are_exact_match(expected_logged_event_types, case_id):
                                      f"did not match expected {expected_logged_event_types}")
 
 
-@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def get_logged_events_for_case_by_id(case_id):
+def get_logged_events_for_case_by_id(case_id: str) -> list[dict]:
     with open_cursor() as cur:
         cur.execute(
             "select * from casev3.event where caze_id = %s OR uac_qid_link_id = \
