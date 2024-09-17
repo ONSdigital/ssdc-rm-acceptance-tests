@@ -1,6 +1,6 @@
 from behave import step
 
-from acceptance_tests.utilities.event_helper import check_invalid_case_reason_matches_on_event, \
+from acceptance_tests.utilities.event_helper import \
     get_logged_case_events_by_type, get_emitted_case_update_by_correlation_id, \
     get_emitted_cases, get_emitted_uac_update, \
     get_uac_update_events, _check_uacs_updated_match_cases, _check_new_uacs_are_as_expected, \
@@ -144,7 +144,7 @@ def cases_emitted_for_bulk_invalid_with_correct_reason(context):
         test_helper.assertEqual(len(logged_invalid_events), 1,
                                 msg=f'Expected 1 Invalid Case event, received {len(logged_invalid_events)}')
 
-        check_invalid_case_reason_matches_on_event(logged_invalid_events[0]['id'], expected_reason)
+        test_helper.assertEqual(logged_invalid_events[0]['payload']['invalidCase']['reason'], expected_reason)
 
 
 @step("a CASE_UPDATE message is emitted for each bulk updated sample row")

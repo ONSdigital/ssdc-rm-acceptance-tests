@@ -92,11 +92,6 @@ class Config:
 
     PROTOCOL = os.getenv('PROTOCOL', 'http')
 
-    CASEAPI_SERVICE_HOST = os.getenv('CASEAPI_SERVICE_HOST', 'localhost')
-    CASEAPI_SERVICE_PORT = os.getenv('CASEAPI_SERVICE_PORT', '8161')
-    CASEAPI_SERVICE = f'{PROTOCOL}://{CASEAPI_SERVICE_HOST}:{CASEAPI_SERVICE_PORT}'
-    CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
-
     RH_UI_HOST = os.getenv('RH_UI_HOST', 'localhost')
     RH_UI_PORT = os.getenv('RH_UI_PORT', '9092')
     RH_UI_URL = f'{PROTOCOL}://{RH_UI_HOST}:{RH_UI_PORT}/'
