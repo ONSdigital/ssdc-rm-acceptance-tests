@@ -1,6 +1,6 @@
 # Motivation and Context
 <!--- Why is this change required? What problem does it solve? -->
-* [ ] [Context Index](../CODE_GUIDE.md#context-index) has been kept up to date
+* [ ] [Context Index](github.com/ONSdigital/ssdc-rm-acceptance-tests/CODE_GUIDE.md#context-index) has been kept up to date
 
 # What has changed
 <!--- What code changes has been made -->
