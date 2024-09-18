@@ -82,11 +82,6 @@ class Config:
     )
     OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE', 'test')
 
-    CASEAPI_SERVICE_HOST = os.getenv('CASEAPI_SERVICE_HOST', 'localhost')
-    CASEAPI_SERVICE_PORT = os.getenv('CASEAPI_SERVICE_PORT', '8161')
-    CASEAPI_SERVICE = f'http://{CASEAPI_SERVICE_HOST}:{CASEAPI_SERVICE_PORT}'
-    CASE_API_CASE_URL = f'{CASEAPI_SERVICE}/cases/'
-
     RH_UI_URL = os.getenv("RH_UI_URL", "http://localhost:9092/")
 
     EQ_DECRYPTION_JSON_FILE = Path(os.getenv('EQ_JSON_FILE') or RESOURCE_FILE_PATH.joinpath('dummy_keys',
