@@ -9,7 +9,7 @@ from config import Config
 def add_collex(survey_id, collection_instrument_selection_rules, test_start_time, start_date, end_date):
     collex_name = 'test collex ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
-    url = f'{Config.SUPPORT_TOOL_API}/collectionExercises'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/collectionExercises'
     body = {'name': collex_name,
             'surveyId': survey_id,
             'reference': "MVP012021",

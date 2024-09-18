@@ -48,7 +48,7 @@ def request_print_fulfilment_step(context, personalisation=None):
 
 @step("export file fulfilments are triggered to be exported")
 def print_fulfilments_trigger_step(context):
-    url = (f'{Config.SUPPORT_TOOL_API}/fulfilmentNextTriggers'
+    url = (f'{Config.SUPPORT_TOOL_API_URL}/fulfilmentNextTriggers'
            f'?triggerDateTime={datetime.utcnow().replace(microsecond=0).isoformat()}Z')
 
     response = iap_requests.make_request(method='POST', url=url)
@@ -60,7 +60,7 @@ def authorise_pack_code(context, template_name):
     context.template = context.export_file_templates[template_name]['template']
     context.pack_code = context.export_file_packcodes[template_name]['pack_code']
 
-    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyExportFileTemplates'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/fulfilmentSurveyExportFileTemplates'
     body = {
         'surveyId': context.survey_id,
         'packCode': context.pack_code

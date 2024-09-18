@@ -51,21 +51,13 @@ class Config:
     # This uses the default auth available in the environment
     SUPPORT_TOOL_IAP_CLIENT_ID = os.getenv('SUPPORT_TOOL_IAP_CLIENT_ID')
 
-    SUPPORT_TOOL_HOST = os.getenv('SUPPORT_TOOL_HOST', 'localhost')
-    SUPPORT_TOOL_PORT = os.getenv('SUPPORT_TOOL_PORT', '9999')
+    # Note that for the ATs to go via IAP the protocol must be set to HTTPS in the Pod config
+    SUPPORT_TOOL_BASE_URL = os.getenv("SUPPORT_TOOL_BASE_URL", "http://localhost:9999")
 
-    # To go via IAP this must be set to 'https'
-    SUPPORT_TOOL_PROTOCOL = os.getenv('SUPPORT_TOOL_PROTOCOL', 'http')
-
-    if SUPPORT_TOOL_PORT == '80':
-        SUPPORT_TOOL_API = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}/api'
-        SUPPORT_TOOL_URL = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}'
-    else:
-        SUPPORT_TOOL_API = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}/api'
-        SUPPORT_TOOL_URL = f'{SUPPORT_TOOL_PROTOCOL}://{SUPPORT_TOOL_HOST}:{SUPPORT_TOOL_PORT}'
+    SUPPORT_TOOL_API_URL = f"{SUPPORT_TOOL_BASE_URL}/api"
 
     # Allow the URL used for UI navigation to be set differently, since the browser driver cannot support IAP auth
-    SUPPORT_TOOL_UI_URL = os.getenv('SUPPORT_TOOL_UI_URL', SUPPORT_TOOL_URL)
+    SUPPORT_TOOL_UI_URL = os.getenv('SUPPORT_TOOL_UI_URL', SUPPORT_TOOL_BASE_URL)
 
     NOTIFY_SERVICE_HOST = os.getenv('NOTIFY_SERVICE_HOST', 'localhost')
     NOTIFY_SERVICE_PORT = os.getenv('NOTIFY_SERVICE_PORT', '8162')
@@ -90,11 +82,7 @@ class Config:
     )
     OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE = os.getenv('OUR_EXPORT_FILE_DECRYPTION_KEY_PASSPHRASE', 'test')
 
-    PROTOCOL = os.getenv('PROTOCOL', 'http')
-
-    RH_UI_HOST = os.getenv('RH_UI_HOST', 'localhost')
-    RH_UI_PORT = os.getenv('RH_UI_PORT', '9092')
-    RH_UI_URL = f'{PROTOCOL}://{RH_UI_HOST}:{RH_UI_PORT}/'
+    RH_UI_URL = os.getenv("RH_UI_URL", "http://localhost:9092/")
 
     EQ_DECRYPTION_JSON_FILE = Path(os.getenv('EQ_JSON_FILE') or RESOURCE_FILE_PATH.joinpath('dummy_keys',
                                                                                             'eq-decrypt-keys.json'))

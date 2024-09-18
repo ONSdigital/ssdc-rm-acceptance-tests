@@ -26,7 +26,7 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
 
 def create_export_file_template(template, export_file_destination=Config.SUPPLIER_DEFAULT_TEST):
     pack_code = generate_pack_code('PRINT_')
-    url = f'{Config.SUPPORT_TOOL_API}/exportFileTemplates'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/exportFileTemplates'
     create_template(url, pack_code, template, export_file_destination=export_file_destination)
     return pack_code
 
@@ -34,7 +34,7 @@ def create_export_file_template(template, export_file_destination=Config.SUPPLIE
 def create_sms_template(template):
     pack_code = generate_pack_code('SMS_')
     notify_template_id = str(uuid.uuid4())
-    url = f'{Config.SUPPORT_TOOL_API}/smsTemplates'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/smsTemplates'
     create_template(url, pack_code, template, notify_template_id=notify_template_id)
     return pack_code, notify_template_id
 
@@ -42,7 +42,7 @@ def create_sms_template(template):
 def create_email_template(template):
     pack_code = generate_pack_code('EMAIL_')
     notify_template_id = str(uuid.uuid4())
-    url = f'{Config.SUPPORT_TOOL_API}/emailTemplates'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/emailTemplates'
     create_template(url, pack_code, template, notify_template_id=notify_template_id)
     return pack_code, notify_template_id
 

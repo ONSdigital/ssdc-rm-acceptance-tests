@@ -16,7 +16,7 @@ def authorise_sms_pack_code(context, template_name):
     context.pack_code = context.email_packcodes[template_name]['pack_code']
     context.notify_template_id = context.email_packcodes[template_name]['notify_template_id']
 
-    url = f'{Config.SUPPORT_TOOL_API}/fulfilmentSurveyEmailTemplates'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/fulfilmentSurveyEmailTemplates'
     body = {
         'surveyId': context.survey_id,
         'packCode': context.pack_code

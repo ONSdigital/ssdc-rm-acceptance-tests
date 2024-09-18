@@ -12,7 +12,7 @@ def add_survey(sample_validation_rules, test_start_time, sample_definition_url="
                sample_has_header_row=True, sample_file_separator=','):
     survey_name = 'test survey ' + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
-    url = f'{Config.SUPPORT_TOOL_API}/surveys'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/surveys'
 
     body = {"name": survey_name,
             "sampleValidationRules": sample_validation_rules,

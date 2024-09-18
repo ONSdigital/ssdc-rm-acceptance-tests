@@ -29,7 +29,7 @@ def upload_file_by_api(file_path: str, file_name: str) -> str:
         'file': (file_name, open(file_path, 'rb'), 'text/plain')
     })
 
-    url = f'{Config.SUPPORT_TOOL_API}/upload'
+    url = f'{Config.SUPPORT_TOOL_API_URL}/upload'
 
     response = iap_requests.make_request(method='POST',
                                          url=url,
@@ -48,7 +48,7 @@ def create_job(collex_id: str, file_name: str, file_id: str, job_type: str) -> s
         'jobType': job_type
     }
 
-    create_job_url = f'{Config.SUPPORT_TOOL_API}/job'
+    create_job_url = f'{Config.SUPPORT_TOOL_API_URL}/job'
     response = iap_requests.make_request(method='POST', url=create_job_url, params=request_params)
     response.raise_for_status()
 
@@ -57,7 +57,7 @@ def create_job(collex_id: str, file_name: str, file_id: str, job_type: str) -> s
 
 
 def wait_for_job_file_validation(job_id: str, timeout_sec=30) -> None:
-    get_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}'
+    get_job_url = f'{Config.SUPPORT_TOOL_API_URL}/job/{job_id}'
 
     deadline = time.time() + timeout_sec
 
@@ -74,6 +74,6 @@ def wait_for_job_file_validation(job_id: str, timeout_sec=30) -> None:
 
 
 def process_job(job_id: str) -> None:
-    process_job_url = f'{Config.SUPPORT_TOOL_API}/job/{job_id}/process'
+    process_job_url = f'{Config.SUPPORT_TOOL_API_URL}/job/{job_id}/process'
     response = iap_requests.make_request(method='POST', url=process_job_url)
     response.raise_for_status()
