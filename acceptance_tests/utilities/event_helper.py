@@ -4,7 +4,6 @@ from typing import Mapping, List, Optional
 
 from tenacity import retry, wait_fixed, stop_after_delay
 
-from acceptance_tests.utilities.case_api_helper import get_logged_events_for_case_by_id
 from acceptance_tests.utilities.database_helper import open_cursor
 from acceptance_tests.utilities.pubsub_helper import get_exact_number_of_pubsub_messages, \
     get_matching_pubsub_message_acking_others, get_matching_pubsub_messages_acking_others
@@ -141,20 +140,10 @@ def get_logged_case_events_by_type(case_id: str, type_filter: str):
     logged_event_of_type = []
 
     for event in events:
-        if event['eventType'] == type_filter:
+        if event['type'] == type_filter:
             logged_event_of_type.append(event)
 
     return logged_event_of_type
-
-
-@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
-def check_invalid_case_reason_matches_on_event(event_id: str, expected_reason: str):
-    with open_cursor() as cur:
-        cur.execute("SELECT payload FROM casev3.event WHERE id = %s", (event_id,))
-        result = cur.fetchone()
-
-        test_helper.assertEqual(result[0]['invalidCase']['reason'], expected_reason,
-                                "The invalid case reason doesn't matched expected")
 
 
 def check_uac_update_msgs_emitted_with_qid_active_and_field_equals_value(emitted_cases: List[Mapping],
@@ -201,3 +190,25 @@ def _check_new_uacs_are_as_expected(emitted_uacs: List[Mapping], active: bool, f
         if field_to_test:
             test_helper.assertEqual(uac[field_to_test], expected_value,
                                     f"UAC {uac} field {field_to_test} doesn't equal expected {expected_value}")
+
+
+@retry(wait=wait_fixed(1), stop=stop_after_delay(30))
+def check_if_event_types_are_exact_match(expected_logged_event_types: list[str], case_id: str):
+    logged_events = get_logged_events_for_case_by_id(case_id)
+    actual_logged_event_types = [event['type'] for event in logged_events]
+
+    test_helper.assertCountEqual(expected_logged_event_types, actual_logged_event_types,
+                                 msg=f"Actual logged event types {actual_logged_event_types} "
+                                     f"did not match expected {expected_logged_event_types}")
+
+
+def get_logged_events_for_case_by_id(case_id: str) -> list[dict]:
+    with open_cursor() as cur:
+        cur.execute(
+            "select * from casev3.event where caze_id = %s OR uac_qid_link_id = \
+             (select id from casev3.uac_qid_link where casev3.uac_qid_link.caze_id = %s)",
+            (case_id, case_id))
+
+        columns = [col[0] for col in cur.description]
+        results = [dict(zip(columns, row)) for row in cur.fetchall()]
+        return results
