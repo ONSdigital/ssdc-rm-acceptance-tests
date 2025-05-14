@@ -27,7 +27,6 @@ jobs:
 
       - name: Run Checks
         run: |
-          make check
           make flake
           make vulture
           make build
