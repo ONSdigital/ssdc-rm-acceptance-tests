@@ -2,6 +2,7 @@ import json
 from urllib.parse import urlparse, parse_qs
 
 from behave import step
+from tenacity import wait_fixed, retry, stop_after_delay
 
 from acceptance_tests.features.steps.events_emitted import check_uac_update_msgs_emitted_with_qid_active
 from acceptance_tests.features.steps.notify_api import get_uac_from_sms_fulfilment
@@ -80,6 +81,7 @@ def input_receipted_uac(context):
 
 
 @step("they are redirected to the receipted page")
+@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
 def redirected_to_receipted_page(context):
     test_helper.assertIn('This access code has already been used', context.browser.find_by_css('h1').text)
 
@@ -90,6 +92,7 @@ def enter_inactive_uac(context):
 
 
 @step("they are redirected to the inactive uac page")
+@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
 def check_on_inactive_uac_page(context):
     test_helper.assertIn('This questionnaire has now closed', context.browser.find_by_css('h1').text)
 
@@ -122,6 +125,7 @@ def error_section_displayed_with_header_text(context, error_section_header, href
     test_helper.assertEqual(error_text, expected_text)
 
 
+@retry(wait=wait_fixed(2), stop=stop_after_delay(30))
 def _redirect_to_eq(context, language_code):
     expected_url_start = 'session?token='
     test_helper.assertIn(expected_url_start, context.browser.url)
