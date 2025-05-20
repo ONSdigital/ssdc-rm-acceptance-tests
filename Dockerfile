@@ -1,8 +1,9 @@
 FROM python:3.11-slim
 
 # install google chrome, chromedriver and add acceptancetest user
+# Hardcoding chrome version until the latest stable version is updated
 RUN apt-get -y update && apt-get install -y curl git wget gnupg jq && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - &&  \
-    LATEST_COMPATIBLE_CHROME_VERSION=$(curl https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels."Stable"."version"') && \
+    LATEST_COMPATIBLE_CHROME_VERSION=136.0.7103.113 && \
     wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${LATEST_COMPATIBLE_CHROME_VERSION}-1_amd64.deb && \
     dpkg -i google-chrome-stable_${LATEST_COMPATIBLE_CHROME_VERSION}-1_amd64.deb || apt -y -f install && \
     rm google-chrome-stable_${LATEST_COMPATIBLE_CHROME_VERSION}-1_amd64.deb && \
