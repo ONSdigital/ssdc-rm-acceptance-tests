@@ -1,6 +1,6 @@
 import json
 import os
-from distutils.util import strtobool
+from acceptance_tests.common.strtobool import strtobool
 from pathlib import Path
 
 from jwcrypto import jwk

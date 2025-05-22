@@ -4,7 +4,7 @@ import json
 import random
 import string
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from behave import step
 from tenacity import retry, stop_after_delay, wait_fixed
@@ -59,7 +59,7 @@ def _send_update_sample_msg(correlation_id, originating_user, case_id, update_js
                 "topic": Config.PUBSUB_UPDATE_SAMPLE_TOPIC,
                 "source": "RH",
                 "channel": "RH",
-                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "dateTime": f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
                 "correlationId": correlation_id,
                 "originatingUser": originating_user
