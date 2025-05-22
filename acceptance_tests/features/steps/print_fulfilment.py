@@ -1,6 +1,6 @@
 import json
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from behave import step
 
@@ -23,7 +23,7 @@ def request_print_fulfilment_step(context, personalisation=None):
             "topic": Config.PUBSUB_PRINT_FULFILMENT_TOPIC,
             "source": "RH",
             "channel": "RH",
-            "dateTime": f'{datetime.utcnow().isoformat()}Z',
+            "dateTime": f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
             "messageId": str(uuid.uuid4()),
             "correlationId": context.correlation_id,
             "originatingUser": context.originating_user
@@ -49,7 +49,7 @@ def request_print_fulfilment_step(context, personalisation=None):
 @step("export file fulfilments are triggered to be exported")
 def print_fulfilments_trigger_step(context):
     url = (f'{Config.SUPPORT_TOOL_API_URL}/fulfilmentNextTriggers'
-           f'?triggerDateTime={datetime.utcnow().replace(microsecond=0).isoformat()}Z')
+           f'?triggerDateTime={datetime.now(timezone.utc).replace(microsecond=0).replace(tzinfo=None).isoformat()}Z')
 
     response = iap_requests.make_request(method='POST', url=url)
     response.raise_for_status()

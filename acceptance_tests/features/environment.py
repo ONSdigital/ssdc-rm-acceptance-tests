@@ -2,7 +2,7 @@ import json
 import logging
 import time
 from datetime import datetime, timezone
-from distutils.util import strtobool
+from acceptance_tests.common.strtobool import strtobool
 
 import requests
 from behave import register_type
@@ -51,7 +51,7 @@ def move_fulfilment_triggers_harmlessly_massively_into_the_future():
 def before_scenario(context, scenario):
     move_fulfilment_triggers_harmlessly_massively_into_the_future()
 
-    context.test_start_utc_datetime = datetime.utcnow().replace(tzinfo=timezone.utc)
+    context.test_start_utc_datetime = datetime.now(timezone.utc).replace(tzinfo=timezone.utc)
     context.correlation_id = None
     context.originating_user = None
     context.sent_messages = []

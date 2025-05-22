@@ -3,7 +3,7 @@ import hashlib
 import json
 import random
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from behave import step
 from acceptance_tests.utilities.audit_trail_helper import add_random_suffix_to_email
 from acceptance_tests.utilities.file_to_process_upload_helper import upload_and_process_file_by_api
@@ -38,7 +38,7 @@ def _send_refusal_message(correlation_id, originating_user, case_id, erase_data=
                 "topic": Config.PUBSUB_REFUSAL_TOPIC,
                 "source": "RH",
                 "channel": "RH",
-                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "dateTime": f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
                 "correlationId": correlation_id,
                 "originatingUser": originating_user

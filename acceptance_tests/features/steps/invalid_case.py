@@ -4,7 +4,7 @@ import json
 import random
 import string
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from behave import step
 
@@ -41,7 +41,7 @@ def _send_invalid_case_message(correlation_id, originating_user, case_id):
                 "topic": Config.PUBSUB_INVALID_CASE_TOPIC,
                 "source": "RH",
                 "channel": "RH",
-                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "dateTime": f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
                 "correlationId": correlation_id,
                 "originatingUser": originating_user

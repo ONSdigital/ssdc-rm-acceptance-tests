@@ -1,7 +1,7 @@
 import hashlib
 import json
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from behave import step
 
@@ -36,7 +36,7 @@ def _send_deactivate_uac_message(correlation_id, originating_user, qid):
                 "topic": Config.PUBSUB_DEACTIVATE_UAC_TOPIC,
                 "source": "CC",
                 "channel": "CC",
-                "dateTime": f'{datetime.utcnow().isoformat()}Z',
+                "dateTime": f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
                 "messageId": str(uuid.uuid4()),
                 "correlationId": correlation_id,
                 "originatingUser": originating_user

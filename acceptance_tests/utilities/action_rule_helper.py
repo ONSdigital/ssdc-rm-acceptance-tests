@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from acceptance_tests.utilities import iap_requests
 from config import Config
@@ -10,7 +10,7 @@ def create_export_file_action_rule(collex_id, classifiers, pack_code):
     body = {
         'type': 'EXPORT_FILE',
         'packCode': pack_code,
-        'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
+        'triggerDateTime': f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
         'classifiers': classifiers,
         'collectionExerciseId': collex_id
     }
@@ -25,7 +25,7 @@ def setup_deactivate_uac_action_rule(collex_id):
     body = {
         'type': 'DEACTIVATE_UAC',
         'packCode': None,
-        'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
+        'triggerDateTime': f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
         'classifiers': '',
         'collectionExerciseId': collex_id
     }
@@ -40,7 +40,7 @@ def setup_sms_action_rule(collex_id, pack_code):
     body = {
         'type': 'SMS',
         'packCode': pack_code,
-        'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
+        'triggerDateTime': f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
         'classifiers': '',
         'collectionExerciseId': collex_id,
         'phoneNumberColumn': 'mobileNumber',
@@ -57,7 +57,7 @@ def setup_email_action_rule(collex_id, pack_code):
     body = {
         'type': 'EMAIL',
         'packCode': pack_code,
-        'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
+        'triggerDateTime': f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
         'classifiers': '',
         'collectionExerciseId': collex_id,
         'emailColumn': 'emailAddress',
@@ -74,7 +74,7 @@ def set_eq_flush_action_rule(collex_id):
     body = {
         'type': 'EQ_FLUSH',
         'packCode': None,
-        'triggerDateTime': f'{datetime.utcnow().isoformat()}Z',
+        'triggerDateTime': f'{datetime.now(timezone.utc).replace(tzinfo=None).isoformat()}Z',
         'classifiers': '',
         'collectionExerciseId': collex_id,
     }

@@ -49,7 +49,7 @@ def create_survey_in_ui(context, survey_prefix, sample_file_name, sensitive_colu
     context.browser.find_by_id('surveyDefinitionURLTextField').fill("http://foo.bar.json")
     context.browser.find_by_id('postCreateSurveyBtn').click()
 
-    test_helper.assertEquals(
+    test_helper.assertEqual(
         len(context.browser.find_by_id('surveyListTable').first.find_by_text(context.survey_name, wait_time=30)), 1)
 
     get_emitted_survey_update(context.survey_name, context.test_start_utc_datetime)
@@ -84,7 +84,7 @@ def click_create_collex_button(context):
     context.browser.find_by_id('collectionExerciseCIRulesTextField').fill(
         json.dumps(collection_instrument_selection_rules))
     context.browser.find_by_id('postCreateCollectionExerciseBtn').click()
-    test_helper.assertEquals(
+    test_helper.assertEqual(
         len(context.browser.find_by_id('collectionExerciseTableList').first.find_by_text(context.collex_name)), 1)
 
     get_collection_exercise_update_by_name(context.collex_name, context.test_start_utc_datetime)
@@ -101,7 +101,7 @@ def click_load_sample(context, sample_file_name):
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(sample_file_name)
     context.browser.find_by_id('contained-button-file').first.type(str(sample_file_path))
     context.sample_count = sum(1 for _ in open(sample_file_path)) - 1
-    test_helper.assertEquals(
+    test_helper.assertEqual(
         len(context.browser.find_by_id('sampleFilesList').first.find_by_text(sample_file_name, wait_time=30)), 1)
     context.browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").click()
     context.browser.find_by_id("jobProcessBtn", wait_time=30).click()
@@ -110,12 +110,12 @@ def click_load_sample(context, sample_file_name):
     context.emitted_cases = get_emitted_cases(context.sample_count, context.test_start_utc_datetime,
                                               originating_user_email=Config.UI_USER_EMAIL)
 
-    test_helper.assertEquals(len(context.emitted_cases), context.sample_count)
+    test_helper.assertEqual(len(context.emitted_cases), context.sample_count)
 
 
 @retry(wait=wait_fixed(2), stop=stop_after_delay(30))
 def poll_sample_status_processed(browser):
-    test_helper.assertEquals(browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").text, "PROCESSED")
+    test_helper.assertEqual(browser.find_by_id('sampleFilesList').first.find_by_id("sampleStatus0").text, "PROCESSED")
 
 
 @step('the Create Export File Template button is clicked on')
@@ -137,7 +137,7 @@ def create_export_file_template(context, packcode, template: List):
 
 @step('I should see the export file template in the template list')
 def find_created_export_file(context):
-    test_helper.assertEquals(
+    test_helper.assertEqual(
         len(context.browser.find_by_id('exportFileTemplateTable', wait_time=30).first
             .find_by_text(context.pack_code, wait_time=30)), 1)
 
@@ -170,9 +170,9 @@ def check_for_action_rule_completed(context):
 @retry(wait=wait_fixed(2), stop=stop_after_delay(120))
 def poll_action_rule_completed(browser, pack_code):
     browser.reload()
-    test_helper.assertEquals(
+    test_helper.assertEqual(
         len(browser.find_by_id('actionRuleTable').first.find_by_text(pack_code)), 1)
-    test_helper.assertEquals(browser.find_by_id('actionRuleStatus').text, 'COMPLETED')
+    test_helper.assertEqual(browser.find_by_id('actionRuleStatus').text, 'COMPLETED')
 
 
 @step('the Create Email Template button is clicked on')
@@ -198,7 +198,7 @@ def create_email_template(context, packcode, notify_service_ref, template: List)
 
 @step('I should see the email template in the template list')
 def find_created_email_template(context):
-    test_helper.assertEquals(
+    test_helper.assertEqual(
         len(context.browser.find_by_id('emailTemplateTable').first.find_by_text(context.pack_code)), 1)
 
 
@@ -251,4 +251,4 @@ def check_action_rule_triggered_for_email_in_future(context, expected_timezone):
         test_helper.assertIsNone(action_rule_date_time.utcoffset())  # Time is in UTC, so we assert there's no offset
     else:
         action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z%z")
-        test_helper.assertEquals(action_rule_date_time.utcoffset().seconds, 3600)
+        test_helper.assertEqual(action_rule_date_time.utcoffset().seconds, 3600)
