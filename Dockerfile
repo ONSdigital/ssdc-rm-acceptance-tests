@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12.10-slim@sha256:bae1a061b657f403aaacb1069a7f67d91f7ef5725ab17ca36abc5f1b2797ff92
 
 # install google chrome, chromedriver and add acceptancetest user
 # Hardcoding chrome version until the latest stable version is updated

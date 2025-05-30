@@ -130,13 +130,13 @@ def format_expected_export_file_row(export_row_components: Iterable[str]):
 
 
 def check_export_file_matches_expected(actual_export_file, expected_export_file):
-    test_helper.assertEquals(actual_export_file[0], expected_export_file[0],
-                             'Export file header row did not match expected')
+    test_helper.assertEqual(actual_export_file[0], expected_export_file[0],
+                            'Export file header row did not match expected')
 
     actual_export_file.sort()
     expected_export_file.sort()
 
-    test_helper.assertEquals(actual_export_file, expected_export_file, 'Export file contents did not match expected')
+    test_helper.assertEqual(actual_export_file, expected_export_file, 'Export file contents did not match expected')
 
 
 def get_datetime_from_export_file_name(export_file_name: str, prefix: str, suffix: str) -> datetime:
