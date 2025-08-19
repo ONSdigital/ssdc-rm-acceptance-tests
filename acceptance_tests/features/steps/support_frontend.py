@@ -20,7 +20,7 @@ def input_survey_details_and_save_survey(context, survey_name):
     context.survey_name = survey_name + get_random_alpha_numerics(5)
     context.browser.find_by_id("name_input").fill(context.survey_name)
     context.browser.find_by_id("sample_definition_url_input").fill(survey_name)
-    context.browser.find_by_id("sample_validation_rules_input").fill("{}")
+    context.browser.find_by_id("sample_validation_rules_input").fill("[]")
     context.browser.find_by_id("create-survey-button").click()
 
 

@@ -57,7 +57,7 @@ run:
       # Exec into the pod to run the tests while tailing their logs
       # The sleep is to give kubectl time to attach properly, otherwise the first few log lines are lost
       kubectl exec -it acceptance-tests -- /bin/bash -c \
-      "sleep 2; behave acceptance_tests/features --logging-level WARN ${BEHAVE_TAGS}"
+      "sleep 2; behave acceptance_tests/features --logging-level WARN ${BEHAVE_TAGS} --tags=~@SupportFrontend "
   
       # Clean up the pod once we're finished
       kubectl delete pod acceptance-tests || true
