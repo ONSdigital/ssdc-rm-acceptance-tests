@@ -51,6 +51,6 @@ kubectl exec -it acceptance-tests -- /bin/bash -c \
   "sleep 2;  python -m poll_endpoint --url https://support-tool-$ENV.rm.gcp.onsdigital.uk/actuator/health --max_retries 10"
 
 
-kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features $BEHAVE_TAGS --logging-level WARN"
+kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features $BEHAVE_TAGS --tags=~@SupportFrontend --logging-level WARN"
 
 kubectl delete pod acceptance-tests || true

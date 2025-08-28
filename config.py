@@ -104,3 +104,5 @@ class Config:
 
     SUPPLIER_INTERNAL_REPROGRAPHICS = os.getenv('SUPPLIER_INTERNAL_REPROGRAPHICS', 'internal_reprographics')
     SUPPLIER_DEFAULT_TEST = os.getenv('SUPPLIER_DEFAULT_TEST', 'test_supplier')
+
+    SUPPORT_FRONTEND_URL = os.getenv('SUPPORT_FRONTEND_URL', 'http://localhost:9096/')
