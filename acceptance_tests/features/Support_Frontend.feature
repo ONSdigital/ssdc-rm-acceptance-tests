@@ -20,7 +20,10 @@ Feature: Test functionality of the Support Frontend
     Given the support frontend is displayed
     When the "Create new survey" button is clicked
     And a survey with no filed entered is attempted to be created
-    Then I should see error messages
+    Then I should see 3 problems with this page
+    And I see a "Enter a survey name" error
+    And I see a "Enter a sample definition URL" error
+    And I see a "Select a sample template" error
 
   @regression
   Scenario: Edit a surveys details and removing fields
@@ -29,7 +32,9 @@ Feature: Test functionality of the Support Frontend
     And a survey called "SupportFrontendTest" plus unique suffix is created
     When the name edit link is clicked
     And fields are emptied
-    Then I should see error messages other than for sample template
+    Then I should see 2 problems with this page
+    And I see a "Enter a survey name" error
+    And I see a "Enter a sample definition URL" error
 
   @regression
   Scenario: Create a survey with a too long name

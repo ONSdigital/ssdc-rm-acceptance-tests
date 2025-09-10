@@ -63,15 +63,15 @@ def create_survey_with_no_name(context):
     context.browser.find_by_id("create-survey-button").click()
 
 
-@step('I should see error messages')
-def see_error_messages(context):
+@step('I should see {num_errors} problems with this page')
+def see_number_of_problems(context, num_errors):
     test_helper.assertEqual(context.browser.find_by_id("alert", wait_time=5).first.text,
-                            "There are 3 problems with this page", "No error summary shown")
-    test_helper.assertTrue(context.browser.is_text_present("Enter a survey name"), "No error message shown for name")
-    test_helper.assertTrue(context.browser.is_text_present("Enter a sample definition URL"),
-                           "No error message shown for sample definition URL")
-    test_helper.assertTrue(context.browser.is_text_present("Select a sample template"),
-                           "No error message shown for sample template")
+                            f"There are {num_errors} problems with this page", "No error summary shown")
+
+
+@step('I see a "{text}" error')
+def see_a_text_error(context, text):
+    test_helper.assertTrue(context.browser.is_text_present(text), f"No error {text} message shown")
 
 
 @step('fields are emptied')
@@ -82,16 +82,6 @@ def empty_fields(context):
     if radios:
         radios[0].click()
     context.browser.find_by_id("create-survey-button").click()
-
-
-@step('I should see error messages other than for sample template')
-def see_error_messages_minus_template(context):
-    test_helper.assertEqual(context.browser.find_by_id("alert", wait_time=5).first.text,
-                            "There are 2 problems with this page", "No error summary shown")
-    test_helper.assertTrue(context.browser.is_text_present("Enter a survey name"),
-                           "No error message shown for name")
-    test_helper.assertTrue(context.browser.is_text_present("Enter a sample definition URL"),
-                           "No error message shown for sample definition URL")
 
 
 @step('a survey with a name longer than 255 characters is attempted to be created')
