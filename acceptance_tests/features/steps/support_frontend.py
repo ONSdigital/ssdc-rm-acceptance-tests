@@ -22,9 +22,7 @@ def input_survey_details_and_save_survey(context, survey_name):
     context.browser.find_by_id("sample_definition_url_input").fill(survey_name)
     radios = context.browser.find_by_css("input[type='radio']")
     radios[0].click()
-    button = context.browser.find_by_id("create-survey-button")
-    context.browser.execute_script("arguments[0].scrollIntoView(true);", button._element)
-    button.click()
+    context.browser.find_by_id("create-survey-button").click()
 
 
 @step("I should see the new surveys details")
