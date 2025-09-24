@@ -81,6 +81,8 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | sms_packcodes                      | Stores the list of sms packcodes setup prior to the tests                           | Mapping  |
 | survey_name                        | Stores the survey name to be used in the scenario                                   | str      |
 | edited_survey_name                 | Stores the edited survey name to be used in the scenario                            | str      |
+| collection_exercise_name           | Stores the collection exercise name to be used in the scenario                      | str      |
+| edited_collection_exercise__name   | Stores the edited collection exericise name to be used in the scenario              | str      |
 
 </div>
 
