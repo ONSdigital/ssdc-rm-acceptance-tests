@@ -1,6 +1,7 @@
 from behave import step
 
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
+from acceptance_tests.utilities.event_helper import get_collection_exercise_update_by_name
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -18,9 +19,10 @@ def click_on_create_new_survey_button(context):
 @step('a survey called "{survey_name}" plus unique suffix is created')
 def input_survey_details_and_save_survey(context, survey_name):
     context.survey_name = survey_name + get_random_alpha_numerics(5)
-    context.browser.find_by_id("name_input").fill(context.survey_name)
+    context.browser.find_by_id("name_input", wait_time=5).fill(context.survey_name)
     context.browser.find_by_id("sample_definition_url_input").fill(survey_name)
-    context.browser.find_by_id("sample_validation_rules_input").fill("[]")
+    radios = context.browser.find_by_css("input[type='radio']")
+    radios[0].click()
     context.browser.find_by_id("create-survey-button").click()
 
 
@@ -60,7 +62,10 @@ def add_collection_exercise_button(context):
     context.browser.find_by_id("add-new-collection-exercise-button").click()
 
 
-@step('a collection exercise called "{collecting_exercise_name}" plus unique suffix, with a start date of "{start_date}" and an end date of "{end_date}" is created')
+@step(
+    'a collection exercise called "{collecting_exercise_name}" plus unique suffix,'
+    ' with a start date of "{start_date}" and an end date of "{end_date}" is created'
+)
 def create_collection_exercise(context, collecting_exercise_name, start_date, end_date):
     context.collecting_exercise_name = collecting_exercise_name + get_random_alpha_numerics(5)
     context.collecting_exercise_start_date = dict(zip(["year", "month", "day"], start_date.split("-")))
@@ -70,9 +75,9 @@ def create_collection_exercise(context, collecting_exercise_name, start_date, en
     context.browser.find_by_id("start_date_input-day").fill(context.collecting_exercise_start_date["day"])
     context.browser.find_by_id("start_date_input-month").fill(context.collecting_exercise_start_date["month"])
     context.browser.find_by_id("start_date_input-year").fill(context.collecting_exercise_start_date["year"])
-    context.browser.find_by_id("start_date_input-day").fill(end_date["day"])
-    context.browser.find_by_id("start_date_input-month").fill(end_date["month"])
-    context.browser.find_by_id("start_date_input-year").fill(end_date["year"])
+    context.browser.find_by_id("end_date_input-day").fill(context.collecting_exercise_end_date["day"])
+    context.browser.find_by_id("end_date_input-month").fill(context.collecting_exercise_end_date["month"])
+    context.browser.find_by_id("end_date_input-year").fill(context.collecting_exercise_end_date["year"])
     context.browser.find_by_id("collection_instrument_rules_input").fill('[{"foo": "bar"}]')
     context.browser.find_by_id("create-collection-exercise-button").click()
 
@@ -86,34 +91,47 @@ def find_collection_exercise_details(context):
         f" but found {context.browser.find_by_id("collection_exercise_name_value").first.text}"
     )
     test_helper.assertIn(
-        context.browser.find_by_id("start_date_value", wait_time=5).first.text,
         f"{context.collecting_exercise_start_date["year"]}-"
         f"{context.collecting_exercise_start_date["month"].zfill(2)}-"
         f"{context.collecting_exercise_start_date["day"].zfill(2)}",
+        context.browser.find_by_id("start_date_value", wait_time=5).first.text
     )
     test_helper.assertIn(
-        context.browser.find_by_id("end_date_value", wait_time=5).first.text,
         f"{context.collecting_exercise_end_date["year"]}-"
         f"{context.collecting_exercise_end_date["month"].zfill(2)}-"
         f"{context.collecting_exercise_end_date["day"].zfill(2)}",
+        context.browser.find_by_id("end_date_value", wait_time=5).first.text
     )
 
-@step("the {detail} name edit link is clicked")
-def click_name_edit_link(context, detail):
-    context.browser.find_by_id(f"{detail.join("_")}_name_edit_link", wait_time=5).first.click()
+
+@step('the {collex_type} collection exercise is emitted')
+def check_collection_exercise_is_emitted(context, collex_type):
+    collection_exercise_name = ""
+    if collex_type == "new":
+        collection_exercise_name = context.collecting_exercise_name
+    elif collex_type == "edited":
+        collection_exercise_name = context.edited_collection_exercise_name
+    get_collection_exercise_update_by_name(collection_exercise_name, context.test_start_utc_datetime)
+
+
+@step("the collection exercise name edit link is clicked")
+def click_collection_exercise_name_edit_link(context):
+    context.browser.find_by_id("collection_exercise_name_edit_link", wait_time=5).first.click()
 
 
 @step('the collection exercise name is changed to "{edited_name}"')
-def change_survey_name(context, edited_name):
+def change_collection_exercise_name(context, edited_name):
     context.edited_collection_exercise_name = edited_name + get_random_alpha_numerics(5)
-    context.browser.find_by_id("collection_exercise_name_input").fill(context.edited_survey_name)
+    context.browser.find_by_id("collection_exercise_name_input").fill(context.edited_collection_exercise_name)
     context.browser.find_by_id("create-collection-exercise-button").click()
 
 
 @step('I should see the edited collection name')
-def find_edited_survey_name(context):
+def find_edited_collection_exercise_name(context):
     test_helper.assertEqual(context.browser.find_by_id("collection_exercise_name_value", wait_time=5).first.text,
                             context.edited_collection_exercise_name,
                             f"Expected collection exercise name to be {context.edited_collection_exercise_name},"
                             f" but found {context.browser.find_by_id("collection_exercise_name_value").first.text}")
-    test_helper.assertNotEqual(context.survey_name, context.edited_collection_exercise_name, "The collection exercise name was not edited")
+    test_helper.assertNotEqual(context.survey_name,
+                               context.edited_collection_exercise_name,
+                               "The collection exercise name was not edited")
