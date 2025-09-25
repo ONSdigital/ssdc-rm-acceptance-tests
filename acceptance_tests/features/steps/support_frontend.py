@@ -57,6 +57,51 @@ def find_edited_survey_name(context):
     test_helper.assertNotEqual(context.survey_name, context.edited_survey_name, "The survey name was not edited")
 
 
+@step('a survey with no filed entered is attempted to be created')
+def create_survey_with_no_name(context):
+    context.browser.find_by_id("create-survey-button").click()
+
+
+@step('I should see {num_errors} problems with this page')
+def see_number_of_problems(context, num_errors):
+    test_helper.assertEqual(context.browser.find_by_id("alert", wait_time=5).first.text,
+                            f"There are {num_errors} problems with this page", "No error summary shown")
+
+
+@step('I see a "{text}" error')
+def see_a_text_error(context, text):
+    test_helper.assertTrue(context.browser.is_text_present(text), f"No error {text} message shown")
+
+
+@step('fields are emptied')
+def empty_fields(context):
+    context.browser.find_by_id("name_input", wait_time=5).fill("")
+    context.browser.find_by_id("sample_definition_url_input").fill("")
+    radios = context.browser.find_by_css("input[type='radio']:checked")
+    if radios:
+        radios[0].click()
+    context.browser.find_by_id("create-survey-button").click()
+
+
+@step('a survey with a name longer than 255 characters is attempted to be created')
+def create_survey_with_long_name(context):
+    long_name = "This is a very long survey name that is definitely going to be longer than 255 characters. " \
+                "In fact, it is so long that it just keeps going and going and going and going and going and going " \
+                "and going and going and going and going and going and going and going and going and going and " \
+                "going and going and going and going and going and going and going and going and going and going " \
+                "and going and going and going and going and going and going and going!"
+    context.browser.find_by_id("name_input", wait_time=5).fill(long_name)
+    context.browser.find_by_id("sample_definition_url_input").fill("Test URL")
+    radios = context.browser.find_by_css("input[type='radio']")
+    radios[0].click()
+
+
+@step('the name should be truncated to 255 characters')
+def name_truncated_to_255_characters(context):
+    test_helper.assertEqual(len(context.browser.find_by_id("name_input").first.value), 255,
+                            "The survey name is not 255 characters long")
+
+
 @step('the "Add collection exercise" button is clicked')
 def add_collection_exercise_button(context):
     context.browser.find_by_id("add-new-collection-exercise-button").click()
