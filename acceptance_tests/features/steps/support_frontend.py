@@ -63,21 +63,21 @@ def add_collection_exercise_button(context):
 
 
 @step(
-    'a collection exercise called "{collecting_exercise_name}" plus unique suffix,'
+    'a collection exercise called "{collection_exercise_name}" plus unique suffix,'
     ' with a start date of "{start_date}" and an end date of "{end_date}" is created'
 )
-def create_collection_exercise(context, collecting_exercise_name, start_date, end_date):
-    context.collecting_exercise_name = collecting_exercise_name + get_random_alpha_numerics(5)
-    context.collecting_exercise_start_date = dict(zip(["year", "month", "day"], start_date.split("-")))
-    context.collecting_exercise_end_date = dict(zip(["year", "month", "day"], end_date.split("-")))
-    context.browser.find_by_id("collection_exercise_name_input").fill(context.collecting_exercise_name)
-    context.browser.find_by_id("description_input").fill(context.collecting_exercise_name)
-    context.browser.find_by_id("start_date_input-day").fill(context.collecting_exercise_start_date["day"])
-    context.browser.find_by_id("start_date_input-month").fill(context.collecting_exercise_start_date["month"])
-    context.browser.find_by_id("start_date_input-year").fill(context.collecting_exercise_start_date["year"])
-    context.browser.find_by_id("end_date_input-day").fill(context.collecting_exercise_end_date["day"])
-    context.browser.find_by_id("end_date_input-month").fill(context.collecting_exercise_end_date["month"])
-    context.browser.find_by_id("end_date_input-year").fill(context.collecting_exercise_end_date["year"])
+def create_collection_exercise(context, collection_exercise_name, start_date, end_date):
+    context.collection_exercise_name = collection_exercise_name + get_random_alpha_numerics(5)
+    context.collection_exercise_start_date = dict(zip(["year", "month", "day"], start_date.split("-")))
+    context.collection_exercise_end_date = dict(zip(["year", "month", "day"], end_date.split("-")))
+    context.browser.find_by_id("collection_exercise_name_input").fill(context.collection_exercise_name)
+    context.browser.find_by_id("description_input").fill(context.collection_exercise_name)
+    context.browser.find_by_id("start_date_input-day").fill(context.collection_exercise_start_date["day"])
+    context.browser.find_by_id("start_date_input-month").fill(context.collection_exercise_start_date["month"])
+    context.browser.find_by_id("start_date_input-year").fill(context.collection_exercise_start_date["year"])
+    context.browser.find_by_id("end_date_input-day").fill(context.collection_exercise_end_date["day"])
+    context.browser.find_by_id("end_date_input-month").fill(context.collection_exercise_end_date["month"])
+    context.browser.find_by_id("end_date_input-year").fill(context.collection_exercise_end_date["year"])
     context.browser.find_by_id("collection_instrument_rules_input").fill('[{"foo": "bar"}]')
     context.browser.find_by_id("create-collection-exercise-button").click()
 
@@ -86,20 +86,20 @@ def create_collection_exercise(context, collecting_exercise_name, start_date, en
 def find_collection_exercise_details(context):
     test_helper.assertEqual(
         context.browser.find_by_id("collection_exercise_name_value", wait_time=5).first.text,
-        context.collecting_exercise_name,
-        f"Expected collection exercise name to be {context.collecting_exercise_name},"
+        context.collection_exercise_name,
+        f"Expected collection exercise name to be {context.collection_exercise_name},"
         f" but found {context.browser.find_by_id("collection_exercise_name_value").first.text}"
     )
     test_helper.assertIn(
-        f"{context.collecting_exercise_start_date["year"]}-"
-        f"{context.collecting_exercise_start_date["month"].zfill(2)}-"
-        f"{context.collecting_exercise_start_date["day"].zfill(2)}",
+        f"{context.collection_exercise_start_date["year"]}-"
+        f"{context.collection_exercise_start_date["month"].zfill(2)}-"
+        f"{context.collection_exercise_start_date["day"].zfill(2)}",
         context.browser.find_by_id("start_date_value", wait_time=5).first.text
     )
     test_helper.assertIn(
-        f"{context.collecting_exercise_end_date["year"]}-"
-        f"{context.collecting_exercise_end_date["month"].zfill(2)}-"
-        f"{context.collecting_exercise_end_date["day"].zfill(2)}",
+        f"{context.collection_exercise_end_date["year"]}-"
+        f"{context.collection_exercise_end_date["month"].zfill(2)}-"
+        f"{context.collection_exercise_end_date["day"].zfill(2)}",
         context.browser.find_by_id("end_date_value", wait_time=5).first.text
     )
 
@@ -108,7 +108,7 @@ def find_collection_exercise_details(context):
 def check_collection_exercise_is_emitted(context, collex_type):
     collection_exercise_name = ""
     if collex_type == "new":
-        collection_exercise_name = context.collecting_exercise_name
+        collection_exercise_name = context.collection_exercise_name
     elif collex_type == "edited":
         collection_exercise_name = context.edited_collection_exercise_name
     get_collection_exercise_update_by_name(collection_exercise_name, context.test_start_utc_datetime)
