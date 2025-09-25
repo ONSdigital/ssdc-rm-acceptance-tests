@@ -132,6 +132,6 @@ def find_edited_collection_exercise_name(context):
                             context.edited_collection_exercise_name,
                             f"Expected collection exercise name to be {context.edited_collection_exercise_name},"
                             f" but found {context.browser.find_by_id("collection_exercise_name_value").first.text}")
-    test_helper.assertNotEqual(context.survey_name,
+    test_helper.assertNotEqual(context.collection_exercise_name,
                                context.edited_collection_exercise_name,
                                "The collection exercise name was not edited")
