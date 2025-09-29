@@ -70,7 +70,8 @@ def before_scenario(context, scenario):
         service = Service()
         options = Options()
         options.add_argument("--verbose")
-        options.add_argument("--window-size=1920,1080")
+        if "SupportFrontend" in context.tags:
+            options.add_argument("--window-size=1920,1080")
         context.browser = Browser('chrome', headless=Config.HEADLESS, service=service, options=options)
 
 
