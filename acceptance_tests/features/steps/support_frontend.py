@@ -149,7 +149,7 @@ def find_collection_exercise_details(context):
     )
 
 
-@step('the {collex_type} collection exercise is emitted')
+@step('the {collex_type} collection exercise is published to pubsub')
 def check_collection_exercise_is_emitted(context, collex_type):
     collection_exercise_name = ""
     if collex_type == "new":
