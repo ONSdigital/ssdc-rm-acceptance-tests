@@ -64,3 +64,23 @@ Feature: Test functionality of the Support Frontend
     Then I should see the edited collection name
     And the new collection exercise is published to pubsub
     And the edited collection exercise is published to pubsub
+
+  Scenario: Create an invalid Collection Exercise
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendCollexTest" plus unique suffix is created
+    When the "Add collection exercise" button is clicked
+    And a collection exercise is saved with no fields entered
+    Then I should see 5 problems with this page
+
+  @regression
+  Scenario: Edit a Collection Exercise with invalid data
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendCollexTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendCollexTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the new collection exercise is published to pubsub
+    When the collection exercise name edit link is clicked
+    And the collection exercise name and description is changed to an empty string
+    Then I should see 2 problems with this page
