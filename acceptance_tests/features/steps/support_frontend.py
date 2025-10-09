@@ -192,4 +192,3 @@ def change_collex_name_and_description_then_save(context):
     context.browser.find_by_id("collection_exercise_name_input", wait_time=5).fill("")
     context.browser.find_by_id("description_input", wait_time=5).fill("")
     context.browser.find_by_id("create-collection-exercise-button").click()
-
