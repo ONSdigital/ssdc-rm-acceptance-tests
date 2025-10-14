@@ -180,3 +180,15 @@ def find_edited_collection_exercise_name(context):
     test_helper.assertNotEqual(context.collection_exercise_name,
                                context.edited_collection_exercise_name,
                                "The collection exercise name was not edited")
+
+
+@step("a collection exercise is saved with no fields entered")
+def save_collex_with_no_data(context):
+    context.browser.find_by_id("create-collection-exercise-button").click()
+
+
+@step("the collection exercise name and description is changed to an empty string")
+def change_collex_name_and_description_then_save(context):
+    context.browser.find_by_id("collection_exercise_name_input", wait_time=5).fill("")
+    context.browser.find_by_id("description_input", wait_time=5).fill("")
+    context.browser.find_by_id("create-collection-exercise-button").click()
