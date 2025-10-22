@@ -1,19 +1,21 @@
 FROM python:3.12.12-slim@sha256:dc9e92fcdc085ad86dda976f4cfc58856dba33a438a16db37ff00151b285c8ca
 
 # install google chrome, chromedriver and add acceptancetest user
-# Hardcoding chrome version until the latest stable version is updated
-RUN apt-get -y update && apt-get install -y curl git wget gnupg jq && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - &&  \
-    LATEST_COMPATIBLE_CHROME_VERSION=$(curl https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels."Stable"."version"') && \
-    wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${LATEST_COMPATIBLE_CHROME_VERSION}-1_amd64.deb && \
-    dpkg -i google-chrome-stable_${LATEST_COMPATIBLE_CHROME_VERSION}-1_amd64.deb || apt -y -f install && \
-    rm google-chrome-stable_${LATEST_COMPATIBLE_CHROME_VERSION}-1_amd64.deb && \
-    apt-get install -yqq unzip && groupadd --gid 1000 acceptancetests && useradd --create-home --system --uid 1000 --gid acceptancetests acceptancetests
-
-# Chrome and chromedriver share the same version (as of 115) so use this to download chromedriver directly
-RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}') && \
-    wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip && \
+RUN apt-get -y update && apt-get install -y curl git wget gnupg jq unzip &&  \
+    wget -O /tmp/chrome-versions.json https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json && \
+    wget -O /tmp/chrome.zip `jq -r '.channels.Stable.downloads.chrome|.[]|select(.platform=="linux64").url' /tmp/chrome-versions.json` && \
+    wget -O /tmp/chromedriver.zip `jq -r '.channels.Stable.downloads.chromedriver|.[]|select(.platform=="linux64").url' /tmp/chrome-versions.json` && \
+    # Setup chrome
+    unzip /tmp/chrome.zip -d /opt/chrome && \
+    ln -s /opt/chrome/chrome-linux64/chrome /usr/local/bin/google-chrome && \
+    # Install dependencies for chrome
+    while read pkg; do \
+      apt-get satisfy -y --no-install-recommends "${pkg}"; \
+    done < /opt/chrome/chrome-linux64/deb.deps && \
+    # Setup chromedriver
     unzip /tmp/chromedriver.zip chromedriver-linux64/chromedriver -d /usr/local/bin/ && \
-    mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+    mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
+    apt-get install -yqq && groupadd --gid 1000 acceptancetests && useradd --create-home --system --uid 1000 --gid acceptancetests acceptancetests
 
 # Install pipenv
 RUN pip3 install pipenv
