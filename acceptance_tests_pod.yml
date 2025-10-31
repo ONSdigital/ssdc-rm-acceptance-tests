@@ -29,10 +29,10 @@ spec:
     resources:
       requests:
         cpu: "500m"
-        memory: "512Mi"
+        memory: "800Mi"
       limits:
         cpu: "500m"
-        memory: "512Mi"
+        memory: "800Mi"
     volumeMounts:
     - name: case-cloud-sql-certs
       mountPath: "/home/acceptancetests/postgresql"
