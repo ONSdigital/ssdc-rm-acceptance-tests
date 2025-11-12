@@ -33,9 +33,6 @@ register_type(array=parse_array_to_list)
 CONTEXT_ATTRIBUTES = parse_markdown_context_table(Config.CODE_GUIDE_MARKDOWN_FILE_PATH)
 TEMPLATE_FILES_PATH = Config.RESOURCE_FILE_PATH.joinpath('template_files')
 
-import os
-
-os.environ["SE_FORCE_BROWSER_DOWNLOAD"] = "true"
 
 def before_all(context):
     context.config.setup_logging()
