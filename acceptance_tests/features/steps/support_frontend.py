@@ -91,7 +91,7 @@ def create_survey_with_long_name(context):
                 "going and going and going and going and going and going and going and going and going and going " \
                 "and going and going and going and going and going and going and going!"
     context.browser.find_by_id("name_input", wait_time=5).fill(long_name)
-    context.browser.find_by_id("survey_abbreviation_input").fill("Test URL")
+    context.browser.find_by_id("survey_abbreviation_input").fill("TEST")
     radios = context.browser.find_by_css("input[type='radio']")
     radios[0].click()
 
