@@ -20,7 +20,7 @@ def click_on_create_new_survey_button(context):
 def input_survey_details_and_save_survey(context, survey_name):
     context.survey_name = survey_name + get_random_alpha_numerics(5)
     context.browser.find_by_id("name_input", wait_time=5).fill(context.survey_name)
-    context.browser.find_by_id("sample_definition_url_input").fill(survey_name)
+    context.browser.find_by_id("survey_abbreviation_input").fill("TEST")
     radios = context.browser.find_by_css("input[type='radio']")
     radios[0].click()
     context.browser.find_by_id("create-survey-button").click()
@@ -76,7 +76,7 @@ def see_a_text_error(context, text):
 @step('fields are emptied')
 def empty_fields(context):
     context.browser.find_by_id("name_input", wait_time=5).fill("")
-    context.browser.find_by_id("sample_definition_url_input").fill("")
+    context.browser.find_by_id("survey_abbreviation_input").fill("")
     radios = context.browser.find_by_css("input[type='radio']:checked")
     if radios:
         radios[0].click()
@@ -91,7 +91,7 @@ def create_survey_with_long_name(context):
                 "going and going and going and going and going and going and going and going and going and going " \
                 "and going and going and going and going and going and going and going!"
     context.browser.find_by_id("name_input", wait_time=5).fill(long_name)
-    context.browser.find_by_id("sample_definition_url_input").fill("Test URL")
+    context.browser.find_by_id("survey_abbreviation_input").fill("TEST")
     radios = context.browser.find_by_css("input[type='radio']")
     radios[0].click()
 
