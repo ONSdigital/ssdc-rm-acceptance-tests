@@ -118,6 +118,13 @@ spec:
         secretKeyRef:
           name: support-tool-iap
           key: client_id
+    - name: SUPPORT_FRONTEND_URL
+      value: "https://srm-support-$ENV.rm.gcp.onsdigital.uk"
+    - name: SUPPORT_FRONTEND_IAP_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: support-frontend-iap
+          key: client_id
     - name: API_USER_EMAIL
       value: "acceptance-tests@ssdc-rm-$ENV.iam.gserviceaccount.com"
   volumes:

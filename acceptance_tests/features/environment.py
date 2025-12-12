@@ -23,6 +23,7 @@ from acceptance_tests.utilities.template_helper import create_email_template, cr
     create_sms_template
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
+from acceptance_tests.utilities.iap_requests import get_support_frontend_headers
 
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -73,6 +74,15 @@ def before_scenario(context, scenario):
         if "SupportFrontend" in context.tags:
             options.add_argument("--window-size=1920,1080")
         context.browser = Browser('chrome', headless=Config.HEADLESS, service=service, options=options)
+
+        if "SupportFrontend" in context.tags:
+            headers = get_support_frontend_headers()
+            context.browser.driver.execute_cdp_cmd(
+                "Network.enable", {}
+            )
+            context.browser.driver.execute_cdp_cmd(
+                "Network.setExtraHTTPHeaders", headers
+            )
 
 
 def after_all(_context):

@@ -22,6 +22,15 @@ def make_request(method: str = "GET", url: str = None,
     return requests.request(method, url, **kwargs)
 
 
+def get_support_frontend_headers():
+    audience = Config.SUPPORT_FRONTEND_IAP_CLIENT_ID
+
+    token = id_token.fetch_id_token(Request(), audience)
+    return {
+        "headers": {"Authorization": f"Bearer {token}"}
+    }
+
+
 def _make_iap_request(method: str = 'GET', url: str = None, iap_client_id: str = None, **kwargs) -> requests.Response:
     """Makes a request to an application protected by Identity-Aware Proxy.
     Args:

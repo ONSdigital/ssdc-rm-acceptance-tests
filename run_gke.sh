@@ -46,11 +46,16 @@ echo "Running RM Acceptance Tests [$(kubectl config current-context)]..."
 kubectl apply -f "$COMPLETE_MANIFEST"
 
 kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
+#kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; python test.py"
+kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features/Support_Frontend.feature"
 
-kubectl exec -it acceptance-tests -- /bin/bash -c \
-  "sleep 2;  python -m poll_endpoint --url https://support-tool-$ENV.rm.gcp.onsdigital.uk/actuator/health --max_retries 10"
 
-
-kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features $BEHAVE_TAGS --tags=~@SupportFrontend --logging-level WARN"
-
-kubectl delete pod acceptance-tests || true
+#kubectl wait --for=condition=Ready pod/acceptance-tests --timeout=200s
+#
+#kubectl exec -it acceptance-tests -- /bin/bash -c \
+#  "sleep 2;  python -m poll_endpoint --url https://support-tool-$ENV.rm.gcp.onsdigital.uk/actuator/health --max_retries 10"
+#
+#
+#kubectl exec -it acceptance-tests -- /bin/bash -c "sleep 2; behave acceptance_tests/features $BEHAVE_TAGS --tags=~@SupportFrontend --logging-level WARN"
+#
+#kubectl delete pod acceptance-tests || true

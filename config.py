@@ -106,3 +106,5 @@ class Config:
     SUPPLIER_DEFAULT_TEST = os.getenv('SUPPLIER_DEFAULT_TEST', 'test_supplier')
 
     SUPPORT_FRONTEND_URL = os.getenv('SUPPORT_FRONTEND_URL', 'http://localhost:9096/')
+
+    SUPPORT_FRONTEND_IAP_CLIENT_ID = os.getenv('SUPPORT_FRONTEND_IAP_CLIENT_ID')
