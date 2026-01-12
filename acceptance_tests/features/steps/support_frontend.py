@@ -1,7 +1,10 @@
 from behave import step
+from time import sleep
 
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
+from acceptance_tests.utilities.datetime_helper import human_readable_datetime
 from acceptance_tests.utilities.event_helper import get_collection_exercise_update_by_name
+from acceptance_tests.utilities.survey_helper import set_survey_id_context_from_url
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
 
@@ -24,6 +27,9 @@ def input_survey_details_and_save_survey(context, survey_name):
     radios = context.browser.find_by_css("input[type='radio']")
     radios[0].click()
     context.browser.find_by_id("create-survey-button").click()
+    # Allow time for redirect to complete
+    sleep(1)
+    set_survey_id_context_from_url(context)
 
 
 @step("I should see the new surveys details")
@@ -123,7 +129,7 @@ def create_collection_exercise(context, collection_exercise_name, start_date, en
     context.browser.find_by_id("end_date_input-day").fill(context.collection_exercise_end_date["day"])
     context.browser.find_by_id("end_date_input-month").fill(context.collection_exercise_end_date["month"])
     context.browser.find_by_id("end_date_input-year").fill(context.collection_exercise_end_date["year"])
-    context.browser.find_by_id("collection_instrument_rules_input").fill('[{"foo": "bar"}]')
+    context.browser.find_by_id("collection_instrument_rules_input").fill('[]')
     context.browser.find_by_id("create-collection-exercise-button").click()
 
 
@@ -192,3 +198,73 @@ def change_collex_name_and_description_then_save(context):
     context.browser.find_by_id("collection_exercise_name_input", wait_time=5).fill("")
     context.browser.find_by_id("description_input", wait_time=5).fill("")
     context.browser.find_by_id("create-collection-exercise-button").click()
+
+
+@step("the create {action_type} action link is clicked")
+def click_create_action_link(context, action_type):
+    action_link_id = "create_"+action_type+"_action_link"
+    context.browser.find_by_id(action_link_id, wait_time=5).first.click()
+
+
+@step(
+    'an action rule of type "{action_rule_type}" for cohort "{cohort}",'
+    ' with a trigger date of "{trigger_date}" and a trigger time of "{trigger_time}" is created'
+)
+def create_action_rule(context, action_rule_type, cohort, trigger_date, trigger_time):
+    context.cohort = cohort
+    context.action_trigger_date = dict(zip(["year", "month", "day"], trigger_date.split("-")))
+    context.action_trigger_time = dict(zip(["hour", "minute"], trigger_time.split(":")))
+    context.browser.find_by_id("cohort_number_input").fill(cohort)
+    context.browser.find_by_id("action_date_input-day").fill(context.action_trigger_date["day"])
+    context.browser.find_by_id("action_date_input-month").fill(context.action_trigger_date["month"])
+    context.browser.find_by_id("action_date_input-year").fill(context.action_trigger_date["year"])
+    context.browser.find_by_id("action_time_input-hour").fill(context.action_trigger_time["hour"])
+    context.browser.find_by_id("action_time_input-minute").fill(context.action_trigger_time["minute"])
+
+    if action_rule_type == "email":
+        context.browser.find_by_id(context.pack_code).click()
+
+    context.browser.find_by_id("continue-action-button").click()
+
+
+@step('I should see the new action rule in the action rules list')
+def find_action_rule_details(context):
+    formatted_datetime = human_readable_datetime(
+        context.action_trigger_date,
+        context.action_trigger_time
+    )
+
+    test_helper.assertTrue(
+        context.browser.is_text_present(formatted_datetime, wait_time=5),
+        f"No action rule with trigger date {formatted_datetime} in action rules table"
+    )
+    test_helper.assertTrue(
+        context.browser.is_text_present("Cohort " + context.cohort, wait_time=5),
+        f"No action rule with cohort {context.cohort} in action rules table"
+    )
+
+
+@step("the edit action rule link is clicked")
+def click_edit_action_link(context):
+    context.browser.find_by_css('[id$="_edit_link"]', wait_time=10).first.click()
+
+
+@step('the action rule trigger time is changed to "{new_trigger_time}"')
+def change_action_rule_trigger_time(context, new_trigger_time):
+    context.new_action_trigger_time = dict(zip(["hour", "minute"], new_trigger_time.split(":")))
+    context.browser.find_by_id("action_time_input-hour").fill(context.new_action_trigger_time["hour"])
+    context.browser.find_by_id("action_time_input-minute").fill(context.new_action_trigger_time["minute"])
+    context.browser.find_by_id("continue-action-button").click()
+
+
+@step('I should see the edited action rule in the action rules list')
+def find_edited_action_rule_trigger_time(context):
+    formatted_new_datetime = human_readable_datetime(
+        context.action_trigger_date,
+        context.new_action_trigger_time
+    )
+
+    test_helper.assertTrue(
+        context.browser.is_text_present(formatted_new_datetime, wait_time=5),
+        f"No action rule with trigger date {formatted_new_datetime} in action rules table"
+    )

@@ -22,5 +22,9 @@
   {
     "templateName": "sensitive_emailaddress__uac",
     "template": ["__sensitive__.emailAddress","__uac__"]
+  },
+  {
+    "templateName": "his_survey_test",
+    "template": ["__uac__", "__qid__"]
   }
 ]

@@ -84,3 +84,77 @@ Feature: Test functionality of the Support Frontend
     When the collection exercise name edit link is clicked
     And the collection exercise name and description is changed to an empty string
     Then I should see 2 problems with this page
+
+  @regression
+  Scenario: Create a deactivate action rule
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    When the create deactivate_uac action link is clicked
+    And an action rule of type "deactivate_uac" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    Then I should see the new action rule in the action rules list
+
+  @regression
+  Scenario: Create a flush action rule
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    When the create partial_process action link is clicked
+    And an action rule of type "partial_process" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    Then I should see the new action rule in the action rules list
+
+  @regression
+  Scenario: Edit a flush action rule
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the create partial_process action link is clicked
+    And an action rule of type "partial_process" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    When the edit action rule link is clicked
+    And the action rule trigger time is changed to "12:00"
+    Then I should see the edited action rule in the action rules list
+
+  @regression
+  Scenario: Edit a deactivate action rule
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the create deactivate_uac action link is clicked
+    And an action rule of type "deactivate_uac" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    When the edit action rule link is clicked
+    And the action rule trigger time is changed to "12:00"
+    Then I should see the edited action rule in the action rules list
+
+  @regression
+  Scenario: Create an email action rule
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
+    And action rules are authorised for email template "his_survey_test"
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    When the create email action link is clicked
+    And an action rule of type "email" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    Then I should see the new action rule in the action rules list
+
+  @regression
+  Scenario: Edit an email action rule
+    Given the support frontend is displayed
+    And the "Create new survey" button is clicked
+    And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
+    And action rules are authorised for email template "his_survey_test"
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the create email action link is clicked
+    And an action rule of type "email" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    When the edit action rule link is clicked
+    And the action rule trigger time is changed to "12:00"
+    Then I should see the edited action rule in the action rules list

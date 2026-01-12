@@ -34,6 +34,22 @@ def authorise_sms_pack_code(context, template_name):
                             'Unexpected allowedEmailFulfilments packCode')
 
 
+@step('action rules are authorised for email template "{template_name}"')
+def authorise_email_template_for_action_rule(context, template_name):
+    context.template = context.email_templates[template_name]['template']
+    context.pack_code = context.email_packcodes[template_name]['pack_code']
+    context.notify_template_id = context.email_packcodes[template_name]['notify_template_id']
+
+    url = f'{Config.SUPPORT_TOOL_API_URL}/actionRuleSurveyEmailTemplates'
+    body = {
+        'surveyId': context.survey_id,
+        'packCode': context.pack_code
+    }
+
+    response = iap_requests.make_request(method='POST', url=url, json=body)
+    response.raise_for_status()
+
+
 @step('a request has been made for a replacement UAC by email from email address "{email}"')
 @step('a request has been made for a replacement UAC by email from email address "{email}"'
       ' with personalisation {personalisation:json}')
