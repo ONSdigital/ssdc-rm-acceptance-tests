@@ -60,12 +60,3 @@ def generate_pack_code(pack_code_prefix):
     # By using a unique random pack_code we have better filter options
     # We can change/remove this if we get UACS differently or a better solution is found
     return pack_code_prefix + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-
-
-# def add_allowed_email_template(survey_id, email_template_pack_code):
-#     url = f'{Config.SUPPORT_TOOL_API_URL}/surveys/{survey_id}/allowedEmailTemplates'
-#     body = {
-#         'emailTemplatePackCode': email_template_pack_code
-#     }
-#     response = iap_requests.make_request(method='POST', url=url, json=body)
-#     response.raise_for_status()
