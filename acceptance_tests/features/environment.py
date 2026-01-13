@@ -135,8 +135,8 @@ def _setup_templates(context):
     email_templates = json.loads(email_templates_path.read_text())
     context.email_templates = {template['templateName']: template for template in email_templates}
     context.email_packcodes = {}
-    for _, template in context.email_templates.items():
-        pack_code, notify_template_id = create_email_template(template['template'])
+    for template_name, template in context.email_templates.items():
+        pack_code, notify_template_id = create_email_template(template['template'], template_name)
         context.email_packcodes[template['templateName']] = {"pack_code": pack_code,
                                                              "notify_template_id": notify_template_id}
 
