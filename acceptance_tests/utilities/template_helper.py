@@ -1,3 +1,4 @@
+import logging
 import random
 import string
 import uuid
@@ -5,6 +6,9 @@ import uuid
 from acceptance_tests.utilities import iap_requests
 from requests.exceptions import HTTPError
 from config import Config
+from structlog import wrap_logger
+
+logger = wrap_logger(logging.getLogger(__name__))
 
 
 def create_template(create_url, pack_code, template, notify_template_id=None, export_file_destination=None):
@@ -26,7 +30,7 @@ def create_template(create_url, pack_code, template, notify_template_id=None, ex
         response.raise_for_status()
     except HTTPError:
         # If the template already exists, log and carry on
-        print(f'Template: {template} with pack code: {pack_code} already exists.')
+        logger.info(f'Template: {template} with pack code: {pack_code} already exists.')
 
 
 def create_export_file_template(template, export_file_destination=Config.SUPPLIER_DEFAULT_TEST):
