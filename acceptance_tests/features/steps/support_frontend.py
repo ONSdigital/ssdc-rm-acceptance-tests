@@ -1,3 +1,5 @@
+import datetime
+
 from behave import step
 from time import sleep
 
@@ -16,7 +18,7 @@ def navigating_to_the_support_frontend_landing_page(context):
 
 @step('the "Create new survey" button is clicked')
 def click_on_create_new_survey_button(context):
-    context.browser.find_by_id("create-new-survey-button").click()
+    context.browser.find_by_id("create-survey-link").click()
 
 
 @step('a survey called "{survey_name}" plus unique suffix is created')
@@ -110,7 +112,7 @@ def name_truncated_to_255_characters(context):
 
 @step('the "Add collection exercise" button is clicked')
 def add_collection_exercise_button(context):
-    context.browser.find_by_id("add-new-collection-exercise-button").click()
+    context.browser.find_by_id("add-new-collection-exercise-link").click()
 
 
 @step(
@@ -141,18 +143,18 @@ def find_collection_exercise_details(context):
         f"Expected collection exercise name to be {context.collection_exercise_name},"
         f" but found {context.browser.find_by_id("collection_exercise_name_value").first.text}"
     )
-    test_helper.assertIn(
-        f"{context.collection_exercise_start_date["year"]}-"
-        f"{context.collection_exercise_start_date["month"].zfill(2)}-"
-        f"{context.collection_exercise_start_date["day"].zfill(2)}",
-        context.browser.find_by_id("start_date_value", wait_time=5).first.text
-    )
-    test_helper.assertIn(
-        f"{context.collection_exercise_end_date["year"]}-"
-        f"{context.collection_exercise_end_date["month"].zfill(2)}-"
-        f"{context.collection_exercise_end_date["day"].zfill(2)}",
-        context.browser.find_by_id("end_date_value", wait_time=5).first.text
-    )
+    test_helper.assertEqual(context.browser.find_by_id("start_date_value", wait_time=5).first.text,
+                            datetime.datetime(int(context.collection_exercise_start_date["year"]),
+                                              int(context.collection_exercise_start_date["month"].zfill(2)),
+                                              int(context.collection_exercise_start_date["day"].zfill(2))).strftime(
+                                "%-d %B %Y"))
+
+    test_helper.assertEqual(context.browser.find_by_id("end_date_value", wait_time=5).first.text,
+                            datetime.datetime(int(context.collection_exercise_end_date["year"]),
+                                              int(context.collection_exercise_end_date["month"].zfill(2)),
+                                              int(context.collection_exercise_end_date["day"].zfill(2))).strftime(
+                                "%-d %B %Y")
+                            )
 
 
 @step('the {collex_type} collection exercise is published to pubsub')
@@ -202,7 +204,7 @@ def change_collex_name_and_description_then_save(context):
 
 @step("the create {action_type} action link is clicked")
 def click_create_action_link(context, action_type):
-    action_link_id = "create_"+action_type+"_action_link"
+    action_link_id = "create_" + action_type + "_action_link"
     context.browser.find_by_id(action_link_id, wait_time=5).first.click()
 
 
