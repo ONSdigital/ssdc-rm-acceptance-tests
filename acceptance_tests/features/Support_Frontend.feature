@@ -3,14 +3,14 @@ Feature: Test functionality of the Support Frontend
 
   Scenario: Create a Survey and View Details
     Given the support frontend is displayed
-    When the "Create new survey" button is clicked
+    When the "Create new survey" link is clicked
     And a survey called "SupportFrontendTest" plus unique suffix is created
     Then I should see the new surveys details
 
   @regression
   Scenario: Edit a surveys details
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendTest" plus unique suffix is created
     When the edit survey link is clicked
     And the name is changed to "EditedSupportFrontendTest"
@@ -18,7 +18,7 @@ Feature: Test functionality of the Support Frontend
 
   Scenario: Create an invalid survey
     Given the support frontend is displayed
-    When the "Create new survey" button is clicked
+    When the "Create new survey" link is clicked
     And a survey with no filed entered is attempted to be created
     Then I should see 3 problems with this page
     And I see a "Enter a survey name" error
@@ -28,7 +28,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Edit a surveys details and removing fields
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendTest" plus unique suffix is created
     When the edit survey link is clicked
     And fields are emptied
@@ -39,13 +39,13 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Create a survey with a too long name
     Given the support frontend is displayed
-    When the "Create new survey" button is clicked
+    When the "Create new survey" link is clicked
     And a survey with a name longer than 255 characters is attempted to be created
     Then the name should be truncated to 255 characters
 
   Scenario: Create a Collection Exercise and View Details
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendCollexTest" plus unique suffix is created
     When the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendCollexTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
@@ -55,7 +55,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Edit a Collection Exercise
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendCollexTest" plus unique suffix is created
     And the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendCollexTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
@@ -67,7 +67,7 @@ Feature: Test functionality of the Support Frontend
 
   Scenario: Create an invalid Collection Exercise
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendCollexTest" plus unique suffix is created
     When the "Add collection exercise" button is clicked
     And a collection exercise is saved with no fields entered
@@ -76,7 +76,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Edit a Collection Exercise with invalid data
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendCollexTest" plus unique suffix is created
     And the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendCollexTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
@@ -88,7 +88,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Create a deactivate action rule
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
     And the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
@@ -100,7 +100,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Create a flush action rule
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
     And the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
@@ -112,7 +112,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Edit a flush action rule
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
     And the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
@@ -126,7 +126,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Edit a deactivate action rule
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
     And the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
@@ -140,7 +140,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Create an email action rule
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
     And action rules are authorised for email template "his_survey_test"
     And the "Add collection exercise" button is clicked
@@ -153,7 +153,7 @@ Feature: Test functionality of the Support Frontend
   @regression
   Scenario: Edit an email action rule
     Given the support frontend is displayed
-    And the "Create new survey" button is clicked
+    And the "Create new survey" link is clicked
     And a survey called "SupportFrontendActionRuleTest" plus unique suffix is created
     And action rules are authorised for email template "his_survey_test"
     And the "Add collection exercise" button is clicked
