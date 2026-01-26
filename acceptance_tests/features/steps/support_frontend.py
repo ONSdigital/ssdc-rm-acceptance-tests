@@ -16,8 +16,8 @@ def navigating_to_the_support_frontend_landing_page(context):
     context.browser.visit(f"{Config.SUPPORT_FRONTEND_URL}/surveys")
 
 
-@step('the "Create new survey" button is clicked')
-def click_on_create_new_survey_button(context):
+@step('the "Create new survey" link is clicked')
+def click_on_create_new_survey_link(context):
     context.browser.find_by_id("create-survey-link").click()
 
 
