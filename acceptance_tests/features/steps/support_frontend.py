@@ -42,9 +42,9 @@ def find_survey_details(context):
     )
 
 
-@step("the name edit link is clicked")
+@step("the edit survey link is clicked")
 def click_name_edit_link(context):
-    context.browser.find_by_id("name_edit_link", wait_time=5).first.click()
+    context.browser.find_by_id("edit_survey_link", wait_time=5).first.click()
 
 
 @step('the name is changed to "{edited_name}"')
