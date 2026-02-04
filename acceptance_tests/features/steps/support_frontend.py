@@ -167,9 +167,9 @@ def check_collection_exercise_is_emitted(context, collex_type):
     get_collection_exercise_update_by_name(collection_exercise_name, context.test_start_utc_datetime)
 
 
-@step("the collection exercise name edit link is clicked")
+@step("the collection exercise edit link is clicked")
 def click_collection_exercise_name_edit_link(context):
-    context.browser.find_by_id("collection_exercise_name_edit_link", wait_time=5).first.click()
+    context.browser.find_by_id("edit_collection_exercise_link", wait_time=5).first.click()
 
 
 @step('the collection exercise name is changed to "{edited_name}"')
