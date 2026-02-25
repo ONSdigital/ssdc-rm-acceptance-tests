@@ -271,9 +271,11 @@ def find_edited_action_rule_trigger_time(context):
         f"No action rule with trigger date {formatted_new_datetime} in action rules table"
     )
 
+
 @step('the action rule is saved with no fields entered')
 def create_action_rule_with_no_data(context):
     context.browser.find_by_id("continue-action-button").click()
+
 
 @step('the cohort number, action rule trigger date and time are changed to an empty string')
 def change_action_rule_cohort_and_trigger_datetime_to_empty_string(context):
