@@ -308,9 +308,9 @@ def upload_sample_file(context, sample_file):
 @step('the sample file should be listed on the collection exercise details page')
 def find_sample_file_details(context):
     # Waiting until Sample file name is present in the sample file table
-    def refresh_and_search_for_sample_file():
-        context.browser.reload()
-        sample_file_name_element = context.browser.find_by_id("sample-file-name-value")
+    def refresh_until_sample_file_loaded(driver):
+        driver.reload()
+        sample_file_name_element = driver.find_by_id("sample-file-name-value")
         try:
             return sample_file_name_element
         except NoSuchElementException:
@@ -318,7 +318,7 @@ def find_sample_file_details(context):
 
     try:
         sample_file_name = (WebDriverWait(context.browser, 30, poll_frequency=5)
-                            .until(lambda _: refresh_and_search_for_sample_file()))
+                            .until(refresh_until_sample_file_loaded))
 
         test_helper.assertTrue(sample_file_name.text, context.sample_file)
         test_helper.assertTrue(
