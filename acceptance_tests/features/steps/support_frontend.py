@@ -9,6 +9,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
 from acceptance_tests.utilities.datetime_helper import human_readable_datetime
 from acceptance_tests.utilities.event_helper import get_collection_exercise_update_by_name, get_emitted_cases
+from acceptance_tests.utilities.frontend_helper import refresh_page_until_sample_file_loaded
 from acceptance_tests.utilities.survey_helper import set_survey_id_context_from_url
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -307,18 +308,9 @@ def upload_sample_file(context, sample_file):
 
 @step('the sample file should be listed on the collection exercise details page')
 def find_sample_file_details(context):
-    # Waiting until Sample file name is present in the sample file table
-    def refresh_until_sample_file_loaded(driver):
-        driver.reload()
-        sample_file_name_element = driver.find_by_id("sample-file-name-value")
-        try:
-            return sample_file_name_element
-        except NoSuchElementException:
-            return False
-
     try:
         sample_file_name = (WebDriverWait(context.browser, 30, poll_frequency=5)
-                            .until(refresh_until_sample_file_loaded))
+                            .until(refresh_page_until_sample_file_loaded))
 
         test_helper.assertTrue(sample_file_name.text, context.sample_file)
         test_helper.assertTrue(
