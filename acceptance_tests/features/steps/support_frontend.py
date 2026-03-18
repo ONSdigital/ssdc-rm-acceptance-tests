@@ -3,9 +3,12 @@ import datetime
 from behave import step
 from time import sleep
 
+from selenium.common import NoSuchElementException, TimeoutException
+from selenium.webdriver.support.wait import WebDriverWait
+
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
 from acceptance_tests.utilities.datetime_helper import human_readable_datetime
-from acceptance_tests.utilities.event_helper import get_collection_exercise_update_by_name
+from acceptance_tests.utilities.event_helper import get_collection_exercise_update_by_name, get_emitted_cases
 from acceptance_tests.utilities.survey_helper import set_survey_id_context_from_url
 from acceptance_tests.utilities.test_case_helper import test_helper
 from config import Config
@@ -286,3 +289,49 @@ def change_action_rule_cohort_and_trigger_datetime_to_empty_string(context):
     context.browser.find_by_id("action_time_input-hour").fill("")
     context.browser.find_by_id("action_time_input-minute").fill("")
     context.browser.find_by_id("continue-action-button").click()
+
+
+@step('the upload sample file link is clicked')
+def click_upload_sample_file_link(context):
+    context.browser.find_by_id("upload_sample_file_link").click()
+
+
+@step('the "{sample_file}" sample file is uploaded')
+def upload_sample_file(context, sample_file):
+    context.sample_file = sample_file
+    sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(context.sample_file)
+    context.sample_count = sum(1 for _ in open(sample_file_path)) - 1
+    context.browser.find_by_id(f"sample-file-{context.sample_file}").click()
+    context.browser.find_by_id("upload-sample-file-button").click()
+
+
+@step('the sample file should be listed on the collection exercise details page')
+def find_sample_file_details(context):
+    # Waiting until Sample file name is present in the sample file table
+    def refresh_and_search_for_sample_file():
+        context.browser.reload()
+        sample_file_name_element = context.browser.find_by_id("sample-file-name-value")
+        try:
+            return sample_file_name_element
+        except NoSuchElementException:
+            return False
+
+    try:
+        sample_file_name = (WebDriverWait(context.browser, 30, poll_frequency=5)
+                            .until(lambda _: refresh_and_search_for_sample_file()))
+
+        test_helper.assertTrue(sample_file_name.text, context.sample_file)
+        test_helper.assertTrue(
+            context.browser.find_by_id("sample-file-respondent-number-value").text,
+            f"{context.sample_count} respondents"
+        )
+
+    except TimeoutException:
+        test_helper.fail("Sample file was not found on the collection exercise details page after 30 seconds")
+
+    context.emitted_cases = get_emitted_cases(
+        context.sample_count,
+        context.test_start_utc_datetime,
+        originating_user_email=Config.FRONTEND_USER_EMAIL
+    )
+    test_helper.assertEqual(len(context.emitted_cases), context.sample_count)
