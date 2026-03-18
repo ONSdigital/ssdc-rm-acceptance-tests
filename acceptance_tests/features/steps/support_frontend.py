@@ -3,7 +3,7 @@ import datetime
 from behave import step
 from time import sleep
 
-from selenium.common import NoSuchElementException, TimeoutException
+from selenium.common import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 
 from acceptance_tests.utilities.audit_trail_helper import get_random_alpha_numerics
