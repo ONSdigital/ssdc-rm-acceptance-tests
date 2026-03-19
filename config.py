@@ -106,3 +106,5 @@ class Config:
     SUPPLIER_DEFAULT_TEST = os.getenv('SUPPLIER_DEFAULT_TEST', 'test_supplier')
 
     SUPPORT_FRONTEND_URL = os.getenv('SUPPORT_FRONTEND_URL', 'http://localhost:9096/')
+    # Support Frontend doesn't currently set a user email in pub/sub messages
+    FRONTEND_USER_EMAIL = os.getenv('FRONTEND_USER_EMAIL', None)

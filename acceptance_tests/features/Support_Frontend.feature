@@ -241,3 +241,16 @@ Feature: Test functionality of the Support Frontend
     When the edit action rule link is clicked
     And the cohort number, action rule trigger date and time are changed to an empty string
     Then I should see 3 problems with this page
+
+  # TODO: This will need to be updated to work in cloud environments where the sample file will need to be put in a GCP bucket
+  @regression
+  Scenario: Upload a sample file
+    Given the support frontend is displayed
+    And the "Create new survey" link is clicked
+    And a survey called "SupportFrontendSampleFileUploadTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendSampleFileTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the new collection exercise is published to pubsub
+    When the upload sample file link is clicked
+    And the "dummy-hms-sample-file.csv" sample file is uploaded
+    Then the sample file should be listed on the collection exercise details page

@@ -83,6 +83,8 @@ logging upon failure in the [audit_trail_helper](/acceptance_tests/utilities/aud
 | edited_survey_name                 | Stores the edited survey name to be used in the scenario                            | str      |
 | collection_exercise_name           | Stores the collection exercise name to be used in the scenario                      | str      |
 | edited_collection_exercise__name   | Stores the edited collection exericise name to be used in the scenario              | str      |
+| cohort                             | Stores the cohort number to be used in action scenarios                             | int      |
+| sample_file                        | Stores the sample file name to be used in the scenario                              | str      |
 
 </div>
 
