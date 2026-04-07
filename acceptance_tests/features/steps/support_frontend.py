@@ -343,7 +343,7 @@ def delete_confirmation_page(context):
 
 @step('the confirm delete action rule link is clicked')
 def confirm_delete_action(context):
-    context.browser.find_by_id("confirm-delete_action_button").click()
+    context.browser.find_by_id("confirm_delete_action_button").click()
 
 
 @step('I should not see any actions in the action rules summary')
