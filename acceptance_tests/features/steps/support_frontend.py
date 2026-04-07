@@ -327,3 +327,28 @@ def find_sample_file_details(context):
         originating_user_email=Config.FRONTEND_USER_EMAIL
     )
     test_helper.assertEqual(len(context.emitted_cases), context.sample_count)
+
+
+@step('the delete action rule link is clicked')
+def delete_action_rule_link(context):
+    context.browser.find_by_id("delete_action_rule_link").click()
+
+
+@step('I should see the delete confirmation page')
+def delete_confirmation_page(context):
+    test_helper.assertTrue(
+        context.browser.is_text_present("Are you sure you want to delete"), "No delete confirmation present"
+    )
+
+
+@step('the confirm delete action rule link is clicked')
+def confirm_delete_action(context):
+    context.browser.find_by_id("confirm-delete_action_button").click()
+
+
+@step('I should not see any actions in the action rules summary')
+def check_deleted_action_rule(context):
+    test_helper.assertFalse(
+        context.browser.is_text_present("1 action", wait_time=5),
+        "No actions should be present in the action rules summary after deletion"
+    )
