@@ -353,9 +353,11 @@ def check_deleted_action_rule(context):
         case 'deactivate_uac':
             no_actions_present_text = "No deactivation actions have been set up for this collection exercise"
         case 'partial_process':
-            no_actions_present_text = "No actions have been set up to process partial responses for this collection exercise."
+            no_actions_present_text = \
+                "No actions have been set up to process partial responses for this collection exercise."
         case _:
-            no_actions_present_text = f"No {context.action_rule_type.replace("_", " ")} actions have been set up for this collection exercise."
+            no_actions_present_text = (f"No {context.action_rule_type.replace("_", " ")} actions "
+                                       f"have been set up for this collection exercise.")
 
     test_helper.assertTrue(
         context.browser.is_text_present(no_actions_present_text, wait_time=5),
