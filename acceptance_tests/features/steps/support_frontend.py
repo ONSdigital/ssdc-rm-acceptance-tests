@@ -220,6 +220,7 @@ def create_action_rule(context, action_rule_type, cohort, trigger_date, trigger_
     context.cohort = cohort
     context.action_trigger_date = dict(zip(["year", "month", "day"], trigger_date.split("-")))
     context.action_trigger_time = dict(zip(["hour", "minute"], trigger_time.split(":")))
+    context.action_rule_type = action_rule_type
     context.browser.find_by_id("cohort_number_input").fill(cohort)
     context.browser.find_by_id("action_date_input-day").fill(context.action_trigger_date["day"])
     context.browser.find_by_id("action_date_input-month").fill(context.action_trigger_date["month"])
@@ -348,7 +349,14 @@ def confirm_delete_action(context):
 
 @step('I should not see any actions in the action rules summary')
 def check_deleted_action_rule(context):
-    test_helper.assertFalse(
-        context.browser.is_text_present("1 action", wait_time=5),
-        "No actions should be present in the action rules summary after deletion"
+    match context.action_rule_type:
+        case 'deactivate_uac':
+            no_actions_present_text = "No deactivation actions have been set up for this collection exercise"
+        case 'partial_process':
+            no_actions_present_text = "No actions have been set up to process partial responses for this collection exercise."
+        case _:
+            no_actions_present_text = f"No {context.action_rule_type.replace("_", " ")} actions have been set up for this collection exercise."
+
+    test_helper.assertTrue(
+        context.browser.is_text_present(no_actions_present_text, wait_time=5),
     )
