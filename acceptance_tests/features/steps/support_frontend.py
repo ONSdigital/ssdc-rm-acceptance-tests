@@ -220,6 +220,7 @@ def create_action_rule(context, action_rule_type, cohort, trigger_date, trigger_
     context.cohort = cohort
     context.action_trigger_date = dict(zip(["year", "month", "day"], trigger_date.split("-")))
     context.action_trigger_time = dict(zip(["hour", "minute"], trigger_time.split(":")))
+    context.action_rule_type = action_rule_type
     context.browser.find_by_id("cohort_number_input").fill(cohort)
     context.browser.find_by_id("action_date_input-day").fill(context.action_trigger_date["day"])
     context.browser.find_by_id("action_date_input-month").fill(context.action_trigger_date["month"])
@@ -327,3 +328,37 @@ def find_sample_file_details(context):
         originating_user_email=Config.FRONTEND_USER_EMAIL
     )
     test_helper.assertEqual(len(context.emitted_cases), context.sample_count)
+
+
+@step('the delete action rule link is clicked')
+def delete_action_rule_link(context):
+    context.browser.find_by_id("delete_action_rule_link").click()
+
+
+@step('I should see the delete confirmation page')
+def delete_confirmation_page(context):
+    test_helper.assertTrue(
+        context.browser.is_text_present("Are you sure you want to delete"), "No delete confirmation present"
+    )
+
+
+@step('the confirm delete action rule link is clicked')
+def confirm_delete_action(context):
+    context.browser.find_by_id("confirm_delete_action_button").click()
+
+
+@step('I should not see any actions in the action rules summary')
+def check_deleted_action_rule(context):
+    match context.action_rule_type:
+        case 'deactivate_uac':
+            no_actions_present_text = "No deactivation actions have been set up for this collection exercise"
+        case 'partial_process':
+            no_actions_present_text = \
+                "No actions have been set up to process partial responses for this collection exercise."
+        case _:
+            no_actions_present_text = (f"No {context.action_rule_type.replace("_", " ")} actions "
+                                       f"have been set up for this collection exercise.")
+
+    test_helper.assertTrue(
+        context.browser.is_text_present(no_actions_present_text, wait_time=5),
+    )
