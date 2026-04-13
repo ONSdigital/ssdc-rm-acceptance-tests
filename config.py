@@ -108,3 +108,5 @@ class Config:
     SUPPORT_FRONTEND_URL = os.getenv('SUPPORT_FRONTEND_URL', 'http://localhost:9096/')
     # Support Frontend doesn't currently set a user email in pub/sub messages
     FRONTEND_USER_EMAIL = os.getenv('FRONTEND_USER_EMAIL', None)
+
+    SUPPORT_FRONTEND_IAP_CLIENT_ID = os.getenv('SUPPORT_FRONTEND_IAP_CLIENT_ID')

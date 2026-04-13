@@ -16,6 +16,7 @@ from acceptance_tests.utilities.audit_trail_helper import log_out_user_context_v
 from acceptance_tests.utilities.eq_stub_helper import reset_eq_stub
 from acceptance_tests.utilities.exception_manager_helper import get_bad_messages, \
     quarantine_bad_messages_check_and_reset
+from acceptance_tests.utilities.iap_requests import get_support_frontend_headers
 from acceptance_tests.utilities.notify_helper import reset_notify_stub
 from acceptance_tests.utilities.parameter_parsers import parse_array_to_list, parse_json_object
 from acceptance_tests.utilities.pubsub_helper import purge_outbound_topics_with_retry, purge_outbound_topics
@@ -73,6 +74,21 @@ def before_scenario(context, scenario):
         if "SupportFrontend" in context.tags:
             options.add_argument("--window-size=1920,1080")
         context.browser = Browser('chrome', headless=Config.HEADLESS, service=service, options=options)
+
+    if "SupportFrontend" in context.tags:
+        if Config.SUPPORT_FRONTEND_IAP_CLIENT_ID:
+
+            # TODO: Needs to be removed when sample files ATs work in GCP
+            if scenario.name == "Upload a sample file":
+                scenario.skip("Skipping - Sample file Scenarios aren't supported in GCP yet")
+
+            headers = get_support_frontend_headers()
+            context.browser.driver.execute_cdp_cmd(
+                "Network.enable", {}
+            )
+            context.browser.driver.execute_cdp_cmd(
+                "Network.setExtraHTTPHeaders", headers
+            )
 
 
 def after_all(_context):

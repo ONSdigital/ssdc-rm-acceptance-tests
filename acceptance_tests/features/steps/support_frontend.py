@@ -71,7 +71,7 @@ def find_edited_survey_name(context):
 
 @step('a survey with no filed entered is attempted to be created')
 def create_survey_with_no_name(context):
-    context.browser.find_by_id("create-survey-button").click()
+    context.browser.find_by_id("create-survey-button", wait_time=5).click()
 
 
 @step('I should see {num_errors} problems with this page')
@@ -116,7 +116,7 @@ def name_truncated_to_255_characters(context):
 
 @step('the "Add collection exercise" button is clicked')
 def add_collection_exercise_button(context):
-    context.browser.find_by_id("add-new-collection-exercise-link").click()
+    context.browser.find_by_id("add-new-collection-exercise-link", wait_time=5).click()
 
 
 @step(
@@ -127,7 +127,7 @@ def create_collection_exercise(context, collection_exercise_name, start_date, en
     context.collection_exercise_name = collection_exercise_name + get_random_alpha_numerics(5)
     context.collection_exercise_start_date = dict(zip(["year", "month", "day"], start_date.split("-")))
     context.collection_exercise_end_date = dict(zip(["year", "month", "day"], end_date.split("-")))
-    context.browser.find_by_id("collection_exercise_name_input").fill(context.collection_exercise_name)
+    context.browser.find_by_id("collection_exercise_name_input", wait_time=5).fill(context.collection_exercise_name)
     context.browser.find_by_id("description_input").fill(context.collection_exercise_name)
     context.browser.find_by_id("start_date_input-day").fill(context.collection_exercise_start_date["day"])
     context.browser.find_by_id("start_date_input-month").fill(context.collection_exercise_start_date["month"])
@@ -179,7 +179,8 @@ def click_collection_exercise_name_edit_link(context):
 @step('the collection exercise name is changed to "{edited_name}"')
 def change_collection_exercise_name(context, edited_name):
     context.edited_collection_exercise_name = edited_name + get_random_alpha_numerics(5)
-    context.browser.find_by_id("collection_exercise_name_input").fill(context.edited_collection_exercise_name)
+    (context.browser.find_by_id("collection_exercise_name_input", wait_time=5)
+     .fill(context.edited_collection_exercise_name))
     context.browser.find_by_id("create-collection-exercise-button").click()
 
 
@@ -220,7 +221,7 @@ def create_action_rule(context, action_rule_type, cohort, trigger_date, trigger_
     context.cohort = cohort
     context.action_trigger_date = dict(zip(["year", "month", "day"], trigger_date.split("-")))
     context.action_trigger_time = dict(zip(["hour", "minute"], trigger_time.split(":")))
-    context.browser.find_by_id("cohort_number_input").fill(cohort)
+    context.browser.find_by_id("cohort_number_input", wait_time=5).fill(cohort)
     context.browser.find_by_id("action_date_input-day").fill(context.action_trigger_date["day"])
     context.browser.find_by_id("action_date_input-month").fill(context.action_trigger_date["month"])
     context.browser.find_by_id("action_date_input-year").fill(context.action_trigger_date["year"])
@@ -258,7 +259,7 @@ def click_edit_action_link(context):
 @step('the action rule trigger time is changed to "{new_trigger_time}"')
 def change_action_rule_trigger_time(context, new_trigger_time):
     context.new_action_trigger_time = dict(zip(["hour", "minute"], new_trigger_time.split(":")))
-    context.browser.find_by_id("action_time_input-hour").fill(context.new_action_trigger_time["hour"])
+    context.browser.find_by_id("action_time_input-hour", wait_time=5).fill(context.new_action_trigger_time["hour"])
     context.browser.find_by_id("action_time_input-minute").fill(context.new_action_trigger_time["minute"])
     context.browser.find_by_id("continue-action-button").click()
 
@@ -283,7 +284,7 @@ def create_action_rule_with_no_data(context):
 
 @step('the cohort number, action rule trigger date and time are changed to an empty string')
 def change_action_rule_cohort_and_trigger_datetime_to_empty_string(context):
-    context.browser.find_by_id("cohort_number_input").fill("")
+    context.browser.find_by_id("cohort_number_input", wait_time=5).fill("")
     context.browser.find_by_id("action_date_input-day").fill("")
     context.browser.find_by_id("action_date_input-month").fill("")
     context.browser.find_by_id("action_date_input-year").fill("")
@@ -294,7 +295,7 @@ def change_action_rule_cohort_and_trigger_datetime_to_empty_string(context):
 
 @step('the upload sample file link is clicked')
 def click_upload_sample_file_link(context):
-    context.browser.find_by_id("upload_sample_file_link").click()
+    context.browser.find_by_id("upload_sample_file_link", wait_time=5).click()
 
 
 @step('the "{sample_file}" sample file is uploaded')
@@ -302,7 +303,7 @@ def upload_sample_file(context, sample_file):
     context.sample_file = sample_file
     sample_file_path = Config.SAMPLE_FILES_PATH.joinpath(context.sample_file)
     context.sample_count = sum(1 for _ in open(sample_file_path)) - 1
-    context.browser.find_by_id(f"sample-file-{context.sample_file}").click()
+    context.browser.find_by_id(f"sample-file-{context.sample_file}", wait_time=5).click()
     context.browser.find_by_id("upload-sample-file-button").click()
 
 
