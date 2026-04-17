@@ -242,6 +242,52 @@ Feature: Test functionality of the Support Frontend
     And the cohort number, action rule trigger date and time are changed to an empty string
     Then I should see 3 problems with this page
 
+  Scenario: Delete an email action rule
+    Given the support frontend is displayed
+    And the "Create new survey" link is clicked
+    And a survey called "SupportFrontendDeleteEmailActionRuleTest" plus unique suffix is created
+    And action rules are authorised for email template "his_survey_test"
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendDeleteActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the new collection exercise is published to pubsub
+    And the create email action link is clicked
+    And an action rule of type "email" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    And the edit action rule link is clicked
+    When the delete action rule link is clicked
+    Then I should see the delete confirmation page
+    When the confirm delete action rule link is clicked
+    Then I should not see any actions in the action rules summary
+
+  Scenario: Delete a flush action rule
+    Given the support frontend is displayed
+    And the "Create new survey" link is clicked
+    And a survey called "SupportFrontendDeleteFlushActionRuleTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendDeleteActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the new collection exercise is published to pubsub
+    When the create partial_process action link is clicked
+    And an action rule of type "partial_process" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    And the edit action rule link is clicked
+    When the delete action rule link is clicked
+    Then I should see the delete confirmation page
+    When the confirm delete action rule link is clicked
+    Then I should not see any actions in the action rules summary
+
+  Scenario: Delete a deactivate action rule
+    Given the support frontend is displayed
+    And the "Create new survey" link is clicked
+    And a survey called "SupportFrontendDeleteDeactivateActionRuleTest" plus unique suffix is created
+    And the "Add collection exercise" button is clicked
+    And a collection exercise called "SupportFrontendDeleteActionRuleTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the new collection exercise is published to pubsub
+    When the create deactivate_uac action link is clicked
+    And an action rule of type "deactivate_uac" for cohort "1", with a trigger date of "2050-12-30" and a trigger time of "10:00" is created
+    And the edit action rule link is clicked
+    When the delete action rule link is clicked
+    Then I should see the delete confirmation page
+    When the confirm delete action rule link is clicked
+    Then I should not see any actions in the action rules summary
+
   # TODO: This will need to be updated to work in cloud environments where the sample file will need to be put in a GCP bucket
   @regression
   Scenario: Upload a sample file
