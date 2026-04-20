@@ -22,6 +22,26 @@ def make_request(method: str = "GET", url: str = None,
     return requests.request(method, url, **kwargs)
 
 
+def get_support_frontend_headers(iap_client_id: str = Config.SUPPORT_FRONTEND_IAP_CLIENT_ID) -> dict:
+    """Get headers required for IAP authentication with SRM Support.
+
+    Args:
+        iap_client_id: (Optional) The IAP Client ID for srm support to use for authentication.
+        If not configured, it will fall back on a regular,
+        unauthenticated request. Defaults to the configured Support Frontend Client if present.
+
+    Returns:
+        Dictionary of headers required for IAP authentication with SRM Support.
+    """
+    if not iap_client_id:
+        return {"headers": {}}
+
+    token = id_token.fetch_id_token(Request(), iap_client_id)
+    return {
+        "headers": {"Authorization": f"Bearer {token}"}
+    }
+
+
 def _make_iap_request(method: str = 'GET', url: str = None, iap_client_id: str = None, **kwargs) -> requests.Response:
     """Makes a request to an application protected by Identity-Aware Proxy.
     Args:
