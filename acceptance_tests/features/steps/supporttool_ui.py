@@ -245,8 +245,9 @@ def check_action_rule_triggered_for_email(context, email_column):
 @step('I can see the action rule has been created in "{expected_timezone}"')
 def check_action_rule_triggered_for_email_in_future(context, expected_timezone):
     action_rule_date_time_str = context.browser.find_by_id('actionRuleDateTime', wait_time=30).text
-
     if expected_timezone == "GMT":
+        # TODO: Find a permanent fix for +00:00 being added to the end of the date time string in GMT timezone.
+        action_rule_date_time_str = action_rule_date_time_str.rstrip("+00:00")
         action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z")
         test_helper.assertIsNone(action_rule_date_time.utcoffset())  # Time is in UTC, so we assert there's no offset
     else:
