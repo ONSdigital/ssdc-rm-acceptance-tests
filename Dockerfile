@@ -24,9 +24,6 @@ RUN pip3 install pipenv
 ENV DISPLAY=:99
 WORKDIR /home/acceptancetests
 
-# Force selenium manager to avoid downloading chrome
-ENV SE_AVOID_BROWSER_DOWNLOAD=true
-
 COPY Pipfile* /home/acceptancetests/
 RUN pipenv install --system --deploy --dev
 USER acceptancetests

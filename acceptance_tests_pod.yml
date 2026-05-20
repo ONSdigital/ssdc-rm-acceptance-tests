@@ -41,8 +41,6 @@ spec:
       mountPath: "/home/acceptancetests/destination_config"
       readOnly: true
     env:
-    - name: TZ
-      value: "Europe/London"
     - name: DB_USERNAME
       valueFrom:
         secretKeyRef:
@@ -130,6 +128,10 @@ spec:
           name: support-frontend-iap
           key: client_id
           optional: true
+    - name: SE_AVOID_BROWSER_DOWNLOAD
+      value: "True"
+    - name: TZ
+      value: "Europe/London"
   volumes:
   - name: export-file-destinations
     secret:
