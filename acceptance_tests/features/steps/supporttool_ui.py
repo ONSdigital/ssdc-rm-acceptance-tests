@@ -1,4 +1,5 @@
 import json
+import re
 import uuid
 from datetime import datetime
 from typing import List
@@ -246,10 +247,12 @@ def check_action_rule_triggered_for_email(context, email_column):
 def check_action_rule_triggered_for_email_in_future(context, expected_timezone):
     action_rule_date_time_str = context.browser.find_by_id('actionRuleDateTime', wait_time=30).text
     if expected_timezone == "GMT":
-        # TODO: Find a permanent fix for +00:00 being added to the end of the date time string in GMT timezone.
-        action_rule_date_time_str = action_rule_date_time_str.rstrip("+00:00")
-        action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z")
-        test_helper.assertIsNone(action_rule_date_time.utcoffset())  # Time is in UTC, so we assert there's no offset
+        # Since Chrome 148 +00:00 is added to the datetime
+        # Adding +00:00 if it doesn't already exist to support older browsers
+        if not re.search(r'\+\d{2}:\d{2}$', action_rule_date_time_str):
+            action_rule_date_time_str += '+00:00'
+        action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z%z")
+        test_helper.assertEqual(action_rule_date_time.utcoffset().seconds, 0)
     else:
         action_rule_date_time = datetime.strptime(action_rule_date_time_str, "%d/%m/%Y, %H:%M:%S %Z%z")
         test_helper.assertEqual(action_rule_date_time.utcoffset().seconds, 3600)
