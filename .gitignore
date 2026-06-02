@@ -128,3 +128,6 @@ tmp_*_acceptance_tests_pod.yml
 
 # Megalinter reports
 megalinter-reports/
+
+# Podman secrets
+podman-build-secret*
