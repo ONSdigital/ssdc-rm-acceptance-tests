@@ -1,3 +1,6 @@
+# Set the container runtime based on architecture, default to docker for amd64 and podman for arm64
+DOCKER ?= $(shell if [ "$$(uname -m)" = "arm64" ]; then echo podman; else echo docker; fi)
+
 install:
 	pipenv install --dev
 
@@ -21,16 +24,16 @@ run_tests_core:
 	PUBSUB_EMULATOR_HOST=localhost:8538 pipenv run behave acceptance_tests/features --tags="~@regression" --tags="~@cloud_only"
 
 build:
-	docker build -t europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests .
+	$(DOCKER) build --platform linux/amd64 -t europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests .
 
 megalint:  ## Run the mega-linter.
-	docker run --platform linux/amd64 --rm \
+	$(DOCKER) run --platform linux/amd64 --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock:rw \
 		-v $(shell pwd):/tmp/lint:rw \
 		oxsecurity/megalinter:v8
 
 megalint-fix:  ## Run the mega-linter and attempt to auto fix any issues.
-	docker run --platform linux/amd64 --rm \
+	$(DOCKER) run --platform linux/amd64 --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock:rw \
 		-v $(shell pwd):/tmp/lint:rw \
 		-e APPLY_FIXES=all \
