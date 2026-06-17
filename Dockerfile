@@ -7,7 +7,7 @@ RUN apt-get -y update && apt-get install -y curl git wget gnupg jq unzip &&  \
     wget -O /tmp/chromedriver.zip `jq -r '.channels.Stable.downloads.chromedriver|.[]|select(.platform=="linux64").url' /tmp/chrome-versions.json` && \
     # Setup chrome
     unzip /tmp/chrome.zip -d /opt/chrome && \
-    ln -s /opt/chrome/chrome-linux64/chrome /usr/local/bin/google-chrome && \
+    ln -s /opt/chrome/chrome-linux64/chrome /usr/local/bin/chrome && \
     # Install dependencies for chrome
     while read pkg; do \
       apt-get satisfy -y --no-install-recommends "${pkg}"; \
