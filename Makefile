@@ -26,18 +26,18 @@ run_tests_core:
 build:
 	$(DOCKER) build --platform linux/amd64 -t europe-west2-docker.pkg.dev/ssdc-rm-ci/docker/ssdc-rm-acceptance-tests .
 
-megalint:  ## Run the mega-linter.
+megalint:  ## Run the mega-linter. v10.1.0
 	$(DOCKER) run --platform linux/amd64 --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock:rw \
 		-v $(shell pwd):/tmp/lint:rw \
-		oxsecurity/megalinter:v8
+		gchr.io/oxsecurity/megalinter:b09486c423063200d6f203b63121e0967719eee03c234844f6f1dd658f00a31b 
 
-megalint-fix:  ## Run the mega-linter and attempt to auto fix any issues.
+megalint-fix:  ## Run the mega-linter and attempt to auto fix any issues. v10.1.0
 	$(DOCKER) run --platform linux/amd64 --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock:rw \
 		-v $(shell pwd):/tmp/lint:rw \
 		-e APPLY_FIXES=all \
-		oxsecurity/megalinter:v8
+		gchr.io/oxsecurity/megalinter:b09486c423063200d6f203b63121e0967719eee03c234844f6f1dd658f00a31b 
 
 clean_megalint: ## Clean the temporary files.
 	rm -rf megalinter-reports
