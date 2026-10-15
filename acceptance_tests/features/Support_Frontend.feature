@@ -59,10 +59,10 @@ Feature: Test functionality of the Support Frontend
     And a survey called "SupportFrontendCollexTest" plus unique suffix is created
     And the "Add collection exercise" button is clicked
     And a collection exercise called "SupportFrontendCollexTest" plus unique suffix, with a start date of "2050-01-01" and an end date of "2050-12-31" is created
+    And the new collection exercise is published to pubsub
     When the collection exercise edit link is clicked
     And the collection exercise name is changed to "EditedSupportFrontendCollexTest"
     Then I should see the edited collection name
-    And the new collection exercise is published to pubsub
     And the edited collection exercise is published to pubsub
 
   Scenario: Create an invalid Collection Exercise
